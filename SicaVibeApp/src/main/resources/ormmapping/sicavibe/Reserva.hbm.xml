@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Licensee: vicshadow(Universidade do Minho)
+License Type: Academic
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="sicavibe.Reserva" table="Reserva" lazy="false">
+		<id name="ID" column="ID" type="integer" unsaved-value="0">
+			<generator class="native">
+			</generator>
+		</id>
+		<many-to-one name="hospede" cascade="lock" column="HospedeID" class="sicavibe.Hospede" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
+		<property name="dataEntrada" column="DataEntrada" type="date" not-null="false" lazy="false"/>
+		<property name="dataSaida" column="DataSaida" type="date" not-null="false" lazy="false"/>
+		<property name="dataCheckIn" column="DataCheckIn" type="date" not-null="false" lazy="false"/>
+		<property name="dataCheckout" column="DataCheckout" type="date" not-null="false" lazy="false"/>
+		<property name="preco" column="Preco" type="float" not-null="false" lazy="false"/>
+		<set name="ORM_Quartos" table="Reserva_Quarto" lazy="true" cascade="save-update,lock">
+			<key column="ReservaID" not-null="true"/>
+			<many-to-many column="QuartoID" class="sicavibe.Quarto">
+			</many-to-many>
+		</set>
+		<set name="ORM_ServicosExtras" table="Reserva_ServicoExtra" lazy="true" cascade="save-update,lock">
+			<key column="ReservaID" not-null="true"/>
+			<many-to-many column="ServicoExtraID" class="sicavibe.ServicoExtra">
+			</many-to-many>
+		</set>
+	</class>
+</hibernate-mapping>
