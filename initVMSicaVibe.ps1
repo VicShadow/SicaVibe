@@ -12,16 +12,16 @@
 
 # NOTA: TAMBÉM É NECESSÁRIO TER A CHAVE SSH ADICIONADA NO COMPUTE ENGINE
 
-$vmName = "abd-tp-vm"
+$vmName = "sicavibe-app"
 $imageFamily = "ubuntu-2204-lts"
 $imageProject = "ubuntu-os-cloud"
-$bootDiskSize = "100GB"
+$bootDiskSize = "64GB"
 $bootDiskType = "pd-ssd"
 $customMemory = "16GB"
 $customCpu = "8"
-$zone = "europe-west1-b"
+$zone = "us-central1-a"
 $scopes = "https://www.googleapis.com/auth/cloud-platform"
-$tags = "http-server"
+$network = "address=34.28.141.169,network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default"
 
 # Criação da VM
 Write-Host -NoNewline "Creating VM..."
@@ -34,7 +34,7 @@ gcloud compute instances create $vmName `
     --custom-cpu $customCpu `
     --zone $zone `
     --scopes $scopes `
-    --tags $tags
+    --network-interface $network
 Write-Host "done."
 
 # Get vm's ip
@@ -74,6 +74,8 @@ mvn clean package -f ~/SicaVibe/SicaVibeApp/pom.xml
 mv ~/SicaVibe/SicaVibeApp/target/SicaVibeApp-0.0.1-SNAPSHOT.jar ./SicaVibeApp.jar
 mv ~/SicaVibe/SicaVibeApp/scripts/startApp.sh .
 sudo chmod +x startApp.sh
+cat ~/SicaVibe/SicaVibeApp/scripts/startArt.txt
+./startApp.sh
 "@
 
 ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshCommand
