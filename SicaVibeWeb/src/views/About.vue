@@ -1,13 +1,11 @@
 <template>
-  <div></div>
+  <div>Hello From The Otherside</div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'About'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

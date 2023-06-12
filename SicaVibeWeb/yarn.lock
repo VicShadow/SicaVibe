@@ -2018,6 +2018,11 @@ vite@^4.3.5:
   optionalDependencies:
     fsevents "~2.3.2"
 
+vue-cli-plugin-vuestic-ui@~1.0.11:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuestic-ui/-/vue-cli-plugin-vuestic-ui-1.0.11.tgz#a309977cc3656bbfe920af70bf4a903d330fa075"
+  integrity sha512-rgyYzqm5v1cu40dctBV+5lYA0NajQuMSJinhdEu5cAy+/sSb9kF6s75fDJkeNCGh3xoU5YNquAUgd3JVxl59qQ==
+
 vue-demi@>=0.14.5:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.5.tgz#676d0463d1a1266d5ab5cba932e043d8f5f2fbd9"
@@ -2070,6 +2075,11 @@ vue@^3.3.2:
     "@vue/runtime-dom" "3.3.4"
     "@vue/server-renderer" "3.3.4"
     "@vue/shared" "3.3.4"
+
+vuetify@3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.3.3.tgz#82904abbed936abaf775b8394b0d094d4b56cbc7"
+  integrity sha512-oLpm6L6Zvf4b7Ua8V3INnUkGoxbi04O68ymEbBDLrPFzmIkzAcwd9L/2Ega582PRJnjTBBZapa6KdmosvhVvgA==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"

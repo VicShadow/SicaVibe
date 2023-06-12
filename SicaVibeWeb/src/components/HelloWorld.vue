@@ -1,13 +1,9 @@
-
 <template>
-    <h1 class="green">{{ msg }}</h1>
-    <h3>
-      A = {{ a }}
-    </h3>
+  <h1 class="va-h1">{{ msg }}</h1>
+  <h3>A = {{ a }}</h3>
 
-    <button @click="a = 'bd'">change A</button>
+  <v-btn @click="a = 'changed-button-name'">Change button's name</v-btn>
 </template>
-
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -16,22 +12,7 @@ defineProps({
   msg: String
 })
 
-const a = ref("asdasda")
-
-
+const a = ref('button-name')
 </script>
 
-
-
-
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-</style>
+<style scoped></style>
