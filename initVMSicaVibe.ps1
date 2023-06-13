@@ -66,7 +66,7 @@ sudo apt install openjdk-17-jre maven mysql-server -y
 gcloud secrets versions access 1 --secret="id_github" > ~/.ssh/id_rsa
 sudo chmod 600 .ssh/id_rsa
 gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
-ssh-keyscan github.com >> ~/.ssh/known_hosts
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 git clone git@github.com:VicShadow/SicaVibe.git
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBSicaVibeCreate.ddl
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
