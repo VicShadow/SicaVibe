@@ -61,8 +61,9 @@ while ($true) {
 
 Write-Host "Setting up VM..."
 $sshCommand = @"
-sudo apt update
-sudo apt install openjdk-17-jre maven mysql-server -y
+sudo apt-get update
+sleep 1
+sudo apt-get install openjdk-17-jre maven mysql-server -y
 gcloud secrets versions access 1 --secret="id_github" > ~/.ssh/id_rsa
 sudo chmod 600 .ssh/id_rsa
 gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
