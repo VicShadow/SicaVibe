@@ -1,8 +1,3 @@
-<template>
-  <div>Home Page</div>
-  <RoomTable :rooms='rooms' />
-</template>
-
 <script setup lang='ts'>
 import RoomTable from '@/components/RoomTable.vue'
 import { Room, RoomStatus } from '@/types/Room'
@@ -37,5 +32,23 @@ const rooms: Room[] = [
   }
 ]
 </script>
+
+<template>
+  <v-breadcrumbs class='px-0' :items="['Quartos']"></v-breadcrumbs>
+  <div class='d-flex justify-space-between'>
+    <h1 class='text-h5 d-inline'>Quartos</h1>
+    <v-btn class='bg-blue-darken-2 elevation-0'> Adicionar Quarto</v-btn>
+  </div>
+  <v-responsive
+    max-width="344"
+  >
+    <v-text-field
+      hide-details
+      label='Identificador'
+      single-line
+    ></v-text-field>
+  </v-responsive>
+  <RoomTable :rooms='rooms' />
+</template>
 
 <style scoped></style>
