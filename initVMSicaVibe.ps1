@@ -67,6 +67,7 @@ gcloud secrets versions access 1 --secret="id_github" > ~/.ssh/id_rsa
 sudo chmod 600 .ssh/id_rsa
 gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 git clone git@github.com:VicShadow/SicaVibe.git
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBSicaVibeCreate.ddl
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
