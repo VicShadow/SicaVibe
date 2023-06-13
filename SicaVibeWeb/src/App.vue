@@ -1,11 +1,7 @@
 <template>
-  <PageLayout>
-    <RouterView />
-  </PageLayout>
+  <RouterView />
 </template>
 
-<script setup lang='ts'>
-import PageLayout from '@/components/PageLayout.vue'
-</script>
+<script lang="ts" setup></script>
 
 <style scoped></style>

@@ -4,14 +4,44 @@ import AdminRooms from '@/views/AdminRooms.vue'
 
 const routes = [
   {
-    path: '/admin/rooms',
+    path: '/',
     name: 'home',
-    component: AdminRooms
+    component: () => import('@/views/Home.vue')
+  },
+  {
+    path: '/admin/',
+    name: 'admin',
+    component: () => import('@/layouts/AdminLayout.vue'),
+    children: [
+      {
+        path: 'rooms',
+        name: 'admin-rooms',
+        component: AdminRooms
+      }
+    ]
+  },
+  {
+    path: '/guest/',
+    name: 'guest',
+    component: () => import('@/layouts/GuestLayout.vue'),
+    children: []
+  },
+  {
+    path: '/receptionist/',
+    name: 'receptionist',
+    component: () => import('@/layouts/ReceptionistLayout.vue'),
+    children: []
   },
   {
     path: '/about',
     name: 'about',
     component: About
+  },
+  {
+    // Redirect to home if no route found
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    redirect: '/'
   }
 ]
 
