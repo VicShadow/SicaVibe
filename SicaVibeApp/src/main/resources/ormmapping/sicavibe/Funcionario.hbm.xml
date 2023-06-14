@@ -16,5 +16,6 @@ License Type: Academic
 		<property name="dataNascimento" column="DataNascimento" type="date" not-null="false" lazy="false"/>
 		<property name="morada" column="Morada" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="nTelemovel" column="NTelemovel" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="estado" column="Estado" type="string" length="255" not-null="false" lazy="false"/>
 	</class>
 </hibernate-mapping>

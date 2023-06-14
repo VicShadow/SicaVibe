@@ -70,8 +70,10 @@ gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 git clone git@github.com:VicShadow/SicaVibe.git
+sudo ~/SicaVibe/SicaVibeApp/scripts/loadImages.sh
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBSicaVibeCreate.ddl
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
+sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBPopulate.sql
 mvn clean package -f ~/SicaVibe/SicaVibeApp/pom.xml
 mv ~/SicaVibe/SicaVibeApp/target/SicaVibeApp-0.0.1-SNAPSHOT.jar ./SicaVibeApp.jar
 mv ~/SicaVibe/SicaVibeApp/scripts/startApp.sh .

@@ -22,7 +22,7 @@ public class HotelCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
 	public final StringExpression nome;
 	public final StringExpression descricao;
-	public final StringExpression imgUrl;
+	public final BlobExpression img;
 	public final StringExpression endereco;
 	public final CollectionExpression listaReservas;
 	public final CollectionExpression listaQuartos;
@@ -35,7 +35,7 @@ public class HotelCriteria extends AbstractORMCriteria {
 		ID = new IntegerExpression("ID", this);
 		nome = new StringExpression("nome", this);
 		descricao = new StringExpression("descricao", this);
-		imgUrl = new StringExpression("imgUrl", this);
+		img = new BlobExpression("img", this);
 		endereco = new StringExpression("endereco", this);
 		listaReservas = new CollectionExpression("ORM_ListaReservas", this);
 		listaQuartos = new CollectionExpression("ORM_ListaQuartos", this);

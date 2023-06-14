@@ -14,6 +14,10 @@
 package sicavibe;
 
 public class Funcionario {
+
+	public static final String estadoATIVO = "ATIVO";
+	public static final String estadoINATIVO = "INATIVO";
+	public static final String estadoEM_PAUSA = "EM_PAUSA";
 	public Funcionario() {
 	}
 	
@@ -30,6 +34,8 @@ public class Funcionario {
 	private String morada;
 	
 	private String nTelemovel;
+	
+	private String estado;
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -89,6 +95,14 @@ public class Funcionario {
 	
 	public String getnTelemovel() {
 		return nTelemovel;
+	}
+	
+	public void setEstado(String value) {
+		this.estado = value;
+	}
+	
+	public String getEstado() {
+		return estado;
 	}
 	
 	public String toString() {
