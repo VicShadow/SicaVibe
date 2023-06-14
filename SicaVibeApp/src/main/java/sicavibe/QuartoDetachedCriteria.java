@@ -23,7 +23,7 @@ public class QuartoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression tipoDeQuartoId;
 	public final AssociationExpression tipoDeQuarto;
 	public final IntegerExpression nPorta;
-	public final IntegerExpression estado;
+	public final StringExpression estado;
 	
 	public QuartoDetachedCriteria() {
 		super(sicavibe.Quarto.class, sicavibe.QuartoCriteria.class);
@@ -31,7 +31,7 @@ public class QuartoDetachedCriteria extends AbstractORMDetachedCriteria {
 		tipoDeQuartoId = new IntegerExpression("tipoDeQuarto.ID", this.getDetachedCriteria());
 		tipoDeQuarto = new AssociationExpression("tipoDeQuarto", this.getDetachedCriteria());
 		nPorta = new IntegerExpression("nPorta", this.getDetachedCriteria());
-		estado = new IntegerExpression("estado", this.getDetachedCriteria());
+		estado = new StringExpression("estado", this.getDetachedCriteria());
 	}
 	
 	public QuartoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -40,7 +40,7 @@ public class QuartoDetachedCriteria extends AbstractORMDetachedCriteria {
 		tipoDeQuartoId = new IntegerExpression("tipoDeQuarto.ID", this.getDetachedCriteria());
 		tipoDeQuarto = new AssociationExpression("tipoDeQuarto", this.getDetachedCriteria());
 		nPorta = new IntegerExpression("nPorta", this.getDetachedCriteria());
-		estado = new IntegerExpression("estado", this.getDetachedCriteria());
+		estado = new StringExpression("estado", this.getDetachedCriteria());
 	}
 	
 	public TipoDeQuartoDetachedCriteria createTipoDeQuartoCriteria() {

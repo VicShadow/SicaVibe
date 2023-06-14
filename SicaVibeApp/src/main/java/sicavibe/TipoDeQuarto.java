@@ -23,11 +23,11 @@ public class TipoDeQuarto {
 	
 	private int capacidade;
 	
-	private Float preco;
+	private float preco;
 	
 	private String descricao;
 	
-	private String imgUrl;
+	private java.sql.Blob img;
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -58,14 +58,10 @@ public class TipoDeQuarto {
 	}
 	
 	public void setPreco(float value) {
-		setPreco(Float.valueOf(value));
-	}
-	
-	public void setPreco(Float value) {
 		this.preco = value;
 	}
 	
-	public Float getPreco() {
+	public float getPreco() {
 		return preco;
 	}
 	
@@ -77,12 +73,12 @@ public class TipoDeQuarto {
 		return descricao;
 	}
 	
-	public void setImgUrl(String value) {
-		this.imgUrl = value;
+	public void setImg(java.sql.Blob value) {
+		this.img = value;
 	}
 	
-	public String getImgUrl() {
-		return imgUrl;
+	public java.sql.Blob getImg() {
+		return img;
 	}
 	
 	public String toString() {

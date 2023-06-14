@@ -23,7 +23,7 @@ public class QuartoCriteria extends AbstractORMCriteria {
 	public final IntegerExpression tipoDeQuartoId;
 	public final AssociationExpression tipoDeQuarto;
 	public final IntegerExpression nPorta;
-	public final IntegerExpression estado;
+	public final StringExpression estado;
 	
 	public QuartoCriteria(Criteria criteria) {
 		super(criteria);
@@ -31,7 +31,7 @@ public class QuartoCriteria extends AbstractORMCriteria {
 		tipoDeQuartoId = new IntegerExpression("tipoDeQuarto.ID", this);
 		tipoDeQuarto = new AssociationExpression("tipoDeQuarto", this);
 		nPorta = new IntegerExpression("nPorta", this);
-		estado = new IntegerExpression("estado", this);
+		estado = new StringExpression("estado", this);
 	}
 	
 	public QuartoCriteria(PersistentSession session) {
