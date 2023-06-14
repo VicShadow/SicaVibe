@@ -26,6 +26,7 @@ public class FuncionarioDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final DateExpression dataNascimento;
 	public final StringExpression morada;
 	public final StringExpression nTelemovel;
+	public final StringExpression estado;
 	
 	public FuncionarioDetachedCriteria() {
 		super(sicavibe.Funcionario.class, sicavibe.FuncionarioCriteria.class);
@@ -36,6 +37,7 @@ public class FuncionarioDetachedCriteria extends AbstractORMDetachedCriteria {
 		dataNascimento = new DateExpression("dataNascimento", this.getDetachedCriteria());
 		morada = new StringExpression("morada", this.getDetachedCriteria());
 		nTelemovel = new StringExpression("nTelemovel", this.getDetachedCriteria());
+		estado = new StringExpression("estado", this.getDetachedCriteria());
 	}
 	
 	public FuncionarioDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -47,6 +49,7 @@ public class FuncionarioDetachedCriteria extends AbstractORMDetachedCriteria {
 		dataNascimento = new DateExpression("dataNascimento", this.getDetachedCriteria());
 		morada = new StringExpression("morada", this.getDetachedCriteria());
 		nTelemovel = new StringExpression("nTelemovel", this.getDetachedCriteria());
+		estado = new StringExpression("estado", this.getDetachedCriteria());
 	}
 	
 	public Funcionario uniqueFuncionario(PersistentSession session) {

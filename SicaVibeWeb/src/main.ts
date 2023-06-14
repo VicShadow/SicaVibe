@@ -8,15 +8,25 @@ import App from '@/App.vue'
 
 // Vuetify
 import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
+import { createVuetify, type ThemeDefinition } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
 const app = createApp(App)
 
+const mainTheme: ThemeDefinition = {
+  dark: false
+}
+
 const vuetify = createVuetify({
   components,
-  directives
+  directives,
+  theme: {
+    defaultTheme: 'mainTheme',
+    themes: {
+      mainTheme
+    }
+  }
 })
 
 app.use(router)

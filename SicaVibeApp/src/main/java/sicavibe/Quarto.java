@@ -14,6 +14,10 @@
 package sicavibe;
 
 public class Quarto {
+
+	public static final String estadoLIVRE = "LIVRE";
+	public static final String estadoOCUPADO = "OCUPADO";
+	public static final String estadoPOR_LIMPAR = "POR_LIMPAR";
 	public Quarto() {
 	}
 	
@@ -36,7 +40,7 @@ public class Quarto {
 	
 	private int nPorta;
 	
-	private int estado;
+	private String estado;
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -58,11 +62,11 @@ public class Quarto {
 		return nPorta;
 	}
 	
-	public void setEstado(int value) {
+	public void setEstado(String value) {
 		this.estado = value;
 	}
 	
-	public int getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 	

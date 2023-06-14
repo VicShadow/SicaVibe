@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 
-import { Room } from '@/types/Room'
+import { type Room } from '@/types/Room'
+import { toRefs } from 'vue'
 
 interface Props {
   rooms: Room[]
@@ -8,21 +9,23 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const { rooms } = toRefs(props)
+
 </script>
 
 <template>
   <v-table>
     <thead>
     <tr>
-      <th class='text-left'>Identificador</th>
+      <th class='text-left px-0'>Identificador</th>
       <th class='text-left'>Descrição</th>
       <th class='text-left'>Estado</th>
       <th class='text-left'>Utilizador</th>
     </tr>
     </thead>
     <tbody>
-    <tr v-for='room in props.rooms' :key='room.id'>
-      <td>{{ room.id }}</td>
+    <tr v-for='room in rooms' :key='room.id'>
+      <td class='px-0'>{{ room.id }}</td>
       <td>{{ room.description }}</td>
       <td class='status'>{{ room.status }}</td> <!-- TODO: Add color for each type of status as in the design -->
       <td> {{ room.user_id ?? '' }}</td>
@@ -37,4 +40,6 @@ const props = defineProps<Props>()
   font-weight: bold;
   text-transform: capitalize;
 }
+
+
 </style>

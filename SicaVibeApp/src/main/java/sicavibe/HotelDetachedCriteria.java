@@ -22,7 +22,7 @@ public class HotelDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
 	public final StringExpression nome;
 	public final StringExpression descricao;
-	public final StringExpression imgUrl;
+	public final BlobExpression img;
 	public final StringExpression endereco;
 	public final CollectionExpression listaReservas;
 	public final CollectionExpression listaQuartos;
@@ -35,7 +35,7 @@ public class HotelDetachedCriteria extends AbstractORMDetachedCriteria {
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		imgUrl = new StringExpression("imgUrl", this.getDetachedCriteria());
+		img = new BlobExpression("img", this.getDetachedCriteria());
 		endereco = new StringExpression("endereco", this.getDetachedCriteria());
 		listaReservas = new CollectionExpression("ORM_ListaReservas", this.getDetachedCriteria());
 		listaQuartos = new CollectionExpression("ORM_ListaQuartos", this.getDetachedCriteria());
@@ -49,7 +49,7 @@ public class HotelDetachedCriteria extends AbstractORMDetachedCriteria {
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		imgUrl = new StringExpression("imgUrl", this.getDetachedCriteria());
+		img = new BlobExpression("img", this.getDetachedCriteria());
 		endereco = new StringExpression("endereco", this.getDetachedCriteria());
 		listaReservas = new CollectionExpression("ORM_ListaReservas", this.getDetachedCriteria());
 		listaQuartos = new CollectionExpression("ORM_ListaQuartos", this.getDetachedCriteria());

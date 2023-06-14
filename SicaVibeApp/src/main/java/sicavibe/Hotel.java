@@ -50,7 +50,7 @@ public class Hotel {
 	
 	private String descricao;
 	
-	private String imgUrl;
+	private java.sql.Blob img;
 	
 	private String endereco;
 	
@@ -92,12 +92,12 @@ public class Hotel {
 		return descricao;
 	}
 	
-	public void setImgUrl(String value) {
-		this.imgUrl = value;
+	public void setImg(java.sql.Blob value) {
+		this.img = value;
 	}
 	
-	public String getImgUrl() {
-		return imgUrl;
+	public java.sql.Blob getImg() {
+		return img;
 	}
 	
 	public void setEndereco(String value) {

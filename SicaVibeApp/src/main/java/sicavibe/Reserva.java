@@ -57,7 +57,7 @@ public class Reserva {
 	
 	private java.util.Date dataCheckout;
 	
-	private Float preco;
+	private float preco;
 	
 	private java.util.Set ORM_quartos = new java.util.HashSet();
 	
@@ -108,14 +108,10 @@ public class Reserva {
 	}
 	
 	public void setPreco(float value) {
-		setPreco(Float.valueOf(value));
-	}
-	
-	public void setPreco(Float value) {
 		this.preco = value;
 	}
 	
-	public Float getPreco() {
+	public float getPreco() {
 		return preco;
 	}
 	

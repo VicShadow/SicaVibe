@@ -21,7 +21,7 @@ public class ServicoExtra {
 	
 	private String nome;
 	
-	private Float preco;
+	private float preco;
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -44,14 +44,10 @@ public class ServicoExtra {
 	}
 	
 	public void setPreco(float value) {
-		setPreco(Float.valueOf(value));
-	}
-	
-	public void setPreco(Float value) {
 		this.preco = value;
 	}
 	
-	public Float getPreco() {
+	public float getPreco() {
 		return preco;
 	}
 	

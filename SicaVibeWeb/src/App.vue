@@ -1,8 +1,7 @@
 <template>
-  <!-- TODO: Add Page Layout here later -->
-  <router-view />
+  <RouterView />
 </template>
 
-<script setup lang="ts"></script>
+<script lang="ts" setup></script>
 
 <style scoped></style>

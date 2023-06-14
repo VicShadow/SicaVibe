@@ -1,0 +1,69 @@
+package sicavibe.response;
+
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import sicavibe.*;
+
+public class HotelResponse {
+
+    private int ID;
+    private String nome;
+    private String descricao;
+    private byte[] img;
+    private String endereco;
+    private java.util.Set<ServicoExtraResponse> servicoExtraSet = new java.util.HashSet();
+    private java.util.Set<TipoDeQuartoResponse> tipoDeQuartoSet = new java.util.HashSet();
+
+
+    public HotelResponse(Hotel hotel,boolean completeInfo) throws SQLException, IOException {
+        this.ID = hotel.getID();
+        this.nome = hotel.getNome();
+        this.descricao = hotel.getDescricao();
+        this.img = hotel.getImg().getBinaryStream().readAllBytes();
+        this.endereco = hotel.getEndereco();
+        if (completeInfo){
+            for (ServicoExtra servicoExtra : hotel.listaServicosExtra.toArray()){
+                servicoExtraSet.add(new ServicoExtraResponse(servicoExtra));
+            }
+            for (TipoDeQuarto tipoDeQuarto : hotel.listaTipoDeQuarto.toArray()){
+                tipoDeQuartoSet.add(new TipoDeQuartoResponse(tipoDeQuarto));
+            }
+        }
+
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public Set<ServicoExtraResponse> getServicoExtraSet() {
+        return servicoExtraSet;
+    }
+
+    public Set<TipoDeQuartoResponse> getTipoDeQuartoSet() {
+        return tipoDeQuartoSet;
+    }
+}

@@ -23,7 +23,7 @@
     <DriverClass>com.mysql.cj.jdbc.Driver</DriverClass>
     <URL>jdbc:mysql://localhost:3306/SicaVibe</URL>
     <UserName>aa-sic-sicavibe</UserName>
-    <EncryptedPassword>9786D56DE07CDC7EE6A1BE3D446F48AB</EncryptedPassword>
+    <EncryptedPassword>1B4D590CA9809276048A84C237D14012</EncryptedPassword>
     <HostName>localhost</HostName>
     <PortNO>3306</PortNO>
     <DBName>SicaVibe</DBName>

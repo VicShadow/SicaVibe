@@ -24,7 +24,7 @@ public class TipoDeQuartoCriteria extends AbstractORMCriteria {
 	public final IntegerExpression capacidade;
 	public final FloatExpression preco;
 	public final StringExpression descricao;
-	public final StringExpression imgUrl;
+	public final BlobExpression img;
 	
 	public TipoDeQuartoCriteria(Criteria criteria) {
 		super(criteria);
@@ -33,7 +33,7 @@ public class TipoDeQuartoCriteria extends AbstractORMCriteria {
 		capacidade = new IntegerExpression("capacidade", this);
 		preco = new FloatExpression("preco", this);
 		descricao = new StringExpression("descricao", this);
-		imgUrl = new StringExpression("imgUrl", this);
+		img = new BlobExpression("img", this);
 	}
 	
 	public TipoDeQuartoCriteria(PersistentSession session) {

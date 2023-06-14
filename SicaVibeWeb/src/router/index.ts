@@ -1,17 +1,47 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
+import AdminRooms from '@/views/AdminRooms.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: () => import('@/views/Home.vue')
+  },
+  {
+    path: '/admin/',
+    name: 'admin',
+    component: () => import('@/layouts/AdminLayout.vue'),
+    children: [
+      {
+        path: 'rooms',
+        name: 'admin-rooms',
+        component: AdminRooms
+      }
+    ]
+  },
+  {
+    path: '/guest/',
+    name: 'guest',
+    component: () => import('@/layouts/GuestLayout.vue'),
+    children: []
+  },
+  {
+    path: '/receptionist/',
+    name: 'receptionist',
+    component: () => import('@/layouts/ReceptionistLayout.vue'),
+    children: []
   },
   {
     path: '/about',
     name: 'about',
     component: About
+  },
+  {
+    // Redirect to home if no route found
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    redirect: '/'
   }
 ]
 

@@ -61,15 +61,19 @@ while ($true) {
 
 Write-Host "Setting up VM..."
 $sshCommand = @"
-sudo apt update
-sudo apt install openjdk-17-jre maven mysql-server -y
+sudo apt-get update
+sleep 1
+sudo apt-get install openjdk-17-jre maven mysql-server -y
 gcloud secrets versions access 1 --secret="id_github" > ~/.ssh/id_rsa
 sudo chmod 600 .ssh/id_rsa
 gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
-ssh-keyscan github.com >> ~/.ssh/known_hosts
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 git clone git@github.com:VicShadow/SicaVibe.git
+sudo ~/SicaVibe/SicaVibeApp/scripts/loadImages.sh
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBSicaVibeCreate.ddl
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
+sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBPopulate.sql
 mvn clean package -f ~/SicaVibe/SicaVibeApp/pom.xml
 mv ~/SicaVibe/SicaVibeApp/target/SicaVibeApp-0.0.1-SNAPSHOT.jar ./SicaVibeApp.jar
 mv ~/SicaVibe/SicaVibeApp/scripts/startApp.sh .

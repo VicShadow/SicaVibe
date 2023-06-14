@@ -1,41 +1,7 @@
+<script lang="ts" setup></script>
+
 <template>
-  <div>Home Page</div>
-  <RoomTable :rooms='rooms' />
+  <h1>Home Page</h1>
 </template>
-
-<script setup lang='ts'>
-import RoomTable from '@/components/RoomTable.vue'
-import { Room, RoomStatus } from '@/types/Room'
-
-const rooms: Room[] = [
-  {
-    id: 1,
-    description: 'Room 1',
-    status: RoomStatus.OCCUPIED,
-    user_id: 2
-  },
-  {
-    id: 2,
-    description: 'Room 2',
-    status: RoomStatus.AVAILABLE
-  },
-  {
-    id: 3,
-    description: 'Room 3',
-    status: RoomStatus.MAINTENANCE
-  },
-  {
-    id: 4,
-    description: 'Room 4',
-    status: RoomStatus.RESERVED,
-    user_id: 1
-  },
-  {
-    id: 5,
-    description: 'Room 5',
-    status: RoomStatus.AVAILABLE
-  }
-]
-</script>
 
 <style scoped></style>

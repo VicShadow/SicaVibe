@@ -26,6 +26,7 @@ public class FuncionarioCriteria extends AbstractORMCriteria {
 	public final DateExpression dataNascimento;
 	public final StringExpression morada;
 	public final StringExpression nTelemovel;
+	public final StringExpression estado;
 	
 	public FuncionarioCriteria(Criteria criteria) {
 		super(criteria);
@@ -36,6 +37,7 @@ public class FuncionarioCriteria extends AbstractORMCriteria {
 		dataNascimento = new DateExpression("dataNascimento", this);
 		morada = new StringExpression("morada", this);
 		nTelemovel = new StringExpression("nTelemovel", this);
+		estado = new StringExpression("estado", this);
 	}
 	
 	public FuncionarioCriteria(PersistentSession session) {

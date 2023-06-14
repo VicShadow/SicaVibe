@@ -24,7 +24,7 @@ public class TipoDeQuartoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression capacidade;
 	public final FloatExpression preco;
 	public final StringExpression descricao;
-	public final StringExpression imgUrl;
+	public final BlobExpression img;
 	
 	public TipoDeQuartoDetachedCriteria() {
 		super(sicavibe.TipoDeQuarto.class, sicavibe.TipoDeQuartoCriteria.class);
@@ -33,7 +33,7 @@ public class TipoDeQuartoDetachedCriteria extends AbstractORMDetachedCriteria {
 		capacidade = new IntegerExpression("capacidade", this.getDetachedCriteria());
 		preco = new FloatExpression("preco", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		imgUrl = new StringExpression("imgUrl", this.getDetachedCriteria());
+		img = new BlobExpression("img", this.getDetachedCriteria());
 	}
 	
 	public TipoDeQuartoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -43,7 +43,7 @@ public class TipoDeQuartoDetachedCriteria extends AbstractORMDetachedCriteria {
 		capacidade = new IntegerExpression("capacidade", this.getDetachedCriteria());
 		preco = new FloatExpression("preco", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		imgUrl = new StringExpression("imgUrl", this.getDetachedCriteria());
+		img = new BlobExpression("img", this.getDetachedCriteria());
 	}
 	
 	public TipoDeQuarto uniqueTipoDeQuarto(PersistentSession session) {
