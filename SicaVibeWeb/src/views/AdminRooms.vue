@@ -42,7 +42,7 @@ const rooms: Room[] = [
       <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize"> Adicionar Quarto</v-btn>
     </div>
   </div>
-  <TextField label="Identificador"></TextField>
+  <TextField label="Identificador" max-width="250px"></TextField>
   <RoomTable :rooms="rooms" />
 </template>
 

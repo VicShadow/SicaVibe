@@ -11,7 +11,7 @@ const props = defineProps<Props>()
 
 const { type, label } = toRefs(props)
 
-const maxWidth = props.maxWidth ?? '250px'
+const maxWidth = props.maxWidth ?? 'unset'
 </script>
 
 <template>
