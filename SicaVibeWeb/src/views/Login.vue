@@ -33,7 +33,7 @@
                       </v-card-item>
 
                       <v-card-text class="d-flex justify-center">
-                          Don't have an account?
+                          Don't have an account? 
                           <router-link class="router-link" to="/signup">Sign up</router-link>
                       </v-card-text>
           
@@ -135,6 +135,7 @@ name: 'Login'
 }
 
 .router-link {
+  padding-left: 0.5rem;
   color: lightcoral;
   text-decoration: underline;
   cursor: pointer;

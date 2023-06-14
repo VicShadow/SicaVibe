@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import TextField from '@/components/TextField.vue'
+
+</script>
+
 <template>
 <v-app>
       <v-app-bar app color="blue-grey-lighten-5">
@@ -8,126 +13,59 @@
       </v-app-bar>
       <v-container fluid class="page-container">
         <div class="background-rect">
-          <div align-items="center">
-            <label class="register-title text-center">Register</label>
-          </div>
+          <div class="register-title">Register</div>
           <div>
             <form>
               <v-container>
-                <v-row>
-                  <v-col>
-                    <v-responsive>
-                        <lavel>Name</lavel>
-                        <v-text-field
-                        type="input"
-                        required
-                        :style="{ 'width': '300px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                <v-row class="flex">
+                  <v-col class="flex-grow-1">
+                    <TextField label="Name"></TextField>
                   </v-col>
-                  <v-col>
-                    <v-responsive>
-                        <lavel>Email</lavel>
-                        <v-text-field
-                        type="input"
-                        required
-                        :style="{ 'width': '300px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                  <v-col class="flex-grow-1">
+                    <TextField label="Email"></TextField>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-responsive>
-                        <lavel>Address</lavel>
-                        <v-text-field
-                        type="input"
-                        required
-                        :style="{ 'width': '660px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                    <TextField label="Address" max-width="5000px"></TextField>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-responsive>
-                        <lavel>Birthday</lavel>
-                        <v-text-field
-                        type="input"
-                        required
-                        :style="{ 'width': '300px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                    <TextField label="Birthday"></TextField>
                   </v-col>
                   <v-col>
-                    <v-responsive>
-                        <lavel>Phone</lavel>
-                        <v-text-field
-                        type="input"
-                        required
-                        :style="{ 'width': '300px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                    <TextField label="Phone Number"></TextField>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-responsive>
-                        <lavel>NIF</lavel>
-                        <v-text-field
-                        type="input"
-                        required
-                        :style="{ 'width': '300px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                    <TextField label="NIF"></TextField>
                   </v-col>
                   <v-col>
-                    <v-responsive>
-                        <lavel>CC</lavel>
-                        <v-text-field
-                        type="input"
-                        required
-                        :style="{ 'width': '300px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                    <TextField label="CC"></TextField>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-responsive>
-                        <lavel>Password</lavel>
-                        <v-text-field
-                        type="password"
-                        required
-                        :style="{ 'width': '300px' }"
-                        hint="Pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula e um número"
-                        ></v-text-field>
-                    </v-responsive>
+                    <TextField label="Password" type="password"></TextField>
                   </v-col>
                   <v-col>
-                    <v-responsive>
-                        <lavel>Confirm Password</lavel>
-                        <v-text-field
-                        type="password"
-                        required
-                        :style="{ 'width': '300px' }"
-                        ></v-text-field>
-                    </v-responsive>
+                    <TextField label="Confirm Password" type="password"></TextField>
                   </v-col>
                 </v-row>
               </v-container>
             </form>
+          </div>
+          <div class="button-container">
+              <v-btn class="button">Cancel</v-btn>
+              <v-btn class="button">Save</v-btn>
           </div>
         </div>
         </v-container>
     </v-app>>
 </template>
 
-<script lang="ts">
-export default {
-name: 'SignUp'
-}
-</script>
 
 <style scoped>
 
@@ -157,15 +95,31 @@ name: 'SignUp'
   font-weight: bold;
   font-size: 1.5rem;
   color: #0D47A1;
+  text-align: center;
+  margin-bottom: 5px;
 }
 
 .background-rect {
-  width: 750px; /* Defina a largura desejada */
-  height: 700px; /* Defina a altura desejada */
+  width: 650px; 
+  height: 450px;
   background-color: #ECEFF1;
   padding: 10px;
-  margin-top: 5%;
+  margin-top: 2%;
   border-radius: 0.8em;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+
+.button {
+  margin-right: 0.5rem;
+  color: white;
+  border-radius: 0.8em;
+  background-color: #0D47A1;
 }
 
 </style>
