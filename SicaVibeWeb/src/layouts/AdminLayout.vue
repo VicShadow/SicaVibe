@@ -12,7 +12,7 @@ defineProps<Props>()
     <top-nav />
     <div class="h-100 d-flex justify-lg-start container">
       <side-nav />
-      <main class="h-100 w-100">
+      <main class="h-100 w-100 d-flex flex-column py-2">
         <router-view />
       </main>
     </div>
@@ -26,5 +26,6 @@ defineProps<Props>()
 
 main {
   padding-right: 2%;
+  gap: 1rem;
 }
 </style>
