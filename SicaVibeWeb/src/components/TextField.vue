@@ -4,11 +4,14 @@ import { defineProps, toRefs } from 'vue'
 interface Props {
   type?: string
   label?: string
+  maxWidth?: string
 }
 
 const props = defineProps<Props>()
 
 const { type, label } = toRefs(props)
+
+const maxWidth = props.maxWidth ?? '250px'
 </script>
 
 <template>
@@ -22,7 +25,7 @@ input {
   border-radius: 3px;
   padding: 6px 8px;
   box-sizing: border-box;
-  max-width: 250px;
+  max-width: v-bind(maxWidth);
 }
 
 input:focus-visible,
