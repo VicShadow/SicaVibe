@@ -27,7 +27,7 @@ License Type: Academic
 			<key column="HotelID" not-null="false"/>
 			<one-to-many class="sicavibe.Funcionario"/>
 		</set>
-		<set name="ORM_ListaServicosExtra" table="Hotel_ServicoExtra3" lazy="true" cascade="save-update,lock">
+		<set name="ORM_ListaServicosExtra" table="Hotel_ServicoExtra" lazy="true" cascade="save-update,lock">
 			<key column="HotelID" not-null="true"/>
 			<many-to-many column="ServicoExtraID" class="sicavibe.ServicoExtra">
 			</many-to-many>

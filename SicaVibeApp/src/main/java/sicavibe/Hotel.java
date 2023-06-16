@@ -13,6 +13,7 @@
  */
 package sicavibe;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -148,7 +149,7 @@ public class Hotel {
 	
 	public Set<TipoDeQuarto> getTiposDeQuarto() {
 		//TODO: Implement Method
-		throw new UnsupportedOperationException();
+		return new HashSet<>();
 	}
 	
 	public Map<Integer, Integer> checkDisponibilidade(java.util.Date dataEntrada, java.util.Date dataSaida) {

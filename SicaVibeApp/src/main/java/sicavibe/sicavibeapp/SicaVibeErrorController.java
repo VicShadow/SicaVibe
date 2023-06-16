@@ -33,8 +33,8 @@ public class SicaVibeErrorController implements ErrorController {
         }
 
         model.addAttribute("errorCode",code);
-        model.addAttribute("errorException",errorMsg);
-        model.addAttribute("errorMsg",errorException);
+        model.addAttribute("errorMsg",errorMsg);
+        model.addAttribute("errorException",errorException);
 
 
         if (code != null) {

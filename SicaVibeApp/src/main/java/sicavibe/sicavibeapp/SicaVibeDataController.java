@@ -1,9 +1,6 @@
 package sicavibe.sicavibeapp;
 
-
 import javassist.NotFoundException;
-import org.json.JSONObject;
-import org.json.JSONString;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +11,7 @@ import sicavibe.response.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,35 +19,41 @@ import java.util.Set;
 public class SicaVibeDataController {
 
 
-    @GetMapping(value = "/data/hoteis",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<HotelResponse> getHoteis() throws PersistentException {
+    @GetMapping(value = "/data/hoteis", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<HotelResponse> getHoteis() {
         try {
-            return SicaVibeAppApplication.sicaVibeFacade.getHoteis();
+            Set<HotelResponse> res = new HashSet<>();
+            for (Hotel hotel : HotelDAO.listHotelByQuery(null,null)){
+                res.add(new HotelResponse(hotel,false));
+            }
+            return res;
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),e);
         }
     }
 
-    @GetMapping(value = "/data/hotel/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/data/hotel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HotelResponse getHotel(@PathVariable("id") int id){
         try {
-            return SicaVibeAppApplication.sicaVibeFacade.getHotel(id);
+            Hotel res = HotelDAO.getHotelByORMID(id);
+            if (res == null) throw new NotFoundException("Hotel '"+id+"' not found");
+            return new HotelResponse(res,true);
+
         } catch (NotFoundException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage(),e);
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),e);
         }
-        //ReservaDAO.createReserva().quartos.add();
     }
 
 
 
-    @GetMapping(value = "/runImg",produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/runImg", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] test() throws PersistentException, SQLException, IOException {
         return HotelDAO.getHotelByORMID(1).getImg().getData().getBinaryStream().readAllBytes();
     }
 
-    @PostMapping(value = "/jwt",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/jwt", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String jwt(@RequestHeader Map<String,Object> header) {
         JwtToken token = new JwtToken(1,JwtToken.TipoUtilizador.HOSPEDE);
         return SicaVibeAppApplication.jwtUtils.generateToken(token);
@@ -63,6 +67,7 @@ public class SicaVibeDataController {
 
         return SicaVibeAppApplication.jwtUtils.getInfoFromToken(token);
     }
+
 
     @GetMapping(value = "/imagem/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getImagem(@PathVariable("id") int id) throws PersistentException, SQLException, IOException {
