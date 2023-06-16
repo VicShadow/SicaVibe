@@ -1,10 +1,13 @@
-<script setup lang='ts'>
-
-</script>
+<script lang="ts" setup></script>
 
 <template>
-    <v-app-bar class='border-b-sm px-4 position-sticky' :elevation='0'>Top Nav</v-app-bar>
+  <v-app-bar
+    :elevation="0"
+    class="border-b-sm px-4 position-sticky d-flex flex-row justify-space-between align-center"
+  >
+    <div>Left</div>
+    <div>Right</div>
+  </v-app-bar>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

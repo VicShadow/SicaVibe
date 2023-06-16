@@ -1,0 +1,145 @@
+<template>
+    <v-app>
+      <v-app-bar app color="blue-grey-lighten-5">
+          <div class="circle"></div>
+          <v-app-bar-title class="header-text">
+              SicaVibe
+          </v-app-bar-title>
+      </v-app-bar>
+      <v-container fluid class="page-container">
+          <v-row justify="space-between" align="center">
+              <v-col class="card-col">
+                  <v-card class="card-width" variant="outlined">
+                      <v-sheet class="pa-2 ma-2">
+                      <v-card-item>
+                          <v-card-title class="welcome-title text-center">
+                              Welcome back!
+                          </v-card-title>
+                          <v-responsive class="mx-auto mt-8" max-width="344">
+                              <v-text-field
+                              label="Email"
+                              type="input"
+                              hint="Enter your email to access this website"
+                              ></v-text-field>
+                          </v-responsive>
+
+                          <v-responsive class="mx-auto mt-4" max-width="344">
+                              <v-text-field
+                              label="Password"
+                              type="password"
+                              hint="Enter your password to access this website"
+                              ></v-text-field>
+                          </v-responsive>                
+                      </v-card-item>
+
+                      <v-card-text class="d-flex justify-center">
+                          Don't have an account? 
+                          <router-link class="router-link" to="/signup">Sign up</router-link>
+                      </v-card-text>
+          
+                      <v-card-actions  class="d-flex justify-center">
+                          <v-btn class="button">
+                          Login
+                          </v-btn>
+                      </v-card-actions>
+                      </v-sheet>
+                  </v-card>
+              </v-col>
+      
+              <v-col class="card-col">
+                  <v-card class="card-width" variant="outlined">
+                      <v-sheet class="pa-2 ma-2">
+                          <div class="image-gradient"></div>
+                          <div class="image-container">
+                              <v-img
+                                  class="image-fill"
+                                  src="../torreBelem.jpg"
+                                  contain
+                              ></v-img>
+                          </div>
+                      </v-sheet>
+                  </v-card>
+              </v-col>
+          </v-row>
+      </v-container>
+    </v-app>
+</template>
+
+<script lang="ts">
+export default {
+name: 'Login'
+}
+</script>
+
+<style scoped>
+
+.header-text {
+  font-weight: bold;
+  font-size: 2.1rem;
+  color: #0D47A1;
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #0D47A1;
+  margin-left: 25px;
+  padding: 1;
+}
+
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+.card-width {
+  width: 100%;
+  max-width: 550px;
+  margin: 0 auto;
+  border: none;
+}
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80%;
+  height: 120%;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  z-index: 1;
+}
+
+.image-fill {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.button {
+  color: white;
+  border-radius: 0.8em;
+  background-color: #0D47A1;
+}
+
+.welcome-title {
+  font-size: 2rem;
+  color: #0D47A1;
+}
+
+.router-link {
+  padding-left: 0.5rem;
+  color: lightcoral;
+  text-decoration: underline;
+  cursor: pointer;
+}
+</style>
+  
+

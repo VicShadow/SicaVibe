@@ -1,17 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import About from '@/views/About.vue'
+import Login from '@/views/Login.vue'
+import SignUp from '@/views/SignUp.vue'
 import AdminRooms from '@/views/AdminRooms.vue'
+import GuestLayoutVue from '@/layouts/GuestLayout.vue'
+import Home from '@/views/Home.vue'
+import AdminLayoutVue from '@/layouts/AdminLayout.vue'
+import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('@/views/Home.vue')
+    component: Home
   },
   {
     path: '/admin/',
     name: 'admin',
-    component: () => import('@/layouts/AdminLayout.vue'),
+    component: AdminLayoutVue,
     children: [
       {
         path: 'rooms',
@@ -23,19 +29,29 @@ const routes = [
   {
     path: '/guest/',
     name: 'guest',
-    component: () => import('@/layouts/GuestLayout.vue'),
+    component: GuestLayoutVue,
     children: []
   },
   {
     path: '/receptionist/',
     name: 'receptionist',
-    component: () => import('@/layouts/ReceptionistLayout.vue'),
+    component: ReceptionistLayoutVue,
     children: []
   },
   {
     path: '/about',
     name: 'about',
     component: About
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: SignUp
   },
   {
     // Redirect to home if no route found

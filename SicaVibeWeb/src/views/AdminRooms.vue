@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import RoomTable from '@/components/RoomTable.vue'
 import { Room, RoomStatus } from '@/types/Room'
+import TextField from '@/components/TextField.vue'
 
 const rooms: Room[] = [
   {
@@ -34,14 +35,14 @@ const rooms: Room[] = [
 </script>
 
 <template>
-  <v-breadcrumbs :items="['Quartos']" class="px-0"></v-breadcrumbs>
-  <div class="d-flex justify-space-between">
-    <h1 class="text-h5 d-inline">Quartos</h1>
-    <v-btn class="bg-blue-darken-2 elevation-0"> Adicionar Quarto</v-btn>
+  <div>
+    <v-breadcrumbs :items="['Quartos']" class="pa-0"></v-breadcrumbs>
+    <div class="d-flex justify-space-between">
+      <h1 class="text-h5 d-inline">Quartos</h1>
+      <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize"> Adicionar Quarto</v-btn>
+    </div>
   </div>
-  <v-responsive max-width="344">
-    <v-text-field hide-details label="Identificador" single-line></v-text-field>
-  </v-responsive>
+  <TextField label="Identificador" max-width="250px"></TextField>
   <RoomTable :rooms="rooms" />
 </template>
 
