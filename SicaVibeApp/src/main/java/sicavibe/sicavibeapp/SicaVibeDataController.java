@@ -64,5 +64,9 @@ public class SicaVibeDataController {
         return SicaVibeAppApplication.jwtUtils.getInfoFromToken(token);
     }
 
+    @GetMapping(value = "/imagem/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getImagem(@PathVariable("id") int id) throws PersistentException, SQLException, IOException {
+        return ImagemDAO.getImagemByORMID(id).getData().getBinaryStream().readAllBytes();
+    }
 
 }

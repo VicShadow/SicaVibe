@@ -12,9 +12,9 @@ VALUES  ('SicaVibe Faro'              , LOAD_FILE('/var/lib/mysql-files/SicaVibe
 
 
 INSERT INTO Hotel (ImagemID, Nome, Descricao, Endereco)
-VALUES (1, 'SicaVibe Faro'  , '', 'Rua da Praia, 323, Faro, Portugal Faro'),
-       (2, 'SicaVibe Porto' , '', 'Rua da Boavista, 123, Porto, Portugal'),
-       (3, 'SicaVibe Lisboa', '', 'Rua Augusta, 789, Lisbon, Portugal');
+VALUES (1, 'SicaVibe Faro'  , 'a', 'Rua da Praia, 323, Faro, Portugal Faro'),
+       (2, 'SicaVibe Porto' , 'a', 'Rua da Boavista, 123, Porto, Portugal'),
+       (3, 'SicaVibe Lisboa', 'a', 'Rua Augusta, 789, Lisbon, Portugal');
 
 UPDATE Hotel
 SET Descricao = 'Discover the allure of SicaVibe Porto, a modern hotel nestled in the heart of vibrant Porto, Portugal. Immerse yourself in contemporary comfort and local authenticity as you explore the rich cultural heritage of this captivating city. Unwind in our stylish and well-appointed rooms, designed to create a serene retreat amidst the bustling city. Indulge in delectable cuisine at our on-site restaurant, showcasing a fusion of local and international flavors. Relax and socialize in our vibrant lounge area, or soak up panoramic views from our rooftop terrace.\nImmerse yourself in the citys charm, from the historic Ribeira district to the famous port wine cellars. Our dedicated team is committed to ensuring your stay is exceptional, providing personalized service and local recommendations. Experience the vibrant energy and warm hospitality of Porto at SicaVibe, where modern comfort meets authentic Portuguese charm.'
