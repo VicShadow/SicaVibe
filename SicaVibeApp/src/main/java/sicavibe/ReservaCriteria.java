@@ -24,9 +24,8 @@ public class ReservaCriteria extends AbstractORMCriteria {
 	public final AssociationExpression hospede;
 	public final DateExpression dataEntrada;
 	public final DateExpression dataSaida;
-	public final DateExpression dataCheckIn;
-	public final DateExpression dataCheckout;
 	public final FloatExpression preco;
+	public final StringExpression estado;
 	public final CollectionExpression quartos;
 	public final CollectionExpression servicosExtras;
 	
@@ -37,9 +36,8 @@ public class ReservaCriteria extends AbstractORMCriteria {
 		hospede = new AssociationExpression("hospede", this);
 		dataEntrada = new DateExpression("dataEntrada", this);
 		dataSaida = new DateExpression("dataSaida", this);
-		dataCheckIn = new DateExpression("dataCheckIn", this);
-		dataCheckout = new DateExpression("dataCheckout", this);
 		preco = new FloatExpression("preco", this);
+		estado = new StringExpression("estado", this);
 		quartos = new CollectionExpression("ORM_Quartos", this);
 		servicosExtras = new CollectionExpression("ORM_ServicosExtras", this);
 	}

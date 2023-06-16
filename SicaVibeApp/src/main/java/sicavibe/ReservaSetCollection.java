@@ -76,6 +76,7 @@ public class ReservaSetCollection extends org.orm.util.ORMSet {
 	 * <li>dataCheckIn</li>
 	 * <li>dataCheckout</li>
 	 * <li>preco</li>
+	 * <li>estado</li>
 	 * </ul>
 	 * @return The persistent objects sorted array
 	 */
@@ -92,6 +93,7 @@ public class ReservaSetCollection extends org.orm.util.ORMSet {
 	 * <li>dataCheckIn</li>
 	 * <li>dataCheckout</li>
 	 * <li>preco</li>
+	 * <li>estado</li>
 	 * </ul>
 	 * @param ascending true for ascending, false for descending
 	 * @return The persistent objects sorted array

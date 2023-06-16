@@ -22,6 +22,8 @@ import sicavibe.SicaVibeFacade;
 public class SicaVibeAppApplication {
 
 	public static ISicaVibeFacade sicaVibeFacade = new SicaVibeFacade();
+	public static JwtUtils jwtUtils = new JwtUtils();
+
 	public static void main(String[] args) {
 		SpringApplication.run(SicaVibeAppApplication.class, args);
 	}

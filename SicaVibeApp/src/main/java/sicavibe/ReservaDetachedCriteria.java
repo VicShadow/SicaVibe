@@ -24,9 +24,8 @@ public class ReservaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final AssociationExpression hospede;
 	public final DateExpression dataEntrada;
 	public final DateExpression dataSaida;
-	public final DateExpression dataCheckIn;
-	public final DateExpression dataCheckout;
 	public final FloatExpression preco;
+	public final StringExpression estado;
 	public final CollectionExpression quartos;
 	public final CollectionExpression servicosExtras;
 	
@@ -37,9 +36,8 @@ public class ReservaDetachedCriteria extends AbstractORMDetachedCriteria {
 		hospede = new AssociationExpression("hospede", this.getDetachedCriteria());
 		dataEntrada = new DateExpression("dataEntrada", this.getDetachedCriteria());
 		dataSaida = new DateExpression("dataSaida", this.getDetachedCriteria());
-		dataCheckIn = new DateExpression("dataCheckIn", this.getDetachedCriteria());
-		dataCheckout = new DateExpression("dataCheckout", this.getDetachedCriteria());
 		preco = new FloatExpression("preco", this.getDetachedCriteria());
+		estado = new StringExpression("estado", this.getDetachedCriteria());
 		quartos = new CollectionExpression("ORM_Quartos", this.getDetachedCriteria());
 		servicosExtras = new CollectionExpression("ORM_ServicosExtras", this.getDetachedCriteria());
 	}
@@ -51,9 +49,8 @@ public class ReservaDetachedCriteria extends AbstractORMDetachedCriteria {
 		hospede = new AssociationExpression("hospede", this.getDetachedCriteria());
 		dataEntrada = new DateExpression("dataEntrada", this.getDetachedCriteria());
 		dataSaida = new DateExpression("dataSaida", this.getDetachedCriteria());
-		dataCheckIn = new DateExpression("dataCheckIn", this.getDetachedCriteria());
-		dataCheckout = new DateExpression("dataCheckout", this.getDetachedCriteria());
 		preco = new FloatExpression("preco", this.getDetachedCriteria());
+		estado = new StringExpression("estado", this.getDetachedCriteria());
 		quartos = new CollectionExpression("ORM_Quartos", this.getDetachedCriteria());
 		servicosExtras = new CollectionExpression("ORM_ServicosExtras", this.getDetachedCriteria());
 	}

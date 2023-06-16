@@ -20,28 +20,28 @@ import org.orm.criteria.*;
 
 public class HotelCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
+	public final IntegerExpression imgId;
+	public final AssociationExpression img;
 	public final StringExpression nome;
 	public final StringExpression descricao;
-	public final BlobExpression img;
 	public final StringExpression endereco;
 	public final CollectionExpression listaReservas;
 	public final CollectionExpression listaQuartos;
 	public final CollectionExpression listaFuncionarios;
 	public final CollectionExpression listaServicosExtra;
-	public final CollectionExpression listaTipoDeQuarto;
 	
 	public HotelCriteria(Criteria criteria) {
 		super(criteria);
 		ID = new IntegerExpression("ID", this);
+		imgId = new IntegerExpression("img.ID", this);
+		img = new AssociationExpression("img", this);
 		nome = new StringExpression("nome", this);
 		descricao = new StringExpression("descricao", this);
-		img = new BlobExpression("img", this);
 		endereco = new StringExpression("endereco", this);
 		listaReservas = new CollectionExpression("ORM_ListaReservas", this);
 		listaQuartos = new CollectionExpression("ORM_ListaQuartos", this);
 		listaFuncionarios = new CollectionExpression("ORM_ListaFuncionarios", this);
 		listaServicosExtra = new CollectionExpression("ORM_ListaServicosExtra", this);
-		listaTipoDeQuarto = new CollectionExpression("ORM_ListaTipoDeQuarto", this);
 	}
 	
 	public HotelCriteria(PersistentSession session) {
@@ -50,6 +50,10 @@ public class HotelCriteria extends AbstractORMCriteria {
 	
 	public HotelCriteria() throws PersistentException {
 		this(sicavibe.SicaVibeMainVPPersistentManager.instance().getSession());
+	}
+	
+	public ImagemCriteria createImgCriteria() {
+		return new ImagemCriteria(createCriteria("img"));
 	}
 	
 	public sicavibe.ReservaCriteria createListaReservasCriteria() {
@@ -66,10 +70,6 @@ public class HotelCriteria extends AbstractORMCriteria {
 	
 	public sicavibe.ServicoExtraCriteria createListaServicosExtraCriteria() {
 		return new sicavibe.ServicoExtraCriteria(createCriteria("ORM_ListaServicosExtra"));
-	}
-	
-	public sicavibe.TipoDeQuartoCriteria createListaTipoDeQuartoCriteria() {
-		return new sicavibe.TipoDeQuartoCriteria(createCriteria("ORM_ListaTipoDeQuarto"));
 	}
 	
 	public Hotel uniqueHotel() {

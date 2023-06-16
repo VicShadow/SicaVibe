@@ -70,13 +70,6 @@ public class FuncionarioSetCollection extends org.orm.util.ORMSet {
 	/**
 	 * Return an sorted array containing all of the persistent objects in ORMSet
 	 * @param propertyName Name of the property for sorting:<ul>
-	 * <li>ID</li>
-	 * <li>email</li>
-	 * <li>password</li>
-	 * <li>nome</li>
-	 * <li>dataNascimento</li>
-	 * <li>morada</li>
-	 * <li>nTelemovel</li>
 	 * <li>estado</li>
 	 * </ul>
 	 * @return The persistent objects sorted array
@@ -88,13 +81,6 @@ public class FuncionarioSetCollection extends org.orm.util.ORMSet {
 	/**
 	 * Return an sorted array containing all of the persistent objects in ORMSet
 	 * @param propertyName Name of the property for sorting:<ul>
-	 * <li>ID</li>
-	 * <li>email</li>
-	 * <li>password</li>
-	 * <li>nome</li>
-	 * <li>dataNascimento</li>
-	 * <li>morada</li>
-	 * <li>nTelemovel</li>
 	 * <li>estado</li>
 	 * </ul>
 	 * @param ascending true for ascending, false for descending

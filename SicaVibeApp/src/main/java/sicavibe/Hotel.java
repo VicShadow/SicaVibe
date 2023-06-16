@@ -13,6 +13,9 @@
  */
 package sicavibe;
 
+import java.util.Map;
+import java.util.Set;
+
 public class Hotel {
 	public Hotel() {
 	}
@@ -30,9 +33,6 @@ public class Hotel {
 		else if (key == sicavibe.ORMConstants.KEY_HOTEL_LISTASERVICOSEXTRA) {
 			return ORM_listaServicosExtra;
 		}
-		else if (key == sicavibe.ORMConstants.KEY_HOTEL_LISTATIPODEQUARTO) {
-			return ORM_listaTipoDeQuarto;
-		}
 		
 		return null;
 	}
@@ -46,11 +46,11 @@ public class Hotel {
 	
 	private int ID;
 	
+	private sicavibe.Imagem img;
+	
 	private String nome;
 	
 	private String descricao;
-	
-	private java.sql.Blob img;
 	
 	private String endereco;
 	
@@ -61,8 +61,6 @@ public class Hotel {
 	private java.util.Set ORM_listaFuncionarios = new java.util.HashSet();
 	
 	private java.util.Set ORM_listaServicosExtra = new java.util.HashSet();
-	
-	private java.util.Set ORM_listaTipoDeQuarto = new java.util.HashSet();
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -90,14 +88,6 @@ public class Hotel {
 	
 	public String getDescricao() {
 		return descricao;
-	}
-	
-	public void setImg(java.sql.Blob value) {
-		this.img = value;
-	}
-	
-	public java.sql.Blob getImg() {
-		return img;
 	}
 	
 	public void setEndereco(String value) {
@@ -148,15 +138,28 @@ public class Hotel {
 	
 	public final sicavibe.ServicoExtraSetCollection listaServicosExtra = new sicavibe.ServicoExtraSetCollection(this, _ormAdapter, sicavibe.ORMConstants.KEY_HOTEL_LISTASERVICOSEXTRA, sicavibe.ORMConstants.KEY_MUL_MANY_TO_MANY);
 	
-	private void setORM_ListaTipoDeQuarto(java.util.Set value) {
-		this.ORM_listaTipoDeQuarto = value;
+	public void setImg(sicavibe.Imagem value) {
+		this.img = value;
 	}
 	
-	private java.util.Set getORM_ListaTipoDeQuarto() {
-		return ORM_listaTipoDeQuarto;
+	public sicavibe.Imagem getImg() {
+		return img;
 	}
 	
-	public final sicavibe.TipoDeQuartoSetCollection listaTipoDeQuarto = new sicavibe.TipoDeQuartoSetCollection(this, _ormAdapter, sicavibe.ORMConstants.KEY_HOTEL_LISTATIPODEQUARTO, sicavibe.ORMConstants.KEY_MUL_MANY_TO_MANY);
+	public Set<TipoDeQuarto> getTiposDeQuarto() {
+		//TODO: Implement Method
+		throw new UnsupportedOperationException();
+	}
+	
+	public Map<Integer, Integer> checkDisponibilidade(java.util.Date dataEntrada, java.util.Date dataSaida) {
+		//TODO: Implement Method
+		throw new UnsupportedOperationException();
+	}
+	
+	public void ocupaQuartos(Map<Integer, Integer> listaTiposDeQuarto) {
+		//TODO: Implement Method
+		throw new UnsupportedOperationException();
+	}
 	
 	public String toString() {
 		return String.valueOf(getID());

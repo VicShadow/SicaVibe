@@ -14,10 +14,6 @@
 package sicavibe;
 
 public class Quarto {
-
-	public static final String estadoLIVRE = "LIVRE";
-	public static final String estadoOCUPADO = "OCUPADO";
-	public static final String estadoPOR_LIMPAR = "POR_LIMPAR";
 	public Quarto() {
 	}
 	
