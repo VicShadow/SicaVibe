@@ -10,9 +10,10 @@ License Type: Academic
 			<generator class="native">
 			</generator>
 		</id>
+		<many-to-one name="img" cascade="lock" column="ImagemID" class="sicavibe.Imagem" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
 		<property name="nome" column="Nome" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="descricao" column="Descricao" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="img" column="Img" type="blob" not-null="false" lazy="false"/>
 		<property name="endereco" column="Endereco" type="string" length="255" not-null="false" lazy="false"/>
 		<set name="ORM_ListaReservas" lazy="true" cascade="save-update,lock" inverse="false">
 			<key column="HotelID" not-null="true"/>
@@ -23,17 +24,12 @@ License Type: Academic
 			<one-to-many class="sicavibe.Quarto"/>
 		</set>
 		<set name="ORM_ListaFuncionarios" lazy="true" cascade="save-update,lock" inverse="false">
-			<key column="HotelID" not-null="true"/>
+			<key column="HotelID" not-null="false"/>
 			<one-to-many class="sicavibe.Funcionario"/>
 		</set>
-		<set name="ORM_ListaServicosExtra" table="Hotel_ServicoExtra" lazy="true" cascade="save-update,lock">
+		<set name="ORM_ListaServicosExtra" table="Hotel_ServicoExtra3" lazy="true" cascade="save-update,lock">
 			<key column="HotelID" not-null="true"/>
 			<many-to-many column="ServicoExtraID" class="sicavibe.ServicoExtra">
-			</many-to-many>
-		</set>
-		<set name="ORM_ListaTipoDeQuarto" table="Hotel_TipoDeQuarto" lazy="true" cascade="save-update,lock">
-			<key column="HotelID" not-null="true"/>
-			<many-to-many column="TipoDeQuartoID" class="sicavibe.TipoDeQuarto">
 			</many-to-many>
 		</set>
 	</class>

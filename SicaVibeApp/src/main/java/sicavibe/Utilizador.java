@@ -23,6 +23,8 @@ public abstract class Utilizador {
 	
 	private String password;
 	
+	private String salt;
+	
 	private String nome;
 	
 	private java.util.Date dataNascimento;
@@ -61,6 +63,14 @@ public abstract class Utilizador {
 	
 	public String getPassword() {
 		return password;
+	}
+	
+	public void setSalt(String value) {
+		this.salt = value;
+	}
+	
+	public String getSalt() {
+		return salt;
 	}
 	
 	public void setNome(String value) {

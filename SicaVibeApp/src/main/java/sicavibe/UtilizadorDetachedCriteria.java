@@ -22,6 +22,7 @@ public class UtilizadorDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
 	public final StringExpression email;
 	public final StringExpression password;
+	public final StringExpression salt;
 	public final StringExpression nome;
 	public final DateExpression dataNascimento;
 	public final StringExpression nTelemovel;
@@ -34,6 +35,7 @@ public class UtilizadorDetachedCriteria extends AbstractORMDetachedCriteria {
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		email = new StringExpression("email", this.getDetachedCriteria());
 		password = new StringExpression("password", this.getDetachedCriteria());
+		salt = new StringExpression("salt", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		dataNascimento = new DateExpression("dataNascimento", this.getDetachedCriteria());
 		nTelemovel = new StringExpression("nTelemovel", this.getDetachedCriteria());
@@ -47,6 +49,7 @@ public class UtilizadorDetachedCriteria extends AbstractORMDetachedCriteria {
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		email = new StringExpression("email", this.getDetachedCriteria());
 		password = new StringExpression("password", this.getDetachedCriteria());
+		salt = new StringExpression("salt", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		dataNascimento = new DateExpression("dataNascimento", this.getDetachedCriteria());
 		nTelemovel = new StringExpression("nTelemovel", this.getDetachedCriteria());

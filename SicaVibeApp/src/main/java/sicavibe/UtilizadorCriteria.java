@@ -22,6 +22,7 @@ public class UtilizadorCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
 	public final StringExpression email;
 	public final StringExpression password;
+	public final StringExpression salt;
 	public final StringExpression nome;
 	public final DateExpression dataNascimento;
 	public final StringExpression nTelemovel;
@@ -34,6 +35,7 @@ public class UtilizadorCriteria extends AbstractORMCriteria {
 		ID = new IntegerExpression("ID", this);
 		email = new StringExpression("email", this);
 		password = new StringExpression("password", this);
+		salt = new StringExpression("salt", this);
 		nome = new StringExpression("nome", this);
 		dataNascimento = new DateExpression("dataNascimento", this);
 		nTelemovel = new StringExpression("nTelemovel", this);
