@@ -4,6 +4,7 @@ import { defineProps, toRefs } from 'vue'
 interface Props {
   type?: string
   label?: string
+  value?: string
   maxWidth?: string
 }
 
@@ -15,7 +16,7 @@ const maxWidth = props.maxWidth ?? 'unset'
 </script>
 
 <template>
-  <input :placeholder="label" :type="type ?? 'text'" />
+  <input :placeholder="label" :type="type ?? 'text'" :value="value" />
 </template>
 
 <style scoped>
