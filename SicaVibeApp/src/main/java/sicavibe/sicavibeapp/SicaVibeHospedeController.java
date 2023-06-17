@@ -42,7 +42,7 @@ public class SicaVibeHospedeController {
 
 
     //@Operation(summary = "Obter informação de um Hóspede", tags = {"Hospede"})
-    @GetMapping(value = "/hospede/reservas", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/hospede/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReservaResponse> getHospedeReservas (@RequestHeader Map<String, Object> headers) {
         try {
             //SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
