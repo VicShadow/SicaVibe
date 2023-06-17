@@ -24,13 +24,13 @@ import static sicavibe.sicavibeapp.SicaVibeAuthController.setUserInfo;
 @RestController
 public class SicaVibeHospedeController {
 
-    //@Operation(summary = "Obter informação de um Hóspede", tags = {"Hospede"})
+    @Operation(summary = "Obter informacao de um Hospede", tags = {"Hospede"})
     @GetMapping(value = "/hospede", produces = MediaType.APPLICATION_JSON_VALUE)
     public HospedePerfilResponse getHospede (@RequestHeader Map<String, Object> headers) {
         try {
-            //SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
-            //int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
-            int id = 1;
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
+
             return new HospedePerfilResponse(HospedeDAO.getHospedeByORMID(id));
 
         } catch (ResponseStatusException e) {
@@ -44,13 +44,12 @@ public class SicaVibeHospedeController {
     }
 
 
-    //@Operation(summary = "Obter informação de um Hóspede", tags = {"Hospede"})
+    @Operation(summary = "Obter Reservas de um Hospede", tags = {"Hospede"})
     @GetMapping(value = "/hospede/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReservaResponse> getHospedeReservas (@RequestHeader Map<String, Object> headers) {
         try {
-            //SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
-            //int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
-            int id = 1;
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
 
             List<ReservaResponse> reservas = new ArrayList<>();
             for (Reserva res : ReservaDAO.listReservaByQuery("UtilizadorID = " + id, null))
@@ -71,13 +70,13 @@ public class SicaVibeHospedeController {
 
 
     // EDIT HOSPEDE PROFILE
-    @Operation(summary = "Editar perfil de um Hospede", tags = {"Hospede"})
+    @Operation(summary = "Editar perfil de um Hospede", tags = {"Hospede"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = HospedePerfilResponse.class))))
     @PostMapping(value = "/hospede/edit-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Hospede editHospedeProfile (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
-            //SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
-            //int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
-            int id = (int) body.get("id");
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
 
             SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"), body);
 
@@ -103,9 +102,9 @@ public class SicaVibeHospedeController {
     @PostMapping(value = "/hospede/delete-account", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void deleteHospedeAccount (@RequestHeader Map<String, Object> headers) {
         try {
-            //SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
-            //int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
-            int id = 15;
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
+
             HospedeDAO.delete(HospedeDAO.getHospedeByORMID(id));
 
         } catch (ResponseStatusException e) {
