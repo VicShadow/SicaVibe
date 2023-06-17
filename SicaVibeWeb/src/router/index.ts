@@ -36,7 +36,13 @@ const routes = [
     path: '/receptionist/',
     name: 'receptionist',
     component: ReceptionistLayoutVue,
-    children: []
+    children: [
+      {
+        path: 'reservations',
+        name: 'receptionist-reservations',
+        component: () => import('@/views/ReceptionistReservations.vue')
+      }
+    ]
   },
   {
     path: '/about',
