@@ -324,7 +324,9 @@ public class AdministadorDAO {
 	
 	public static boolean refresh(sicavibe.Administador administador) throws PersistentException {
 		try {
-			sicavibe.SicaVibeMainVPPersistentManager.instance().getSession().refresh(administador);
+			PersistentSession session = sicavibe.SicaVibeMainVPPersistentManager.instance().getSession();
+			session.update(administador);
+			session.flush();
 			return true;
 		}
 		catch (Exception e) {
@@ -332,6 +334,19 @@ public class AdministadorDAO {
 			throw new PersistentException(e);
 		}
 	}
+
+
+	public static boolean update(sicavibe.Administador admin) throws PersistentException {
+		try {
+			sicavibe.SicaVibeMainVPPersistentManager.instance().getSession().update(admin);
+			return true;
+		}
+		catch (Exception e) {
+			_logger.error("update(SicaVibe.Administrador admin)", e);
+			throw new PersistentException(e);
+		}
+	}
+
 	
 	public static boolean evict(sicavibe.Administador administador) throws PersistentException {
 		try {

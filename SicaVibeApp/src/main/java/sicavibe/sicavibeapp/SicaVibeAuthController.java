@@ -166,7 +166,7 @@ public class SicaVibeAuthController {
     @PostMapping(value = "/admin/registerFunc", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Funcionario registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
-            //SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
             //Check Extra (Set Info ja verifica o resto)
             SicaVibeAppAux.checkRequestContent(List.of("hotelID"),body);
@@ -197,7 +197,7 @@ public class SicaVibeAuthController {
     @PostMapping(value = "/admin/registerAdmin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Administador registerAmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
-            //SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
             Administador admin = AdministadorDAO.createAdministador();
             setUserInfo(admin,body);
@@ -216,7 +216,7 @@ public class SicaVibeAuthController {
 
 
 
-    private static void setUserInfo(Utilizador user,Map<String,Object> body) throws NoSuchAlgorithmException, ParseException {
+    public static void setUserInfo(Utilizador user,Map<String,Object> body) throws NoSuchAlgorithmException, ParseException {
         SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"), body);
 
         user.setEmail(body.get("email").toString());
@@ -261,7 +261,7 @@ public class SicaVibeAuthController {
             return false;
         if (password.length() > MAX_LENGTH)
             return false;
-        if (REQUIRE_SPECIAL_CHARACTERS && !password.matches(".*[!@#$%^&*()].*"))
+        if (REQUIRE_SPECIAL_CHARACTERS && !password.matches(".*[!@#$%^&*().,].*"))
             return false;
         if (REQUIRE_UPPERCASE && !password.matches(".*[A-Z].*"))
             return false;

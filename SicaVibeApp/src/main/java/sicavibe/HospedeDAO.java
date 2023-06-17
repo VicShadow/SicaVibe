@@ -332,6 +332,23 @@ public class HospedeDAO {
 			throw new PersistentException(e);
 		}
 	}
+
+
+
+	public static boolean update(sicavibe.Hospede hospede) throws PersistentException {
+		try {
+			PersistentSession session = sicavibe.SicaVibeMainVPPersistentManager.instance().getSession();
+			session.update(hospede);
+			session.flush();
+			return true;
+		}
+		catch (Exception e) {
+			_logger.error("update(SicaVibe.Hospede hospede)", e);
+			throw new PersistentException(e);
+		}
+	}
+
+
 	
 	public static boolean evict(sicavibe.Hospede hospede) throws PersistentException {
 		try {
