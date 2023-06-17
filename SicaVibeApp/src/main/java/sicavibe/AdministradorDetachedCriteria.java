@@ -18,10 +18,11 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.orm.PersistentSession;
 import org.orm.criteria.*;
 
-public class AdministadorDetachedCriteria extends AbstractORMDetachedCriteria {
+public class AdministradorDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
 	public final StringExpression email;
 	public final StringExpression password;
+	public final StringExpression salt;
 	public final StringExpression nome;
 	public final DateExpression dataNascimento;
 	public final StringExpression nTelemovel;
@@ -29,11 +30,12 @@ public class AdministadorDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression cc;
 	public final StringExpression nif;
 	
-	public AdministadorDetachedCriteria() {
-		super(sicavibe.Administador.class, sicavibe.AdministadorCriteria.class);
+	public AdministradorDetachedCriteria() {
+		super(sicavibe.Administrador.class, sicavibe.AdministradorCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		email = new StringExpression("email", this.getDetachedCriteria());
 		password = new StringExpression("password", this.getDetachedCriteria());
+		salt = new StringExpression("salt", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		dataNascimento = new DateExpression("dataNascimento", this.getDetachedCriteria());
 		nTelemovel = new StringExpression("nTelemovel", this.getDetachedCriteria());
@@ -42,11 +44,12 @@ public class AdministadorDetachedCriteria extends AbstractORMDetachedCriteria {
 		nif = new StringExpression("nif", this.getDetachedCriteria());
 	}
 	
-	public AdministadorDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, sicavibe.AdministadorCriteria.class);
+	public AdministradorDetachedCriteria(DetachedCriteria aDetachedCriteria) {
+		super(aDetachedCriteria, sicavibe.AdministradorCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		email = new StringExpression("email", this.getDetachedCriteria());
 		password = new StringExpression("password", this.getDetachedCriteria());
+		salt = new StringExpression("salt", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		dataNascimento = new DateExpression("dataNascimento", this.getDetachedCriteria());
 		nTelemovel = new StringExpression("nTelemovel", this.getDetachedCriteria());
@@ -55,13 +58,13 @@ public class AdministadorDetachedCriteria extends AbstractORMDetachedCriteria {
 		nif = new StringExpression("nif", this.getDetachedCriteria());
 	}
 	
-	public Administador uniqueAdministador(PersistentSession session) {
-		return (Administador) super.createExecutableCriteria(session).uniqueResult();
+	public Administrador uniqueAdministrador(PersistentSession session) {
+		return (Administrador) super.createExecutableCriteria(session).uniqueResult();
 	}
 	
-	public Administador[] listAdministador(PersistentSession session) {
+	public Administrador[] listAdministrador(PersistentSession session) {
 		List list = super.createExecutableCriteria(session).list();
-		return (Administador[]) list.toArray(new Administador[list.size()]);
+		return (Administrador[]) list.toArray(new Administrador[list.size()]);
 	}
 }
 

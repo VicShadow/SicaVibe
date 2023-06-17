@@ -13,9 +13,9 @@
  */
 package sicavibe;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import sicavibe.response.TipoDeQuartoResponse;
+
+import java.util.*;
 
 public class Hotel {
 	public Hotel() {
@@ -148,8 +148,28 @@ public class Hotel {
 	}
 	
 	public Set<TipoDeQuarto> getTiposDeQuarto() {
-		//TODO: Implement Method
-		return new HashSet<>();
+		//Collect Unique IDs
+		List<Integer> uniqueIDs = new ArrayList<>();
+		for (Quarto quarto: this.listaQuartos.toArray()){
+			int tipoQuartoID = quarto.getTipoDeQuarto().getID();
+			for(Integer id : uniqueIDs){
+				if (tipoQuartoID == id) break;
+			}
+			uniqueIDs.add(tipoQuartoID);
+		}
+
+		//Collect TiposDeQuarto
+		Set<TipoDeQuarto> tipoDeQuartos = new HashSet<>();
+		for(Integer id : uniqueIDs){
+			for (Quarto quarto: this.listaQuartos.toArray()){
+				if (quarto.getTipoDeQuarto().getID() == id){
+					tipoDeQuartos.add(quarto.getTipoDeQuarto());
+					break;
+				}
+			}
+		}
+
+		return tipoDeQuartos;
 	}
 	
 	public Map<Integer, Integer> checkDisponibilidade(java.util.Date dataEntrada, java.util.Date dataSaida) {

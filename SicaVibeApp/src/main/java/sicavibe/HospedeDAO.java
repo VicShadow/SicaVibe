@@ -299,10 +299,17 @@ public class HospedeDAO {
 	public static Hospede createHospede() {
 		return new sicavibe.Hospede();
 	}
-	
+
 	public static boolean save(sicavibe.Hospede hospede) throws PersistentException {
 		try {
-			sicavibe.SicaVibeMainVPPersistentManager.instance().saveObject(hospede);
+			PersistentManager vp = sicavibe.SicaVibeMainVPPersistentManager.instance();
+			try {
+				vp.saveObject(hospede);
+			}
+			catch (Exception e) {
+				vp.getSession().getTransaction().rollback();
+				throw new PersistentException(e);
+			}
 			return true;
 		}
 		catch (Exception e) {

@@ -18,12 +18,12 @@ License Type: Academic
 		<property name="dataCheckout" column="DataCheckout" type="timestamp" not-null="false" lazy="false"/>
 		<property name="preco" column="Preco" type="float" not-null="false" lazy="false"/>
 		<property name="estado" column="Estado" type="string" length="255" not-null="false" lazy="false"/>
-		<set name="ORM_Quartos" table="Reserva_Quarto" lazy="true" cascade="save-update,lock">
+		<set name="ORM_Quartos" table="Reserva_Quarto3" lazy="true" cascade="save-update,lock">
 			<key column="ReservaID" not-null="true"/>
 			<many-to-many column="QuartoID" class="sicavibe.Quarto">
 			</many-to-many>
 		</set>
-		<set name="ORM_ServicosExtras" table="Reserva_ServicoExtra" lazy="true" cascade="save-update,lock">
+		<set name="ORM_ServicosExtras" table="Reserva_ServicoExtra3" lazy="true" cascade="save-update,lock">
 			<key column="ReservaID" not-null="true"/>
 			<many-to-many column="ServicoExtraID" class="sicavibe.ServicoExtra">
 			</many-to-many>

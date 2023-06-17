@@ -33,7 +33,7 @@ WHERE ID = 3;
 
 INSERT INTO Utilizador (HotelID, Email, Password, Salt, Nome, DataNascimento, NTelemovel, Morada, Cc, Nif, Estado, Discriminator)
 VALUES (null, 'hospede@example.com', '33e69e7270efae510fba1c24526a929a52b61dbfd290253bec70fd18a8ba8d80', 'cnqoqx', 'John Doe'     , '1990-01-01', '123456789', 'John Street nº5'  ,  '123123123', '111111111', null   , 'Hospede'),
-       (null, 'jane@example.com'   , '33e69e7270efae510fba1c24526a929a52b61dbfd290253bec70fd18a8ba8d80', 'cnqoqx', 'Jane Smith'   , '1995-05-10', '987654321', 'Jane Street nº30' ,  '321321321', '222222222', null   , 'Administador'),
+       (null, 'jane@example.com'   , '33e69e7270efae510fba1c24526a929a52b61dbfd290253bec70fd18a8ba8d80', 'cnqoqx', 'Jane Smith'   , '1995-05-10', '987654321', 'Jane Street nº30' ,  '321321321', '222222222', null   , 'Administrador'),
        (1   , 'alice@example.com'  , '33e69e7270efae510fba1c24526a929a52b61dbfd290253bec70fd18a8ba8d80', 'cnqoqx', 'Alice Johnson', '1988-12-25', '111111111', 'Alice Street nº10',  '456456456', '333333333', 'ATIVO', 'Funcionario');
 
 

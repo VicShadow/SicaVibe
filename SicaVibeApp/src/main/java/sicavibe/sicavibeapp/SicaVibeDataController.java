@@ -21,7 +21,7 @@ import java.util.Set;
 public class SicaVibeDataController {
 
 
-    @Operation(summary = "GET Informação simples de todos Hoteis",tags = {"No Auth"})
+    @Operation(summary = "Obter informação simples de todos Hoteis",tags = {"No Auth"})
     @GetMapping(value = "/data/hoteis", produces = MediaType.APPLICATION_JSON_VALUE)
     public Set<HotelResponse> getHoteis() {
         try {
@@ -35,48 +35,32 @@ public class SicaVibeDataController {
         }
     }
 
-    @Operation(summary = "GET Informação completa de um Hotel",tags = {"No Auth"})
+    @Operation(summary = "Obter informação completa de um Hotel",tags = {"No Auth"})
     @GetMapping(value = "/data/hotel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HotelResponse getHotel(@PathVariable("id") int id){
         try {
             Hotel res = HotelDAO.getHotelByORMID(id);
-            if (res == null) throw new NotFoundException("Hotel '"+id+"' not found");
+            if (res == null)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Hotel '"+id+"' not found");
             return new HotelResponse(res,true);
 
-        } catch (NotFoundException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage(),e);
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),e);
         }
     }
 
-
-    /*
-    @GetMapping(value = "/runImg", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] test() throws PersistentException, SQLException, IOException {
-        return HotelDAO.getHotelByORMID(1).getImg().getData().getBinaryStream().readAllBytes();
-    }
-
-    @PostMapping(value = "/jwt", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String jwt(@RequestHeader Map<String,Object> header) {
-        JwtToken token = new JwtToken(1,JwtToken.TipoUtilizador.HOSPEDE);
-        return SicaVibeAppApplication.jwtUtils.generateToken(token);
-    }
-
-    @PostMapping(value = "/jwtSend")
-    public JwtToken jwtSend(@RequestBody Map<String,Object> body) {
-        String token = body.get("token").toString();
-        if (!SicaVibeAppApplication.jwtUtils.validateToken(token))
-            return null;
-
-        return SicaVibeAppApplication.jwtUtils.getInfoFromToken(token);
-    }
-    */
-
-    @Operation(summary = "Obter o conteúdo de uma imagem",tags = {"Imagem"})
+    @Operation(summary = "Obter o conteúdo de uma imagem",tags = {"No Auth"})
     @GetMapping(value = "/imagem/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] getImagem(@PathVariable("id") int id) throws PersistentException, SQLException, IOException {
-        return ImagemDAO.getImagemByORMID(id).getData().getBinaryStream().readAllBytes();
+    public byte[] getImagem(@PathVariable("id") int id) {
+        try{
+            Imagem img = ImagemDAO.getImagemByORMID(id);
+            if (img == null)
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Image '"+id+"' not found");
+            return img.getData().getBinaryStream().readAllBytes();
+
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),e);
+        }
     }
 
 }
