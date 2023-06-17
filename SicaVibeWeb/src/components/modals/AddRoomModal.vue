@@ -23,28 +23,57 @@ const addRoomHandler = () => {
 </script>
 
 <template>
-  <v-dialog v-model="isModalOpen" max-width="1000px">
-    <v-card class="pa-2">
-      <v-card-title>
+  <v-dialog v-model="isModalOpen" max-width="800px">
+    <div class="pa-6 card bg-white rounded-sm">
+      <v-card-title class="pa-0">
         <span class="text-h5">Add New Room</span>
       </v-card-title>
-      <div>
-        <TextField label="Room Description" />
+      <div class="fields">
+        <span class="text-subtitle-1">Room Details</span>
+        <TextField class="w-100" label="Room Description" />
       </div>
-      <v-card-actions class="d-flex justify-lg-end">
+      <v-card-actions class="pa-0 w-100 d-flex justify-end">
         <v-btn
+          class="cancel-btn"
           :ripple="false"
-          color="primary"
-          variant="outlined"
+          variant="text"
           @click="$emit('update:isModalOpen', false)"
-          >Close Dialog
+        >
+          Cancel
         </v-btn>
-        <v-btn :loading="loading" :ripple="false" color="primary" @click="addRoomHandler"
-          >Add Room
+        <v-btn :loading="loading" :ripple="false" class="add-btn" @click="addRoomHandler">
+          Add Room
         </v-btn>
       </v-card-actions>
-    </v-card>
+    </div>
   </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  gap: 1.5rem;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  gap: 1rem;
+  width: 100%;
+}
+
+.cancel-btn {
+  text-transform: capitalize;
+}
+
+.add-btn {
+  color: white;
+  background: #0c66e4;
+  text-transform: capitalize;
+}
+</style>

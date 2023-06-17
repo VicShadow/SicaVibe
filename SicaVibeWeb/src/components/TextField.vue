@@ -10,13 +10,18 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const { type, label } = toRefs(props)
+const { type, label, value } = toRefs(props)
 
 const maxWidth = props.maxWidth ?? 'unset'
 </script>
 
 <template>
-  <input :placeholder="label" :type="type ?? 'text'" :value="value" />
+  <input
+    :placeholder="label"
+    :type="type ?? 'text'"
+    :value="value"
+    @input="$emit('update:value', $event.target.value)"
+  />
 </template>
 
 <style scoped>

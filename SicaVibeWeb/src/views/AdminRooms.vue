@@ -9,8 +9,6 @@ const isModalOpen = ref(false)
 
 const id = ref('')
 
-console.log('id=', id.value)
-
 const rooms: Room[] = [
   {
     id: 1,
@@ -42,17 +40,18 @@ const rooms: Room[] = [
 ]
 
 const addRoomHandler = () => {
+  console.log('id=', id.value)
   isModalOpen.value = true
 }
 </script>
 
 <template>
   <div>
-    <v-breadcrumbs :items="['Quartos']" class="pa-0"></v-breadcrumbs>
+    <v-breadcrumbs :items="['Quartos']" class="pa-0" />
     <div class="d-flex justify-space-between">
       <h1 class="text-h5 d-inline">Quartos</h1>
       <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize" @click="addRoomHandler"
-        >Adicionar Quarto {{ id }}
+        >Adicionar Quarto
       </v-btn>
     </div>
   </div>
