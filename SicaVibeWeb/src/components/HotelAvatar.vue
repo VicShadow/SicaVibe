@@ -12,7 +12,7 @@ const { img } = toRefs(props)
 
 <template>
   <div class="d-flex flex-row justify-start align-center py-1 outer-div">
-    <v-img :src="img" aspect-ratio="1" class="rounded-sm" cover="true" height="40" width="40" />
+    <v-img :cover="true" :src="img" aspect-ratio="1" class="rounded-sm" height="40" width="40" />
     <div class="d-flex flex-column justify-center">
       <span class="text-h6">Porto Hotel</span>
       <span class="text-caption">Uma experiência totalmente diferente</span>

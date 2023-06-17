@@ -1,13 +1,22 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useUserStore } from '@/stores/user'
+
+const {
+  user: { name }
+} = useUserStore()
+</script>
 
 <template>
-  <v-app-bar
-    :elevation="0"
-    class="border-b-sm px-4 position-sticky d-flex flex-row justify-space-between align-center"
-  >
-    <div>Left</div>
-    <div>Right</div>
-  </v-app-bar>
+  <div class="border-b-sm pa-4 position-sticky topbar">
+    <div></div>
+    <div>{{ name }}</div>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+</style>
