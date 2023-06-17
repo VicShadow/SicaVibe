@@ -329,20 +329,6 @@ public class UtilizadorDAO {
 		}
 	}
 
-
-	public static boolean update(sicavibe.Utilizador user) throws PersistentException {
-		try {
-			PersistentSession session = sicavibe.SicaVibeMainVPPersistentManager.instance().getSession();
-			session.update(user);
-			session.flush();
-			return true;
-		}
-		catch (Exception e) {
-			_logger.error("update(SicaVibe.Utilizador user)", e);
-			throw new PersistentException(e);
-		}
-	}
-
 	
 	public static boolean evict(sicavibe.Utilizador utilizador) throws PersistentException {
 		try {

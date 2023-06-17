@@ -82,7 +82,7 @@ public class SicaVibeHospedeController {
 
             Hospede h = HospedeDAO.getHospedeByORMID(id);
             setUserInfo(h,body);
-            HospedeDAO.update(h);
+            HospedeDAO.save(h);
             return HospedeDAO.getHospedeByORMID(id);
 
         } catch (ResponseStatusException e) {

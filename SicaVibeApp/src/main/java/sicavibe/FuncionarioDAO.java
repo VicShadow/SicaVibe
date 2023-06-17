@@ -333,18 +333,6 @@ public class FuncionarioDAO {
 		}
 	}
 
-	public static boolean update(sicavibe.Funcionario funcionario) throws PersistentException {
-		try {
-			PersistentSession session = sicavibe.SicaVibeMainVPPersistentManager.instance().getSession();
-			session.update(funcionario);
-			session.flush();
-			return true;
-		}
-		catch (Exception e) {
-			_logger.error("update(SicaVibe.Funcionario funcionario)", e);
-			throw new PersistentException(e);
-		}
-	}
 	
 	public static boolean evict(sicavibe.Funcionario funcionario) throws PersistentException {
 		try {
