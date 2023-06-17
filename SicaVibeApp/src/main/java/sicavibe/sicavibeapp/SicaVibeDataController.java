@@ -51,7 +51,7 @@ public class SicaVibeDataController {
     }
 
 
-
+    /*
     @GetMapping(value = "/runImg", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] test() throws PersistentException, SQLException, IOException {
         return HotelDAO.getHotelByORMID(1).getImg().getData().getBinaryStream().readAllBytes();
@@ -71,8 +71,9 @@ public class SicaVibeDataController {
 
         return SicaVibeAppApplication.jwtUtils.getInfoFromToken(token);
     }
+    */
 
-
+    @Operation(summary = "Obter o conteúdo de uma imagem",tags = {"Imagem"})
     @GetMapping(value = "/imagem/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getImagem(@PathVariable("id") int id) throws PersistentException, SQLException, IOException {
         return ImagemDAO.getImagemByORMID(id).getData().getBinaryStream().readAllBytes();

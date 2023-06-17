@@ -332,6 +332,7 @@ public class HospedeDAO {
 			throw new PersistentException(e);
 		}
 	}
+
 	
 	public static boolean evict(sicavibe.Hospede hospede) throws PersistentException {
 		try {

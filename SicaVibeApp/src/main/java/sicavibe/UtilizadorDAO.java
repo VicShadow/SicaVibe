@@ -328,6 +328,7 @@ public class UtilizadorDAO {
 			throw new PersistentException(e);
 		}
 	}
+
 	
 	public static boolean evict(sicavibe.Utilizador utilizador) throws PersistentException {
 		try {

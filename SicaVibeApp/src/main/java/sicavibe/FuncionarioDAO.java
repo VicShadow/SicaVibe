@@ -332,6 +332,7 @@ public class FuncionarioDAO {
 			throw new PersistentException(e);
 		}
 	}
+
 	
 	public static boolean evict(sicavibe.Funcionario funcionario) throws PersistentException {
 		try {
