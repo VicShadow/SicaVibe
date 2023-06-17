@@ -2,7 +2,14 @@
 import TextField from '@/components/TextField.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { dateValidator } from '@/services/validator'
+import {
+  validateCC,
+  validateDate,
+  validateEmail,
+  validateNif,
+  validatePassword,
+  validatePhone
+} from '@/services/validator'
 
 const router = useRouter()
 const isSaved = ref(false)
@@ -43,51 +50,44 @@ const saveData = () => {
   errorMessagePassword.value = ''
   errorMessageConfirmPassword.value = ''
 
-  const passwordRegex =
-    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
   if (
-    nifValue.length === 9 &&
-    /^\d+$/.test(nifValue) &&
-    emailValue.length > 0 &&
-    emailRegex.test(emailValue) &&
-    ccValue.length === 8 &&
-    /^\d+$/.test(ccValue) &&
-    phoneValue.length === 9 &&
-    /^\d+$/.test(phoneValue) &&
-    /^\d{2}\/\d{2}\/\d{4}$/.test(birthdayValue) &&
-    passwordRegex.test(passwordValue) &&
+    validateNif(nifValue) &&
+    validateEmail(emailValue) &&
+    validateCC(ccValue) &&
+    validatePhone(phoneValue) &&
+    validateDate(birthdayValue) &&
+    validatePassword(passwordValue) &&
     passwordValue === confirmPasswordValue
   ) {
     isSaved.value = true
 
     setTimeout(() => {
       router.push({ name: 'login' })
+
+      // TODO: Redirect to guest dashboard
     }, 2000)
   } else {
-    if (nifValue.length !== 9 || !/^\d+$/.test(nifValue)) {
+    if (!validateNif(nifValue)) {
       errorMessageNif.value += 'The NIF must have 9 digits'
     }
 
-    if (emailValue.length === 0 || !emailRegex.test(emailValue)) {
+    if (!validateEmail(emailValue)) {
       errorMessageEmail.value += 'The email is not valid.'
     }
 
-    if (ccValue.length !== 8 || !/^\d+$/.test(ccValue)) {
+    if (!validateCC(ccValue)) {
       errorMessageCC.value += 'The CC must have 8 digits.'
     }
 
-    if (phoneValue.length !== 9 || !/^\d+$/.test(phoneValue)) {
+    if (!validatePhone(phoneValue)) {
       errorMessagePhone.value += 'The phone number must have 9 digits.'
     }
 
-    if (!dateValidator(birthdayValue)) {
+    if (!validateDate(birthdayValue)) {
       errorMessageBirthday.value = 'The date not valid.'
     }
 
-    if (!passwordRegex.test(passwordValue)) {
+    if (!validatePassword(passwordValue)) {
       errorMessagePassword.value =
         'The password must have at least 8 characters, one uppercase letter, one lowercase letter, and one special character.'
     }
@@ -133,29 +133,29 @@ const saveData = () => {
                   {{ errorMessageBirthday }}
                 </div>
               </div>
-              <div class="d-flex flex-column align-start">
+              <div class="w-100 d-flex flex-column align-start">
                 <TextField id="phone" label="Phone Number" maxlength="9"></TextField>
                 <div v-if="errorMessagePhone" class="error-message">{{ errorMessagePhone }}</div>
               </div>
             </div>
             <div class="field-col">
-              <div class="d-flex flex-column align-start">
+              <div class="w-100 d-flex flex-column align-start">
                 <TextField id="nif" label="NIF" maxlength="9"></TextField>
                 <div v-if="errorMessageNif" class="error-message">{{ errorMessageNif }}</div>
               </div>
-              <div class="d-flex flex-column align-start">
+              <div class="w-100 d-flex flex-column align-start">
                 <TextField id="cc" label="CC" maxlength="8"></TextField>
                 <div v-if="errorMessageCC" class="error-message">{{ errorMessageCC }}</div>
               </div>
             </div>
             <div class="field-col">
-              <div class="d-flex flex-column align-start">
+              <div class="w-100 d-flex flex-column align-start">
                 <TextField id="password" label="Password" type="password"></TextField>
                 <div v-if="errorMessagePassword" class="error-message">
                   {{ errorMessagePassword }}
                 </div>
               </div>
-              <div class="d-flex flex-column align-start">
+              <div class="w-100 d-flex flex-column align-start">
                 <TextField
                   id="confirmPassword"
                   label="Confirm Password"
@@ -233,9 +233,14 @@ const saveData = () => {
   max-width: 1000px;
   max-height: 800px;
   width: 100%;
-  background-color: #eceff1;
+  background-color: #f1f2f4;
   padding: 2rem;
-  border-radius: 0.8em;
+  border-radius: 0.5em;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .button-container {
@@ -270,7 +275,7 @@ const saveData = () => {
   flex-direction: column;
   justify-content: start;
   align-items: start;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .field-col {
