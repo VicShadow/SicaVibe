@@ -124,43 +124,46 @@ const saveData = () => {
               </div>
             </div>
             <div class="w-100">
-              <TextField label="Address"></TextField>
+              <label>Address</label>
+              <TextField label=""></TextField>
             </div>
             <div class="field-col">
               <div class="w-100 d-flex flex-column align-start">
-                <TextField id="birthday" label="Birthday" type="date"></TextField>
+                <label>Birthday</label>
+                <TextField id="birthday" label="" type="date"></TextField>
                 <div v-if="errorMessageBirthday" class="error-message">
                   {{ errorMessageBirthday }}
                 </div>
               </div>
               <div class="w-100 d-flex flex-column align-start">
-                <TextField id="phone" label="Phone Number" maxlength="9"></TextField>
+                <label>Phone Number</label>
+                <TextField id="phone" label="" maxlength="9"></TextField>
                 <div v-if="errorMessagePhone" class="error-message">{{ errorMessagePhone }}</div>
               </div>
             </div>
             <div class="field-col">
               <div class="w-100 d-flex flex-column align-start">
-                <TextField id="nif" label="NIF" maxlength="9"></TextField>
+                <label>NIF</label>
+                <TextField id="nif" label="" maxlength="9"></TextField>
                 <div v-if="errorMessageNif" class="error-message">{{ errorMessageNif }}</div>
               </div>
               <div class="w-100 d-flex flex-column align-start">
-                <TextField id="cc" label="CC" maxlength="8"></TextField>
+                <label>CC</label>
+                <TextField id="cc" label="" maxlength="8"></TextField>
                 <div v-if="errorMessageCC" class="error-message">{{ errorMessageCC }}</div>
               </div>
             </div>
             <div class="field-col">
               <div class="w-100 d-flex flex-column align-start">
-                <TextField id="password" label="Password" type="password"></TextField>
+                <label>Password</label>
+                <TextField id="password" label="" type="password"></TextField>
                 <div v-if="errorMessagePassword" class="error-message">
                   {{ errorMessagePassword }}
                 </div>
               </div>
               <div class="w-100 d-flex flex-column align-start">
-                <TextField
-                  id="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                ></TextField>
+                <label>Confirm Password</label>
+                <TextField id="confirmPassword" label="" type="password"></TextField>
                 <div v-if="errorMessageConfirmPassword" class="error-message">
                   {{ errorMessageConfirmPassword }}
                 </div>
