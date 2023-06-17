@@ -32,6 +32,7 @@ input {
   padding: 6px 8px;
   box-sizing: border-box;
   max-width: v-bind(maxWidth);
+  width: 100%;
 }
 
 input:focus-visible,
