@@ -1,13 +1,8 @@
 package sicavibe.response;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import sicavibe.*;
 

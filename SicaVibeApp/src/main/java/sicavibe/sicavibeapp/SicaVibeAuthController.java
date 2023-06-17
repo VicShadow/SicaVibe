@@ -1,11 +1,7 @@
 package sicavibe.sicavibeapp;
 
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.extensions.Extension;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.models.media.Content;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +30,7 @@ public class SicaVibeAuthController {
         private String email;
         private String password;
         private String nome;
-        @Schema(example = "YYYY-MM-DD")
+        @Schema(example = "dd/MM/yyyy")
         private String dataNascimento;
         private String nTelemovel;
         private String morada;
@@ -145,12 +141,15 @@ public class SicaVibeAuthController {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Hospede registerHospede (@RequestBody Map<String,Object> body) {
         try {
-            //SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"),body);
+            SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"),body);
 
             Hospede h = HospedeDAO.createHospede();
             setUserInfo(h,body);
             HospedeDAO.save(h);
             return h;
+
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -169,7 +168,7 @@ public class SicaVibeAuthController {
         try {
             //SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
-            //Check Extra (Set Info ja checka o resto)
+            //Check Extra (Set Info ja verifica o resto)
             SicaVibeAppAux.checkRequestContent(List.of("hotelID"),body);
             Funcionario f = FuncionarioDAO.createFuncionario();
             setUserInfo(f,body);
@@ -179,6 +178,8 @@ public class SicaVibeAuthController {
             hotel.listaFuncionarios.add(f);
             HotelDAO.save(hotel);
             return f;
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -203,6 +204,8 @@ public class SicaVibeAuthController {
             AdministadorDAO.save(admin);
             return admin;
 
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -232,13 +235,13 @@ public class SicaVibeAuthController {
         user.setSalt(salt);
 
         String stringDate = body.get("dataNascimento").toString();
-        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
+        Date date = new SimpleDateFormat("dd/MM/yyyy").parse(stringDate);
         user.setDataNascimento(date);
     }
 
 
 
-    private static int readTokenAndCheckAuthLevel(String token,JwtToken.TipoUtilizador level){
+    public static int readTokenAndCheckAuthLevel(String token,JwtToken.TipoUtilizador level){
         JwtToken jwtToken = SicaVibeAppApplication.jwtUtils.getInfoFromToken(token);
 
         if (jwtToken.getTipoUtilizador() == JwtToken.TipoUtilizador.ADMINISTRADOR ||
