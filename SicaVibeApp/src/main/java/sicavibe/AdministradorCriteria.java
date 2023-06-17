@@ -18,10 +18,11 @@ import org.orm.PersistentException;
 import org.orm.PersistentSession;
 import org.orm.criteria.*;
 
-public class AdministadorCriteria extends AbstractORMCriteria {
+public class AdministradorCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
 	public final StringExpression email;
 	public final StringExpression password;
+	public final StringExpression salt;
 	public final StringExpression nome;
 	public final DateExpression dataNascimento;
 	public final StringExpression nTelemovel;
@@ -29,11 +30,12 @@ public class AdministadorCriteria extends AbstractORMCriteria {
 	public final StringExpression cc;
 	public final StringExpression nif;
 	
-	public AdministadorCriteria(Criteria criteria) {
+	public AdministradorCriteria(Criteria criteria) {
 		super(criteria);
 		ID = new IntegerExpression("ID", this);
 		email = new StringExpression("email", this);
 		password = new StringExpression("password", this);
+		salt = new StringExpression("salt", this);
 		nome = new StringExpression("nome", this);
 		dataNascimento = new DateExpression("dataNascimento", this);
 		nTelemovel = new StringExpression("nTelemovel", this);
@@ -42,21 +44,21 @@ public class AdministadorCriteria extends AbstractORMCriteria {
 		nif = new StringExpression("nif", this);
 	}
 	
-	public AdministadorCriteria(PersistentSession session) {
-		this(session.createCriteria(Administador.class));
+	public AdministradorCriteria(PersistentSession session) {
+		this(session.createCriteria(Administrador.class));
 	}
 	
-	public AdministadorCriteria() throws PersistentException {
+	public AdministradorCriteria() throws PersistentException {
 		this(sicavibe.SicaVibeMainVPPersistentManager.instance().getSession());
 	}
 	
-	public Administador uniqueAdministador() {
-		return (Administador) super.uniqueResult();
+	public Administrador uniqueAdministrador() {
+		return (Administrador) super.uniqueResult();
 	}
 	
-	public Administador[] listAdministador() {
+	public Administrador[] listAdministrador() {
 		java.util.List list = super.list();
-		return (Administador[]) list.toArray(new Administador[list.size()]);
+		return (Administrador[]) list.toArray(new Administrador[list.size()]);
 	}
 }
 

@@ -13,6 +13,9 @@
  */
 package sicavibe;
 
+import javassist.NotFoundException;
+import org.orm.PersistentException;
+
 public class Funcionario extends sicavibe.Utilizador {
 	public Funcionario() {
 	}
@@ -29,6 +32,15 @@ public class Funcionario extends sicavibe.Utilizador {
 	
 	public String toString() {
 		return super.toString();
+	}
+
+	public Hotel getMyWorkHotel() throws NotFoundException, PersistentException {
+		for (Hotel h : HotelDAO.listHotelByQuery(null,null)){
+			for (Funcionario func : h.listaFuncionarios.toArray()){
+				if (func.getID() == this.getID()) return h;
+			}
+		}
+		throw new NotFoundException("Employer '"+this.getID()+"' has no working hotel");
 	}
 	
 }

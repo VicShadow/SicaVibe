@@ -13,8 +13,8 @@
  */
 package sicavibe;
 
-public class Administador extends sicavibe.Utilizador {
-	public Administador() {
+public class Administrador extends sicavibe.Utilizador {
+	public Administrador() {
 	}
 	
 	public String toString() {

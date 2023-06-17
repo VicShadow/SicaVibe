@@ -2,7 +2,10 @@ package sicavibe.sicavibeapp;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.ConstraintViolationException;
 import org.orm.PersistentException;
+import org.orm.PersistentManager;
+import org.orm.PersistentTransaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -112,7 +115,7 @@ public class SicaVibeAuthController {
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.HOSPEDE));
             if (usr instanceof Funcionario)
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.FUNCIONARIO));
-            if (usr instanceof Administador)
+            if (usr instanceof Administrador)
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
 
             /*
@@ -139,18 +142,20 @@ public class SicaVibeAuthController {
     @Operation(summary = "Registo de um novo Hospede",tags = {"No Auth"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UserInfoBody.class))))
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Hospede registerHospede (@RequestBody Map<String,Object> body) {
+    public String registerHospede (@RequestBody Map<String,Object> body) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"),body);
 
             Hospede h = HospedeDAO.createHospede();
             setUserInfo(h,body);
             HospedeDAO.save(h);
-            return h;
+            HospedeDAO.refresh(h);
+            return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(h.getID(), JwtToken.TipoUtilizador.HOSPEDE));
 
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
+            throw e;
         } catch (PersistentException e) {
+
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
@@ -164,7 +169,7 @@ public class SicaVibeAuthController {
     @Operation(summary = "Registo de um novo Funcionário",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioInfoBody.class))))
     @PostMapping(value = "/admin/registerFunc", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Funcionario registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
+    public String registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
@@ -173,13 +178,15 @@ public class SicaVibeAuthController {
             Funcionario f = FuncionarioDAO.createFuncionario();
             setUserInfo(f,body);
             FuncionarioDAO.save(f);
+            FuncionarioDAO.refresh(f);
 
             Hotel hotel = HotelDAO.getHotelByORMID((Integer) body.get("hotelID"));
             hotel.listaFuncionarios.add(f);
             HotelDAO.save(hotel);
-            return f;
+            return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(f.getID(), JwtToken.TipoUtilizador.FUNCIONARIO));
+
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
+            throw e;
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -195,17 +202,18 @@ public class SicaVibeAuthController {
     @Operation(summary = "Registo de um novo Administrador",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = SicaVibeAuthController.UserInfoBody.class))))
     @PostMapping(value = "/admin/registerAdmin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Administador registerAmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
+    public String registerAmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
-            Administador admin = AdministadorDAO.createAdministador();
+            Administrador admin = AdministradorDAO.createAdministrador();
             setUserInfo(admin,body);
-            AdministadorDAO.save(admin);
-            return admin;
+            AdministradorDAO.save(admin);
+            AdministradorDAO.refresh(admin);
+            return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(admin.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
 
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
+            throw e;
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -256,15 +264,13 @@ public class SicaVibeAuthController {
         final int MAX_LENGTH = 32;
         final boolean REQUIRE_SPECIAL_CHARACTERS = true;
         final boolean REQUIRE_UPPERCASE = true;
+        final boolean REQUIRE_LOWERCASE = true;
 
-        if (password.length() < MIN_LENGTH)
-            return false;
-        if (password.length() > MAX_LENGTH)
-            return false;
-        if (REQUIRE_SPECIAL_CHARACTERS && !password.matches(".*[!@#$%^&*().,].*"))
-            return false;
-        if (REQUIRE_UPPERCASE && !password.matches(".*[A-Z].*"))
-            return false;
+        if (password.length() < MIN_LENGTH) return false;
+        if (password.length() > MAX_LENGTH) return false;
+        if (REQUIRE_SPECIAL_CHARACTERS && !password.matches(".*[!@#$%^&*().,].*")) return false;
+        if (REQUIRE_UPPERCASE && !password.matches(".*[A-Z].*")) return false;
+        if (REQUIRE_LOWERCASE && !password.matches(".*[a-z].*")) return false;
 
         return true;
     }

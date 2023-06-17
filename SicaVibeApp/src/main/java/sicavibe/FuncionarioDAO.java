@@ -302,7 +302,14 @@ public class FuncionarioDAO {
 	
 	public static boolean save(sicavibe.Funcionario funcionario) throws PersistentException {
 		try {
-			sicavibe.SicaVibeMainVPPersistentManager.instance().saveObject(funcionario);
+			PersistentManager vp = sicavibe.SicaVibeMainVPPersistentManager.instance();
+			try {
+				vp.saveObject(funcionario);
+			}
+			catch (Exception e) {
+				vp.getSession().getTransaction().rollback();
+				throw new PersistentException(e);
+			}
 			return true;
 		}
 		catch (Exception e) {

@@ -12,12 +12,31 @@ import java.util.Random;
 
 public class SicaVibeAppAux {
 
+    public static class BaseHeader{
+        String token;
+
+        public String getToken() {
+            return token;
+        }
+    }
+
     public static void checkRequestContent(List<String> desiredKeySet, Map<String,Object> content){
         for (String s : desiredKeySet){
             if (!content.containsKey(s)){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Key-value '"+s+"' missing.");
             }
         }
+    }
+
+    public static <T> List<T> paging(List<T> globalList, int page,int pageSize){
+        int startIndex = (page-1) * pageSize;
+        int endIndex = startIndex + pageSize;
+        int listSize = globalList.size();
+
+        if (startIndex > listSize-1) startIndex = listSize;
+        if (endIndex > listSize) endIndex = listSize;
+
+        return globalList.subList(startIndex,endIndex);
     }
 
 

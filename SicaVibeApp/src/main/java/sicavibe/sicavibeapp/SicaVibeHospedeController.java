@@ -11,8 +11,8 @@ import sicavibe.Hospede;
 import sicavibe.HospedeDAO;
 import sicavibe.Reserva;
 import sicavibe.ReservaDAO;
-import sicavibe.response.HospedePerfilResponse;
 import sicavibe.response.ReservaResponse;
+import sicavibe.response.UtilizadorResponse;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,16 +26,16 @@ public class SicaVibeHospedeController {
 
     @Operation(summary = "Obter informacao de um Hospede", tags = {"Hospede"})
     @GetMapping(value = "/hospede", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HospedePerfilResponse getHospede (@RequestHeader Map<String, Object> headers) {
+    public UtilizadorResponse getHospede (@RequestHeader Map<String, Object> headers) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
             int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
 
-            return new HospedePerfilResponse(HospedeDAO.getHospedeByORMID(id));
+            return new UtilizadorResponse(HospedeDAO.getHospedeByORMID(id));
 
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
-        } catch (PersistentException | SQLException e) {
+            throw e;
+        } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
@@ -58,7 +58,7 @@ public class SicaVibeHospedeController {
             return reservas;
 
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
+            throw e;
         } catch (PersistentException | SQLException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class SicaVibeHospedeController {
 
     // EDIT HOSPEDE PROFILE
     @Operation(summary = "Editar perfil de um Hospede", tags = {"Hospede"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = HospedePerfilResponse.class))))
+            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UtilizadorResponse.class))))
     @PostMapping(value = "/hospede/edit-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Hospede editHospedeProfile (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
@@ -86,7 +86,7 @@ public class SicaVibeHospedeController {
             return HospedeDAO.getHospedeByORMID(id);
 
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
+            throw e;
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class SicaVibeHospedeController {
             HospedeDAO.delete(HospedeDAO.getHospedeByORMID(id));
 
         } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage(), e);
+            throw e;
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
