@@ -4,18 +4,24 @@ import { defineProps, toRefs } from 'vue'
 interface Props {
   type?: string
   label?: string
+  value?: string
   maxWidth?: string
 }
 
 const props = defineProps<Props>()
 
-const { type, label } = toRefs(props)
+const { type, label, value } = toRefs(props)
 
 const maxWidth = props.maxWidth ?? 'unset'
 </script>
 
 <template>
-  <input :placeholder="label" :type="type ?? 'text'" />
+  <input
+    :placeholder="label"
+    :type="type ?? 'text'"
+    :value="value"
+    @input="$emit('update:value', $event.target.value)"
+  />
 </template>
 
 <style scoped>
