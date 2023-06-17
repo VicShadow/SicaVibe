@@ -2,9 +2,18 @@
 import TextField from '@/components/TextField.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import {
+  validateCC,
+  validateDate,
+  validateEmail,
+  validateNif,
+  validatePassword,
+  validatePhone
+} from '@/services/validator'
 
 const router = useRouter()
 const isSaved = ref(false)
+const errorMessageEmail = ref('')
 const errorMessageNif = ref('')
 const errorMessageCC = ref('')
 const errorMessagePhone = ref('')
@@ -17,210 +26,265 @@ const login = () => {
 }
 
 const saveData = () => {
-const nifField = document.querySelector('#nif') as HTMLInputElement
-const nifValue = nifField.value
-const ccField = document.querySelector('#cc') as HTMLInputElement
-const ccValue = ccField.value
-const phoneField = document.querySelector('#phone') as HTMLInputElement
-const phoneValue = phoneField.value
-const birthdayField = document.querySelector('#birthday') as HTMLInputElement
-const birthdayValue = birthdayField.value
-const passwordField = document.querySelector('#password') as HTMLInputElement
-const passwordValue = passwordField.value
-const confirmPasswordField = document.querySelector('#confirmPassword') as HTMLInputElement
-const confirmPasswordValue = confirmPasswordField.value
+  const nifField = document.querySelector('#nif') as HTMLInputElement
+  const nifValue = nifField.value
+  const emailField = document.querySelector('#email') as HTMLInputElement
+  const emailValue = emailField.value
+  const ccField = document.querySelector('#cc') as HTMLInputElement
+  const ccValue = ccField.value
+  const phoneField = document.querySelector('#phone') as HTMLInputElement
+  const phoneValue = phoneField.value
+  const birthdayField = document.querySelector('#birthday') as HTMLInputElement
+  const birthdayValue = birthdayField.value
+  const passwordField = document.querySelector('#password') as HTMLInputElement
+  const passwordValue = passwordField.value
+  const confirmPasswordField = document.querySelector('#confirmPassword') as HTMLInputElement
+  const confirmPasswordValue = confirmPasswordField.value
 
+  // Reset error messages
+  errorMessageNif.value = ''
+  errorMessageEmail.value = ''
+  errorMessageCC.value = ''
+  errorMessagePhone.value = ''
+  errorMessageBirthday.value = ''
+  errorMessagePassword.value = ''
+  errorMessageConfirmPassword.value = ''
 
-errorMessageNif.value = ''
-errorMessageCC.value = ''
-errorMessagePhone.value = ''
-errorMessageBirthday.value = ''
-errorMessagePassword.value = ''
-errorMessageConfirmPassword.value = ''
+  if (
+    validateNif(nifValue) &&
+    validateEmail(emailValue) &&
+    validateCC(ccValue) &&
+    validatePhone(phoneValue) &&
+    validateDate(birthdayValue) &&
+    validatePassword(passwordValue) &&
+    passwordValue === confirmPasswordValue
+  ) {
+    isSaved.value = true
 
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/
+    setTimeout(() => {
+      router.push({ name: 'login' })
 
-if (nifValue.length === 9 && /^\d+$/.test(nifValue) && ccValue.length === 8 && /^\d+$/.test(ccValue) 
-    && phoneValue.length === 9 && /^\d+$/.test(phoneValue)
-    && /^\d{2}\/\d{2}\/\d{4}$/.test(birthdayValue) && passwordRegex.test(passwordValue) &&
-    passwordValue === confirmPasswordValue) {
-
-  isSaved.value = true
-
-  setTimeout(() => {
-    router.push({ name: 'login' })
-  }, 2000)
-} else {
-  if (nifValue.length !== 9 || !/^\d+$/.test(nifValue)) {
-    errorMessageNif.value += 'The NIF must have 9 digits'
-  }
-
-  if (ccValue.length !== 8 || !/^\d+$/.test(ccValue)) {
-    errorMessageCC.value += 'The CC must have 8 digits.'
-  }
-
-  if (phoneValue.length !== 9 || !/^\d+$/.test(phoneValue)) {
-    errorMessagePhone.value += 'The phone number must have 9 digits.'
-  }
-
-  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(birthdayValue)) {
-    errorMessageBirthday.value = 'The date not valid.'
-  }
-
-  if (!passwordRegex.test(passwordValue)) {
-      errorMessagePassword.value = 'The password must have at least 8 characters, one uppercase letter, one lowercase letter, and one special character.'
+      // TODO: Redirect to guest dashboard
+    }, 2000)
+  } else {
+    if (!validateNif(nifValue)) {
+      errorMessageNif.value += 'The NIF must have 9 digits'
     }
 
-  if (passwordValue !== confirmPasswordValue) {
-    errorMessageConfirmPassword.value = 'The passwords do not match.'
+    if (!validateEmail(emailValue)) {
+      errorMessageEmail.value += 'The email is not valid.'
+    }
+
+    if (!validateCC(ccValue)) {
+      errorMessageCC.value += 'The CC must have 8 digits.'
+    }
+
+    if (!validatePhone(phoneValue)) {
+      errorMessagePhone.value += 'The phone number must have 9 digits.'
+    }
+
+    if (!validateDate(birthdayValue)) {
+      errorMessageBirthday.value = 'The date not valid.'
+    }
+
+    if (!validatePassword(passwordValue)) {
+      errorMessagePassword.value =
+        'The password must have at least 8 characters, one uppercase letter, one lowercase letter, and one special character.'
+    }
+
+    if (passwordValue !== confirmPasswordValue) {
+      errorMessageConfirmPassword.value = 'The passwords do not match.'
+    }
   }
-}
 }
 </script>
 
 <template>
-<v-app>
-      <v-app-bar app color="blue-grey-lighten-5">
-          <div class="circle"></div>
-          <v-app-bar-title class="header-text">
-              SicaVibe
-          </v-app-bar-title>
-      </v-app-bar>
-      <v-container fluid class="page-container">
-        <div class="background-rect">
-          <div class="register-title">Register</div>
-          <div class="form">
-            <form>
-              <v-container>
-                <v-row>
-                  <v-col>
-                    <label>Name</label>
-                    <TextField label="Name"></TextField>
-                  </v-col>
-                  <v-col>
-                    <TextField label="Email"></TextField>
-                  </v-col>
-                </v-row>
-                <v-row class="address">
-                    <TextField label="Address" max-width="500px"></TextField>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <TextField label="Birthday" type="date" id="birthday"></TextField>
-                    <div class="error-message" v-if="errorMessageBirthday">{{ errorMessageBirthday }}</div>
-                  </v-col>
-                  <v-col>
-                    <TextField label="Phone Number" id="phone"></TextField>
-                    <div class="error-message" v-if="errorMessagePhone">{{ errorMessagePhone }}</div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <TextField label="NIF" id="nif"></TextField>
-                    <div class="error-message" v-if="errorMessageNif">{{ errorMessageNif }}</div>
-                  </v-col>
-                  <v-col>
-                    <TextField label="CC" id="cc"></TextField>
-                    <div class="error-message" v-if="errorMessageCC">{{ errorMessageCC }}</div>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <TextField label="Password" type="password" id="password"></TextField>
-                    <div class="error-message" v-if="errorMessagePassword">{{ errorMessagePassword }}</div>
-                  </v-col>
-                  <v-col>
-                    <TextField label="Confirm Password" type="password" id="confirmPassword"></TextField>
-                    <div class="error-message" v-if="errorMessageConfirmPassword">{{ errorMessageConfirmPassword }}</div>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </form>
+  <div class="outer-container">
+    <div class="navbar">
+      <div class="circle" />
+      <v-app-bar-title class="header-text">SicaVibe</v-app-bar-title>
+    </div>
+    <div class="page-container">
+      <div class="background-rect">
+        <div class="register-title">Register</div>
+        <form class="form">
+          <div class="fields">
+            <div class="field-col">
+              <div class="w-100 d-flex flex-column align-start">
+                <label>Name</label>
+                <TextField label=""></TextField>
+              </div>
+              <div class="w-100 d-flex flex-column align-start">
+                <label>Email</label>
+                <TextField id="email" label=""></TextField>
+                <div v-if="errorMessageEmail" class="error-message">
+                  {{ errorMessageEmail }}
+                </div>
+              </div>
+            </div>
+            <div class="w-100">
+              <TextField label="Address"></TextField>
+            </div>
+            <div class="field-col">
+              <div class="w-100 d-flex flex-column align-start">
+                <TextField id="birthday" label="Birthday" type="date"></TextField>
+                <div v-if="errorMessageBirthday" class="error-message">
+                  {{ errorMessageBirthday }}
+                </div>
+              </div>
+              <div class="w-100 d-flex flex-column align-start">
+                <TextField id="phone" label="Phone Number" maxlength="9"></TextField>
+                <div v-if="errorMessagePhone" class="error-message">{{ errorMessagePhone }}</div>
+              </div>
+            </div>
+            <div class="field-col">
+              <div class="w-100 d-flex flex-column align-start">
+                <TextField id="nif" label="NIF" maxlength="9"></TextField>
+                <div v-if="errorMessageNif" class="error-message">{{ errorMessageNif }}</div>
+              </div>
+              <div class="w-100 d-flex flex-column align-start">
+                <TextField id="cc" label="CC" maxlength="8"></TextField>
+                <div v-if="errorMessageCC" class="error-message">{{ errorMessageCC }}</div>
+              </div>
+            </div>
+            <div class="field-col">
+              <div class="w-100 d-flex flex-column align-start">
+                <TextField id="password" label="Password" type="password"></TextField>
+                <div v-if="errorMessagePassword" class="error-message">
+                  {{ errorMessagePassword }}
+                </div>
+              </div>
+              <div class="w-100 d-flex flex-column align-start">
+                <TextField
+                  id="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                ></TextField>
+                <div v-if="errorMessageConfirmPassword" class="error-message">
+                  {{ errorMessageConfirmPassword }}
+                </div>
+              </div>
+            </div>
           </div>
           <div class="button-container">
-              <v-spacer></v-spacer>
-              <v-btn class="button2" @click="login">Cancel</v-btn>
-              <v-btn class="button" @click="saveData">Register</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn class="button2" @click="login">Cancel</v-btn>
+            <v-btn class="button" @click="saveData">Register</v-btn>
           </div>
+        </form>
+      </div>
+    </div>
+    <transition name="fade">
+      <div v-if="isSaved" class="confirmation-overlay">
+        <div class="confirmation-message">
+          Account created successfully! Login to start using our platform
         </div>
-        </v-container>
-        <transition name="fade">
-          <div v-if="isSaved" class="confirmation-overlay">
-            <div class="confirmation-message">Account created successfully! Login to start using our platform</div>
-          </div>
-        </transition>
-    </v-app>>
+      </div>
+    </transition>
+  </div>
 </template>
 
-
 <style scoped>
+.outer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  max-height: 100px;
+  background: #eceff1;
+}
 
 .header-text {
   font-weight: bold;
   font-size: 2.1rem;
-  color: #0D47A1;
+  color: #0d47a1;
 }
 
 .circle {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #0D47A1;
-  margin-left: 25px;
-  padding: 1;
+  background-color: #0d47a1;
 }
 
 .page-container {
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
 }
 
 .register-title {
   font-weight: bold;
   font-size: 1.5rem;
-  color: #0D47A1;
+  color: #0d47a1;
   text-align: center;
-  margin-bottom: 5px;
 }
 
 .background-rect {
-  width: 650px; 
-  height: 450px;
-  background-color: #ECEFF1;
-  padding: 10px;
-  margin-top: 2%;
-  border-radius: 0.8em;
+  max-width: 1000px;
+  max-height: 800px;
+  width: 100%;
+  background-color: #f1f2f4;
+  padding: 2rem;
+  border-radius: 0.5em;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .button-container {
+  width: 100%;
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  gap: 1rem;
 }
 
-
 .button {
-  margin-right: 0.5rem;
   color: white;
-  background-color: #0D47A1;
+  background-color: #0d47a1;
 }
 
 .button2 {
-  margin-right: 0.5rem;
-  color: #0D47A1;
+  color: #0d47a1;
   background-color: white;
 }
 
 .form {
-  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  gap: 2rem;
 }
 
-.address {
-  padding-left: 3.7rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+.fields {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  gap: 2rem;
+}
+
+.field-col {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
+  width: 100%;
+  gap: 1rem;
 }
 
 .confirmation-overlay {
@@ -245,7 +309,5 @@ if (nifValue.length === 9 && /^\d+$/.test(nifValue) && ccValue.length === 8 && /
 .error-message {
   color: red;
   font-size: 0.9rem;
-  margin-top: 5px;
 }
 </style>
-
