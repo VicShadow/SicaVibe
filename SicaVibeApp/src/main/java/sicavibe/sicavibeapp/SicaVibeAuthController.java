@@ -1,5 +1,11 @@
 package sicavibe.sicavibeapp;
 
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.models.media.Content;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,16 +16,88 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import sicavibe.*;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 public class SicaVibeAuthController {
 
+
+    private class UserInfoBody{
+        private String email;
+        private String password;
+        private String nome;
+        @Schema(example = "YYYY-MM-DD")
+        private String dataNascimento;
+        private String nTelemovel;
+        private String morada;
+        private String cc;
+        private String nif;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public String getDataNascimento() {
+            return dataNascimento;
+        }
+
+        public String getnTelemovel() {
+            return nTelemovel;
+        }
+
+        public String getMorada() {
+            return morada;
+        }
+
+        public String getCc() {
+            return cc;
+        }
+
+        public String getNif() {
+            return nif;
+        }
+    }
+    private class FuncionarioInfoBody extends UserInfoBody{
+        private int hotelID;
+
+        public int getHotelID() {
+            return hotelID;
+        }
+    }
+
+    private class LoginInfoBody{
+        private String email;
+        private String password;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
+
+
+
+    @Operation(summary = "Login de Utilizador",tags = {"No Auth"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginInfoBody.class))))
     @PostMapping(value = "/login",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public String jwt(@RequestBody Map<String,Object> body) {
 
@@ -31,17 +109,24 @@ public class SicaVibeAuthController {
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"No user with email '"+email+"' found");
 
             String pass = body.get("password").toString().concat(usr.getSalt());
-            if (!SicaVibeAppAux.hashPassword(pass).equals(usr.getPassword()))
+            if (!SicaVibeAuthController.hashPassword(pass).equals(usr.getPassword()))
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Incorrect Password");
 
-            //if (Hospede.class.isAssignableFrom(Utilizador.class));
+            if (usr instanceof Hospede)
+                return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.HOSPEDE));
+            if (usr instanceof Funcionario)
+                return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.FUNCIONARIO));
+            if (usr instanceof Administador)
+                return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
 
+            /*
             if (HospedeDAO.getHospedeByORMID(usr.getID()) != null)
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.HOSPEDE));
             if (FuncionarioDAO.getFuncionarioByORMID(usr.getID()) != null)
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.FUNCIONARIO));
             if (AdministadorDAO.getAdministadorByORMID(usr.getID()) != null)
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
+             */
 
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"User '"+email+"' found and authorized, but no User-Type found");
         } catch (PersistentException | NoSuchAlgorithmException e){
@@ -50,41 +135,20 @@ public class SicaVibeAuthController {
 
     }
 
-    public static int readTokenAndCheckAuthLevel(String token,JwtToken.TipoUtilizador level){
-        JwtToken jwtToken = SicaVibeAppApplication.jwtUtils.getInfoFromToken(token);
 
-        if (jwtToken.getTipoUtilizador() == JwtToken.TipoUtilizador.ADMINISTRADOR ||
-                jwtToken.getTipoUtilizador() == level)
-            return jwtToken.getId();
-
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Token unauthorized for this action");
-    }
 
 
 
     // REGISTER HOSPEDE
-    @PostMapping(value = "/hospede/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Hospede registerHospede (@RequestBody Map<String, Object> body) {
+    @Operation(summary = "Registo de um novo Hospede",tags = {"No Auth"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UserInfoBody.class))))
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Hospede registerHospede (@RequestBody Map<String,Object> body) {
         try {
-            SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"),body);
+            //SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"),body);
 
             Hospede h = HospedeDAO.createHospede();
-            h.setEmail((String) body.get("email"));
-            h.setNome((String) body.get("nome"));
-            h.setnTelemovel((String) body.get("nTelemovel"));
-            h.setMorada((String) body.get("morada"));
-            h.setCc((String) body.get("cc"));
-            h.setNif((String) body.get("nif"));
-
-            String salt = SicaVibeAppAux.generateSalt();
-            String hashed = SicaVibeAppAux.hashPassword(((String) body.get("password")).concat(salt));
-            h.setPassword(hashed);
-            h.setSalt(salt);
-
-            String stringDate = (String) body.get("dataNascimento");
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
-            h.setDataNascimento(date);
-
+            setUserInfo(h,body);
             HospedeDAO.save(h);
             return h;
         } catch (PersistentException e) {
@@ -98,37 +162,23 @@ public class SicaVibeAuthController {
 
 
     // REGISTER FUNCIONARIO
-    @PostMapping(value = "/funcionario/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Funcionario registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String, Object> body) {
+    @Operation(summary = "Registo de um novo Funcionário",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioInfoBody.class))))
+    @PostMapping(value = "/admin/registerFunc", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Funcionario registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
             //SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
-            SicaVibeAppAux.checkRequestContent(List.of("hotelID","email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"),body);
-
+            //Check Extra (Set Info ja checka o resto)
+            SicaVibeAppAux.checkRequestContent(List.of("hotelID"),body);
             Funcionario f = FuncionarioDAO.createFuncionario();
-            f.setEmail((String) body.get("email"));
-            f.setNome((String) body.get("nome"));
-            f.setnTelemovel((String) body.get("nTelemovel"));
-            f.setMorada((String) body.get("morada"));
-            f.setCc((String) body.get("cc"));
-            f.setNif((String) body.get("nif"));
-            f.setEstado("INATIVO");
-
-            String salt = SicaVibeAppAux.generateSalt();
-            String hashed = SicaVibeAppAux.hashPassword(((String) body.get("password")).concat(salt));
-            f.setPassword(hashed);
-            f.setSalt(salt);
-
-            String stringDate = (String) body.get("dataNascimento");
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
-            f.setDataNascimento(date);
-
-
+            setUserInfo(f,body);
             FuncionarioDAO.save(f);
+
             Hotel hotel = HotelDAO.getHotelByORMID((Integer) body.get("hotelID"));
             hotel.listaFuncionarios.add(f);
+            HotelDAO.save(hotel);
             return f;
-
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
@@ -141,37 +191,110 @@ public class SicaVibeAuthController {
 
 
     // REGISTER ADMIN
-    @PostMapping(value = "/admin/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Administador registerAmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String, Object> body) {
+    @Operation(summary = "Registo de um novo Administrador",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = SicaVibeAuthController.UserInfoBody.class))))
+    @PostMapping(value = "/admin/registerAdmin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Administador registerAmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
             //SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
-            SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"), body);
-
             Administador admin = AdministadorDAO.createAdministador();
-            admin.setEmail((String) body.get("email"));
-            admin.setNome((String) body.get("nome"));
-            admin.setnTelemovel((String) body.get("nTelemovel"));
-            admin.setMorada((String) body.get("morada"));
-            admin.setCc((String) body.get("cc"));
-            admin.setNif((String) body.get("nif"));
-
-            String salt = SicaVibeAppAux.generateSalt();
-            String hashed = SicaVibeAppAux.hashPassword(((String) body.get("password")).concat(salt));
-            admin.setPassword(hashed);
-            admin.setSalt(salt);
-
-            String stringDate = (String) body.get("dataNascimento");
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
-            admin.setDataNascimento(date);
-
+            setUserInfo(admin,body);
             AdministadorDAO.save(admin);
             return admin;
+
         } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
+    }
+
+
+
+
+    private static void setUserInfo(Utilizador user,Map<String,Object> body) throws NoSuchAlgorithmException, ParseException {
+        SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"), body);
+
+        user.setEmail(body.get("email").toString());
+        user.setNome(body.get("nome").toString());
+        user.setnTelemovel(body.get("nTelemovel").toString());
+        user.setMorada(body.get("morada").toString());
+        user.setCc(body.get("cc").toString());
+        user.setNif(body.get("nif").toString());
+
+        String basePass = body.get("password").toString();
+        if(!SicaVibeAuthController.isAcceptablePassword(basePass))
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Password provided doesn't meet the criteria");
+        String salt = SicaVibeAuthController.generateSalt();
+        String hashed = SicaVibeAuthController.hashPassword(basePass.concat(salt));
+        user.setPassword(hashed);
+        user.setSalt(salt);
+
+        String stringDate = body.get("dataNascimento").toString();
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
+        user.setDataNascimento(date);
+    }
+
+
+
+    private static int readTokenAndCheckAuthLevel(String token,JwtToken.TipoUtilizador level){
+        JwtToken jwtToken = SicaVibeAppApplication.jwtUtils.getInfoFromToken(token);
+
+        if (jwtToken.getTipoUtilizador() == JwtToken.TipoUtilizador.ADMINISTRADOR ||
+                jwtToken.getTipoUtilizador() == level)
+            return jwtToken.getId();
+
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Token unauthorized for this action");
+    }
+
+    public static boolean isAcceptablePassword(String password) {
+        final int MIN_LENGTH = 8;
+        final int MAX_LENGTH = 32;
+        final boolean REQUIRE_SPECIAL_CHARACTERS = true;
+        final boolean REQUIRE_UPPERCASE = true;
+
+        if (password.length() < MIN_LENGTH)
+            return false;
+        if (password.length() > MAX_LENGTH)
+            return false;
+        if (REQUIRE_SPECIAL_CHARACTERS && !password.matches(".*[!@#$%^&*()].*"))
+            return false;
+        if (REQUIRE_UPPERCASE && !password.matches(".*[A-Z].*"))
+            return false;
+
+        return true;
+    }
+
+    private static String generateSalt(){
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 6;
+
+        Random random = new Random();
+        return random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
+
+    private static String hashPassword(String pass) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] encodedhash = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+        return bytesToHex(encodedhash);
+    }
+
+
+    private static String bytesToHex(byte[] hash) {
+        StringBuilder hexString = new StringBuilder(2 * hash.length);
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
 }

@@ -1,5 +1,7 @@
 package sicavibe.sicavibeapp;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javassist.NotFoundException;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.Set;
 public class SicaVibeDataController {
 
 
+    @Operation(summary = "GET Informação simples de todos Hoteis",tags = {"No Auth"})
     @GetMapping(value = "/data/hoteis", produces = MediaType.APPLICATION_JSON_VALUE)
     public Set<HotelResponse> getHoteis() {
         try {
@@ -32,6 +35,7 @@ public class SicaVibeDataController {
         }
     }
 
+    @Operation(summary = "GET Informação completa de um Hotel",tags = {"No Auth"})
     @GetMapping(value = "/data/hotel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HotelResponse getHotel(@PathVariable("id") int id){
         try {

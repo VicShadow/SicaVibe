@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class SicaVibeErrorController implements ErrorController {
+
 
     @Hidden
     @RequestMapping(value = "/error",produces = MediaType.TEXT_HTML_VALUE)
@@ -51,4 +51,6 @@ public class SicaVibeErrorController implements ErrorController {
         return "error";
     }
 
+
 }
+
