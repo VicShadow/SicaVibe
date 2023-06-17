@@ -9,5 +9,5 @@ export interface Room {
   id: number;
   description?: string;
   status: RoomStatus;
-  user_id?: number; // Set when status is either OCCUPIED or RESERVED
+  userId?: number; // Set when status is either OCCUPIED or RESERVED
 }
