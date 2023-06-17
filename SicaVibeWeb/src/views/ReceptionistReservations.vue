@@ -15,7 +15,8 @@ const reservations: Reservation[] = [
     checkedInAt: new Date('2021-10-10'),
     checkedOutAt: new Date('2021-10-11'),
     scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10')
+    scheduledTo: new Date('2021-10-10'),
+    scheduledUntil: new Date('2021-10-10')
   },
   {
     id: 2,
@@ -24,7 +25,8 @@ const reservations: Reservation[] = [
     checkedInAt: new Date('2021-10-10'),
     checkedOutAt: new Date('2021-10-11'),
     scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10')
+    scheduledTo: new Date('2021-10-10'),
+    scheduledUntil: new Date('2021-10-10')
   },
   {
     id: 3,
@@ -33,7 +35,8 @@ const reservations: Reservation[] = [
     checkedInAt: new Date('2021-10-10'),
     checkedOutAt: new Date('2021-10-11'),
     scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10')
+    scheduledTo: new Date('2021-10-10'),
+    scheduledUntil: new Date('2021-10-10')
   },
   {
     id: 4,
@@ -42,7 +45,8 @@ const reservations: Reservation[] = [
     checkedInAt: new Date('2021-10-10'),
     checkedOutAt: new Date('2021-10-11'),
     scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10')
+    scheduledTo: new Date('2021-10-10'),
+    scheduledUntil: new Date('2021-10-10')
   }
 ]
 
@@ -56,8 +60,8 @@ const addRoomHandler = () => {
     <v-breadcrumbs :items="['Reservations']" class="pa-0" />
     <div class="d-flex justify-space-between">
       <h1 class="text-h5 d-inline">Reservations</h1>
-      <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize" @click="addRoomHandler"
-        >Make Reservation
+      <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize" @click="addRoomHandler">
+        Make Reservation
       </v-btn>
     </div>
   </div>

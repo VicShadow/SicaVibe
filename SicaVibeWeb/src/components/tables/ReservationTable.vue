@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { toRefs } from 'vue'
 import type { Reservation } from '@/types/Reservation'
+import { useRouter } from 'vue-router'
 
 interface Props {
   reservations: Reservation[]
@@ -9,17 +10,23 @@ interface Props {
 const props = defineProps<Props>()
 
 const { reservations } = toRefs(props)
+
+const router = useRouter()
+
+const onReservationClick = (id: number) => {
+  router.push(`/receptionist/reservations/${id}`)
+}
 </script>
 
 <template>
-  <v-table>
+  <v-table class="table">
     <thead>
       <tr>
         <th class="text-left px-0">Identificador</th>
         <th class="text-left">Descrição</th>
         <th class="text-left">Estado</th>
-        <th class="text-left">Utilizador</th>
-        <th class="text-left">Serviços</th>
+        <th class="text-left w-0">Utilizador</th>
+        <th class="text-left w-0" />
       </tr>
     </thead>
     <tbody>
@@ -30,7 +37,9 @@ const { reservations } = toRefs(props)
         <!-- TODO: Add color for each type of status as in the design -->
         <td>{{ reservation.userId ?? '' }}</td>
         <td>
-          <v-btn class="text-capitalize" variant="tonal">See Services</v-btn>
+          <v-btn class="text-capitalize" variant="tonal" @click="onReservationClick(reservation.id)"
+            >See Reservation
+          </v-btn>
         </td>
       </tr>
     </tbody>
@@ -38,6 +47,10 @@ const { reservations } = toRefs(props)
 </template>
 
 <style scoped>
+.table {
+  //max-width: 1000px; width: 100%;
+}
+
 .status {
   color: var(--color-text);
   font-weight: bold;

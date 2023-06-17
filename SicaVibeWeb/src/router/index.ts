@@ -41,6 +41,11 @@ const routes = [
         path: 'reservations',
         name: 'receptionist-reservations',
         component: () => import('@/views/ReceptionistReservations.vue')
+      },
+      {
+        path: 'reservations/:id/',
+        name: 'reservation',
+        component: () => import('@/views/ReceptionistReservation.vue')
       }
     ]
   },
@@ -58,13 +63,15 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: SignUp
-  },
+  }
+  /*
   {
     // Redirect to home if no route found
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     redirect: '/'
   }
+   */
 ]
 
 const router = createRouter({

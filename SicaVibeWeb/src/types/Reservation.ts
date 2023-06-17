@@ -18,6 +18,7 @@ export interface Reservation {
   status: ReservationStatus
   scheduledAt: Date
   scheduledTo: Date
+  scheduledUntil: Date
   checkedInAt?: Date // Only set when reservation is ON_GOING or DONE
   checkedOutAt?: Date // Only set when reservation is DONE
   services?: Service[] // Only set when reservation is ON_GOING or DONE
