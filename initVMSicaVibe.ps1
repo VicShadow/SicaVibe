@@ -58,11 +58,44 @@ while ($true) {
     Start-Sleep -Seconds 5
 }
 
+$sshInstallBasics = @"
+sudo apt-get update
+echo 'Sleeping for 1s'
+sleep 1
+sudo apt-get update
+echo 'Sleeping for 6s'
+sleep 6
+sudo apt-get install openjdk-17-jre maven mysql-server -y
+"@
 
-Write-Host "Setting up VM..."
+$sshSetupGitHubUp = @"
+gcloud secrets versions access 1 --secret="id_github" > ~/.ssh/id_rsa
+sudo chmod 600 .ssh/id_rsa
+gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+git clone git@github.com:VicShadow/SicaVibe.git
+"@
+
+$sshSetupBD = @"
+sudo mkdir /var/lib/mysql-files/SicaVibeImgs
+sudo cp ~/SicaVibe/SicaVibeApp/scripts/imgs/* /var/lib/mysql-files/SicaVibeImgs/
+sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBSicaVibeCreate.ddl
+sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
+sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBPopulate.sql
+"@
+
+$sshSetupMavenAndStart = @"
+mvn clean package -f ~/SicaVibe/SicaVibeApp/pom.xml
+mv ~/SicaVibe/SicaVibeApp/target/SicaVibeApp-0.0.1-SNAPSHOT.jar ./SicaVibeApp.jar
+mv ~/SicaVibe/SicaVibeApp/scripts/startApp.sh .
+sudo chmod +x startApp.sh
+cat ~/SicaVibe/SicaVibeApp/scripts/startArt.txt
+./startApp.sh
+"@
+
 $sshCommand = @"
 sudo apt-get update
-sleep 1
 sudo apt-get install openjdk-17-jre maven mysql-server -y
 gcloud secrets versions access 1 --secret="id_github" > ~/.ssh/id_rsa
 sudo chmod 600 .ssh/id_rsa
@@ -70,7 +103,7 @@ gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 git clone git@github.com:VicShadow/SicaVibe.git
-sudo ~/SicaVibe/SicaVibeApp/scripts/loadImages.sh
+sudo sh ~/SicaVibe/SicaVibeApp/scripts/loadImages.sh
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBSicaVibeCreate.ddl
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBPopulate.sql
@@ -82,7 +115,12 @@ cat ~/SicaVibe/SicaVibeApp/scripts/startArt.txt
 ./startApp.sh
 "@
 
-ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshCommand
+
+Write-Host "Setting up VM..."
+ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshInstallBasics
+ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupGitHubUp
+ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupBD
+ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupMavenAndStart
 Write-Host "Done."
 
 # Start interative ssh terminal
