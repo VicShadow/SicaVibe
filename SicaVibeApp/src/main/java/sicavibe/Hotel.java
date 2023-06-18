@@ -13,10 +13,15 @@
  */
 package sicavibe;
 
+import org.orm.PersistentException;
 import sicavibe.response.TipoDeQuartoResponse;
 
 import java.io.InvalidObjectException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Hotel {
 	public Hotel() {
@@ -193,6 +198,7 @@ public class Hotel {
 			quartosOcupados.addAll(Arrays.asList(reserva.quartos.toArray()));
 		}
 
+		//GET QUARTOS LIVRES
 		Map<Integer,Integer> res = new HashMap<>();
 		for (Quarto quartosHotel : this.listaQuartos.toArray()){
 
@@ -213,9 +219,74 @@ public class Hotel {
 		return res;
 	}
 	
-	public void ocupaQuartos(Map<Integer, Integer> listaTiposDeQuarto) {
-		//TODO: Implement Method
-		throw new UnsupportedOperationException();
+	public float marcaReserva(int hospedeID, Map<Integer, Integer> tiposDeQuartoDesejados,
+							  List<Integer> servicosExtraDesejados,Date dataEntrada,Date dataSaida)
+			throws InvalidObjectException, PersistentException {
+
+		long diffInMillies = Math.abs(dataSaida.getTime() - dataEntrada.getTime());
+		long diasEstadia = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		float precoFinal = 0.0f;
+
+		//CHECK DISPONIBILIDADE & ADD PRICE
+		Map<Integer,Integer> quartosDisponiveis = this.checkDisponibilidade(dataEntrada,dataSaida);
+		for (Map.Entry<Integer,Integer> entry : tiposDeQuartoDesejados.entrySet()){
+			if (!quartosDisponiveis.containsKey(entry.getKey()))
+				throw new InvalidObjectException("Tipo de Quarto '"+entry.getKey()+"' Unavailable");
+
+			int numQuartosDisponiveis = quartosDisponiveis.get(entry.getKey());
+			int numQuartosDesejados = entry.getValue();
+			if (numQuartosDesejados > numQuartosDisponiveis)
+				throw new InvalidObjectException("Tipo de Quarto '"+entry.getKey()+"' Unavailable");
+
+			//QUARTOS DISPONÍVEIS, MARCA PREÇO
+			precoFinal += TipoDeQuartoDAO.getTipoDeQuartoByORMID(entry.getKey()).getPreco() * numQuartosDesejados * diasEstadia;
+		}
+
+		//CHECK SERVICOS EXTRA & ADD PRICE
+		for(Integer servicoID : servicosExtraDesejados){
+			ServicoExtra serv = ServicoExtraDAO.getServicoExtraByORMID(servicoID);
+			if (serv == null)
+				throw new InvalidObjectException("Serviço Extra '"+servicoID+"' doesn't exist");
+			precoFinal += serv.getPreco();
+		}
+
+		//------ MAKE RESERVA ---------
+		//HOSPEDE
+		Hospede hospede = HospedeDAO.getHospedeByORMID(hospedeID);
+		if (hospede == null)
+			throw new InvalidObjectException("Hospede '"+hospedeID+"' doesn't exist");
+
+		//SET BASIC INFO
+		Reserva reserva = ReservaDAO.createReserva();
+		reserva.setDataEntrada(dataEntrada); reserva.setDataSaida(dataSaida);
+		reserva.setPreco(precoFinal); reserva.setDataCheckIn(null); reserva.setDataCheckout(null);
+		reserva.setEstado("MARCADA"); reserva.setHospede(hospede);
+
+		//GET QUARTOS TO USE
+		for(Map.Entry<Integer,Integer> entry : tiposDeQuartoDesejados.entrySet()){
+			int quartosToGet = entry.getValue();
+			for (Quarto quarto : this.listaQuartos.toArray()){
+				if (quarto.getTipoDeQuarto().getID() == entry.getKey() &&
+				quarto.getEstado().equals("LIVRE") && quartosToGet > 0){
+					reserva.quartos.add(quarto);
+					quartosToGet--;
+				}
+
+				if (quartosToGet == 0) break;
+			}
+		}
+
+		//GET SERVICOS
+		for(Integer servicoID : servicosExtraDesejados){
+			ServicoExtra serv = ServicoExtraDAO.getServicoExtraByORMID(servicoID);
+			reserva.servicosExtras.add(serv);
+		}
+
+		//FINALLY
+		this.listaReservas.add(reserva);
+		HotelDAO.save(this);
+		ReservaDAO.save(reserva);
+		return reserva.getPreco();
 	}
 	
 	public String toString() {

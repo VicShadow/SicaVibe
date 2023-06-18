@@ -29,7 +29,7 @@ import java.util.Random;
 public class SicaVibeAuthController {
 
 
-    private class UserInfoBody{
+    private static class UserInfoBody{
         private String email;
         private String password;
         private String nome;
@@ -72,7 +72,7 @@ public class SicaVibeAuthController {
             return nif;
         }
     }
-    private class FuncionarioInfoBody extends UserInfoBody{
+    private static class FuncionarioInfoBody extends UserInfoBody{
         private int hotelID;
 
         public int getHotelID() {
@@ -80,7 +80,7 @@ public class SicaVibeAuthController {
         }
     }
 
-    private class LoginInfoBody{
+    private static class LoginInfoBody{
         private String email;
         private String password;
 
@@ -168,7 +168,7 @@ public class SicaVibeAuthController {
     // REGISTER FUNCIONARIO
     @Operation(summary = "Registo de um novo Funcionário",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioInfoBody.class))))
-    @PostMapping(value = "/admin/registerFunc", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/admin/register-func", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
@@ -201,7 +201,7 @@ public class SicaVibeAuthController {
     // REGISTER ADMIN
     @Operation(summary = "Registo de um novo Administrador",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = SicaVibeAuthController.UserInfoBody.class))))
-    @PostMapping(value = "/admin/registerAdmin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/admin/register-admin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String registerAmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);

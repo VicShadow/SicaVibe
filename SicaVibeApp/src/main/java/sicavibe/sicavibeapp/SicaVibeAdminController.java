@@ -44,7 +44,7 @@ public class SicaVibeAdminController {
             @Parameter(in= ParameterIn.HEADER,name = "page",description = "Número da página (>0)"),
             @Parameter(in= ParameterIn.HEADER,name = "pageSize",description = "Tamanho da Página (>0)"),
     })
-    @GetMapping(value = "/admin/getUserList",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/admin/get-user-list",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UtilizadorResponse> getUserList(@RequestHeader() Map<String, Object> headers) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token","usertype","page","pagesize"),headers);
