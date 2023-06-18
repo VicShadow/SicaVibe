@@ -39,16 +39,16 @@ public class SicaVibeAdminController {
     }
 
     @Operation(summary = "Obter uma lista de um tipo de utilizador",tags = {"Admin"},parameters = {
-            @Parameter(in= ParameterIn.HEADER,name = "token",description = "Token de Autorização"),
-            @Parameter(in= ParameterIn.HEADER,name = "usertype",description = "Tipo de Utilizadores a ser devolvido ('HOSPEDE','FUNCIONARIO','ADMINISTRADOR')"),
-            @Parameter(in= ParameterIn.HEADER,name = "page",description = "Número da página (>0)"),
-            @Parameter(in= ParameterIn.HEADER,name = "pageSize",description = "Tamanho da Página (>0)"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "usertype",description = "Tipo de Utilizadores a ser devolvido ('HOSPEDE','FUNCIONARIO','ADMINISTRADOR')"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "page",description = "Número da página (>0)"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)"),
     })
     @GetMapping(value = "/admin/get-user-list",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UtilizadorResponse> getUserList(@RequestHeader() Map<String, Object> headers) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token","usertype","page","pagesize"),headers);
-            //SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
             String userType = headers.get("usertype").toString();
             int page = Integer.parseInt(headers.get("page").toString());

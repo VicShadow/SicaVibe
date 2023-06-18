@@ -177,8 +177,8 @@ public class Hotel {
 
 		return tipoDeQuartos;
 	}
-	
-	public Map<Integer, Integer> checkDisponibilidade(java.util.Date reservaDataEntrada, java.util.Date reservaDataSaida) throws InvalidObjectException {
+
+	public List<Quarto> getQuartosDisponiveis(Date reservaDataEntrada, Date reservaDataSaida) throws InvalidObjectException {
 
 		//CHECK DATES GIVEN
 		if (reservaDataSaida.before(reservaDataEntrada) || reservaDataSaida.equals(reservaDataEntrada))
@@ -199,7 +199,7 @@ public class Hotel {
 		}
 
 		//GET QUARTOS LIVRES
-		Map<Integer,Integer> res = new HashMap<>();
+		List<Quarto> res = new ArrayList<>();
 		for (Quarto quartosHotel : this.listaQuartos.toArray()){
 
 			boolean occupied = false;
@@ -211,7 +211,20 @@ public class Hotel {
 			}
 			if(occupied) continue;
 
-			int idTipoQuarto = quartosHotel.getTipoDeQuarto().getID();
+			res.add(quartosHotel);
+		}
+		return res;
+	}
+	
+	public Map<Integer, Integer> checkDisponibilidade(Date reservaDataEntrada, Date reservaDataSaida) throws InvalidObjectException {
+
+		//GET QUARTOS DISPONIVEIS
+		List<Quarto> quartosDisponiveis = this.getQuartosDisponiveis(reservaDataEntrada,reservaDataSaida);
+
+		//GET QUARTOS LIVRES
+		Map<Integer,Integer> res = new HashMap<>();
+		for (Quarto quarto : quartosDisponiveis){
+			int idTipoQuarto = quarto.getTipoDeQuarto().getID();
 			if(res.containsKey(idTipoQuarto)) res.put(idTipoQuarto,res.get(idTipoQuarto) + 1);
 			else res.put(idTipoQuarto,1);
 		}
@@ -265,9 +278,8 @@ public class Hotel {
 		//GET QUARTOS TO USE
 		for(Map.Entry<Integer,Integer> entry : tiposDeQuartoDesejados.entrySet()){
 			int quartosToGet = entry.getValue();
-			for (Quarto quarto : this.listaQuartos.toArray()){
-				if (quarto.getTipoDeQuarto().getID() == entry.getKey() &&
-				quarto.getEstado().equals("LIVRE") && quartosToGet > 0){
+			for (Quarto quarto : this.getQuartosDisponiveis(dataEntrada,dataSaida)){
+				if (quarto.getTipoDeQuarto().getID() == entry.getKey() && quartosToGet > 0){
 					reserva.quartos.add(quarto);
 					quartosToGet--;
 				}

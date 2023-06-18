@@ -1,17 +1,10 @@
 package sicavibe.sicavibeapp;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,17 +19,17 @@ import sicavibe.response.UtilizadorResponse;
 
 import java.io.InvalidObjectException;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static sicavibe.sicavibeapp.SicaVibeAuthController.setUserInfo;
 
 @RestController
 public class SicaVibeHospedeController {
+
+    private static ReentrantLock lock = new ReentrantLock();
 
     public static class MakeReservaBody{
 
@@ -154,7 +147,7 @@ public class SicaVibeHospedeController {
             @Parameter(in= ParameterIn.HEADER,name = "datasaida",description = "Data de saída da potencial reserva"),
     })
     @GetMapping(value = "/hospede/check-availability", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<Integer,Integer> checkRoomsDisponibility (@RequestHeader Map<String, Object> headers) {
+    public Map<Integer,Integer> checkRoomsAvailability (@RequestHeader Map<String, Object> headers) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token","hotelid","dataentrada","datasaida"),headers);
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
@@ -186,31 +179,38 @@ public class SicaVibeHospedeController {
             SicaVibeAppAux.checkRequestContent(List.of("hotelid","dataentrada","datasaida","quartos","servicosextra"),body);
             int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
 
+            //Parse Dates
             Date reservaDataEntrada = new SimpleDateFormat("dd/MM/yyyy").parse(body.get("dataentrada").toString());
             Date reservaDataSaida = new SimpleDateFormat("dd/MM/yyyy").parse(body.get("datasaida").toString());
 
+            //Parse JSON Object & Convert
             String jsonStr = body.get("quartos").toString();
             jsonStr = jsonStr.replace("=",":");
             System.out.println(jsonStr);
             JSONObject quartosDesejadosJSON = new JSONObject(jsonStr);
-
-            System.out.println(body.get("servicosextra").toString());
-            JSONArray servicosExtraDesejadosJSON = new JSONArray(body.get("servicosextra").toString());
-
             Map<Integer,Integer> quartosDesejados = new HashMap<>();
             for (Map.Entry<String,Object> entry : quartosDesejadosJSON.toMap().entrySet()){
                 quartosDesejados.put(Integer.parseInt(entry.getKey()),Integer.parseInt(entry.getValue().toString()));
             }
 
+            //Parse JSON Array & Convert
+            System.out.println(body.get("servicosextra").toString());
+            JSONArray servicosExtraDesejadosJSON = new JSONArray(body.get("servicosextra").toString());
             List<Integer> servicosExtraDesejados = new ArrayList<>();
             for (Object obj : servicosExtraDesejadosJSON.toList()){
                 servicosExtraDesejados.add(Integer.parseInt(obj.toString()));
             }
 
+            //Get Hotel ID for operation
             int hotelID = Integer.parseInt(body.get("hotelid").toString());
             Hotel hotel = HotelDAO.getHotelByORMID(hotelID);
 
-            return hotel.marcaReserva(id,quartosDesejados,servicosExtraDesejados,reservaDataEntrada,reservaDataSaida);
+            try{
+                lock.lock();
+                return hotel.marcaReserva(id,quartosDesejados,servicosExtraDesejados,reservaDataEntrada,reservaDataSaida);
+            } finally {
+                lock.unlock();
+            }
 
         } catch (ResponseStatusException e) {
             throw e;
