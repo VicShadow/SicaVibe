@@ -15,6 +15,7 @@ package sicavibe;
 
 import sicavibe.response.TipoDeQuartoResponse;
 
+import java.io.InvalidObjectException;
 import java.util.*;
 
 public class Hotel {
@@ -172,9 +173,44 @@ public class Hotel {
 		return tipoDeQuartos;
 	}
 	
-	public Map<Integer, Integer> checkDisponibilidade(java.util.Date dataEntrada, java.util.Date dataSaida) {
-		//TODO: Implement Method
-		throw new UnsupportedOperationException();
+	public Map<Integer, Integer> checkDisponibilidade(java.util.Date reservaDataEntrada, java.util.Date reservaDataSaida) throws InvalidObjectException {
+
+		//CHECK DATES GIVEN
+		if (reservaDataSaida.before(reservaDataEntrada) || reservaDataSaida.equals(reservaDataEntrada))
+			throw new InvalidObjectException("'Data de Entrada' must be before and different from 'Data de saída'");
+
+		//GET ALL QUARTOS OCUPADOS
+		List<Quarto> quartosOcupados = new ArrayList<>();
+		for (Reserva reserva : this.listaReservas.toArray()){
+			//CHECK STATE
+			if (reserva.getEstado().equals("TERMINADA") || reserva.getEstado().equals("CANCELADA")) continue;
+
+			//CHECK DATES
+			if (reserva.getDataSaida().before(reservaDataEntrada) || reserva.getDataSaida().equals(reservaDataEntrada)
+					|| reserva.getDataEntrada().after(reservaDataSaida) || reserva.getDataEntrada().equals(reservaDataEntrada)) continue;
+
+			//ADD QUARTOS
+			quartosOcupados.addAll(Arrays.asList(reserva.quartos.toArray()));
+		}
+
+		Map<Integer,Integer> res = new HashMap<>();
+		for (Quarto quartosHotel : this.listaQuartos.toArray()){
+
+			boolean occupied = false;
+			for (Quarto quartoOcupado : quartosOcupados){
+				if (quartosHotel.getID() == quartoOcupado.getID()) {
+					occupied = true;
+					break;
+				}
+			}
+			if(occupied) continue;
+
+			int idTipoQuarto = quartosHotel.getTipoDeQuarto().getID();
+			if(res.containsKey(idTipoQuarto)) res.put(idTipoQuarto,res.get(idTipoQuarto) + 1);
+			else res.put(idTipoQuarto,1);
+		}
+
+		return res;
 	}
 	
 	public void ocupaQuartos(Map<Integer, Integer> listaTiposDeQuarto) {

@@ -1,23 +1,29 @@
 package sicavibe.sicavibeapp;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sicavibe.Hospede;
-import sicavibe.HospedeDAO;
-import sicavibe.Reserva;
-import sicavibe.ReservaDAO;
+import sicavibe.*;
 import sicavibe.response.ReservaResponse;
 import sicavibe.response.UtilizadorResponse;
 
+import java.io.InvalidObjectException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 import static sicavibe.sicavibeapp.SicaVibeAuthController.setUserInfo;
 
@@ -110,6 +116,35 @@ public class SicaVibeHospedeController {
         } catch (ResponseStatusException e) {
             throw e;
         } catch (PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
+    @Operation(summary = "Verifcar a disponibilidade de Quartos", tags = {"Hospede"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,name = "hotelid",description = "ID do Hotel a verificar a disponibilidade"),
+            @Parameter(in= ParameterIn.HEADER,name = "dataentrada",description = "Data de entrada da potencial reserva"),
+            @Parameter(in= ParameterIn.HEADER,name = "datasaida",description = "Data de saída da potencial reserva"),
+    })
+    @GetMapping(value = "/hospede/check-availability", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<Integer,Integer> checkRoomsDisponibility (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token","hotelid","dataentrada","datasaida"),headers);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
+
+            Date reservaDataEntrada = new SimpleDateFormat("dd/MM/yyyy").parse(headers.get("dataentrada").toString());
+            Date reservaDataSaida = new SimpleDateFormat("dd/MM/yyyy").parse(headers.get("datasaida").toString());
+            int hotelID = Integer.parseInt(headers.get("hotelid").toString());
+            Hotel hotel = HotelDAO.getHotelByORMID(hotelID);
+
+            return hotel.checkDisponibilidade(reservaDataEntrada,reservaDataSaida);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | InvalidObjectException | ParseException | PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
