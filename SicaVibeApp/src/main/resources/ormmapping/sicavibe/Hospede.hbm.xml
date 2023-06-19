@@ -15,7 +15,7 @@ License Type: Academic
 		<property name="nome" column="Nome" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="dataNascimento" column="DataNascimento" type="date" not-null="false" lazy="false"/>
 		<property name="morada" column="Morada" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="nTelemovel" column="NTelemovel" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="numTelemovel" column="NTelemovel" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="cc" column="Cc" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="nif" column="Nif" type="string" length="255" not-null="false" lazy="false"/>
 	</class>

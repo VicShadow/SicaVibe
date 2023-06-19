@@ -25,7 +25,7 @@ public class AdministradorCriteria extends AbstractORMCriteria {
 	public final StringExpression salt;
 	public final StringExpression nome;
 	public final DateExpression dataNascimento;
-	public final StringExpression nTelemovel;
+	public final StringExpression numTelemovel;
 	public final StringExpression morada;
 	public final StringExpression cc;
 	public final StringExpression nif;
@@ -38,7 +38,7 @@ public class AdministradorCriteria extends AbstractORMCriteria {
 		salt = new StringExpression("salt", this);
 		nome = new StringExpression("nome", this);
 		dataNascimento = new DateExpression("dataNascimento", this);
-		nTelemovel = new StringExpression("nTelemovel", this);
+		numTelemovel = new StringExpression("numTelemovel", this);
 		morada = new StringExpression("morada", this);
 		cc = new StringExpression("cc", this);
 		nif = new StringExpression("nif", this);

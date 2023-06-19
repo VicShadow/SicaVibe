@@ -3,6 +3,8 @@ package sicavibe.sicavibeapp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,8 @@ import sicavibe.*;
 import sicavibe.response.UtilizadorResponse;
 
 import java.util.*;
+
+import static sicavibe.sicavibeapp.SicaVibeAppAux.getListQuartos;
 
 @RestController
 public class SicaVibeAdminController {
@@ -80,6 +84,48 @@ public class SicaVibeAdminController {
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),e);
         }
+    }
 
+
+
+
+
+    @Operation(summary = "Listar Quartos de Hoteis", tags = {"Admin"}, parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER, required = false, name = "hotelid", description = "ID do Hotel a Filtrar"),
+            @Parameter(in= ParameterIn.HEADER,required = false,name = "tipoquarto",description = "Filtro de Tipo de Quarto (ID)"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "page",description = "Número da página (>0)"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json",
+                    schema = @Schema(implementation = SicaVibeAppAux.QuartosHotel.class))))
+    @GetMapping(value = "/admin/get-quartos-list", produces = MediaType.APPLICATION_JSON_VALUE)
+    public SicaVibeAppAux.QuartosHotel getQuartosList (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token","page","pagesize"),headers);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
+
+            //PARSE PAGES
+            int page = Integer.parseInt(headers.get("page").toString());
+            int pageSize = Integer.parseInt(headers.get("pagesize").toString());
+            if (page < 1 || pageSize < 1) throw new NumberFormatException();
+
+            //CHECK OPTIONAL FILTER
+            int filterTipo = -1;
+            int hotelFilter = -1;
+
+            Object filterTipoObj = headers.get("tipoquarto");
+            if (filterTipoObj != null) filterTipo = Integer.parseInt(filterTipoObj.toString());
+            Object filterHotelObj = headers.get("hotelid");
+            if (filterHotelObj != null) hotelFilter = Integer.parseInt(filterHotelObj.toString());
+
+            return getListQuartos(hotelFilter, filterTipo);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
     }
 }

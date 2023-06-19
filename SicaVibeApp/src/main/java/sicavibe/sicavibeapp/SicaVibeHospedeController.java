@@ -105,7 +105,7 @@ public class SicaVibeHospedeController {
             SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
             int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
 
-            SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"), body);
+            SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "numTelemovel", "morada","cc","nif"), body);
 
             Hospede h = HospedeDAO.getHospedeByORMID(id);
             setUserInfo(h,body);

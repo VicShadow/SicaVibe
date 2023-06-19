@@ -17,6 +17,7 @@ import java.io.InvalidObjectException;
 import java.sql.SQLException;
 import java.util.*;
 
+import static sicavibe.sicavibeapp.SicaVibeAppAux.getListQuartos;
 import static sicavibe.sicavibeapp.SicaVibeAppAux.paging;
 
 
@@ -218,9 +219,46 @@ public class SicaVibeFuncionarioController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
-
-
-
     }
+
+
+
+    @Operation(summary = "Listar Quartos do Hotel", tags = {"Funcionario"}, parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,required = false,name = "tipoquarto", description = "Filtro de Tipo de Quarto (ID)"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "page",description = "Número da página (>0)"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json",
+                    schema = @Schema(implementation = SicaVibeAppAux.QuartosHotel.class))))
+    @GetMapping(value = "/funcionario/list-quartos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public SicaVibeAppAux.QuartosHotel listQuartos (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token","page","pagesize"),headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
+
+            Funcionario funcionario = FuncionarioDAO.getFuncionarioByORMID(id);
+            int hotelID = funcionario.getMyWorkHotel().getID();
+
+            //PARSE PAGES
+            int page = Integer.parseInt(headers.get("page").toString());
+            int pageSize = Integer.parseInt(headers.get("pagesize").toString());
+            if (page < 1 || pageSize < 1) throw new NumberFormatException();
+
+            //CHECK OPTIONAL FILTER
+            int filterTipo = -1;
+            Object filterTipoObj = headers.get("tipoquarto");
+            if (filterTipoObj != null) filterTipo = Integer.parseInt(filterTipoObj.toString());
+
+            return getListQuartos(hotelID, filterTipo);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
 
 }
