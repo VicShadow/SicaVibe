@@ -221,4 +221,33 @@ public class SicaVibeHospedeController {
         }
     }
 
+
+    @Operation(summary = "Cancelar uma Reserva", tags = {"Hospede"})
+    @PostMapping(value = "/hospede/reservation-cancel", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void cancelReservation (@RequestHeader Map<String, Object> headers,@RequestBody Map<String, Object> body) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            SicaVibeAppAux.checkRequestContent(List.of("reservaid"),body);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
+            int reservaID = Integer.parseInt(body.get("reservaid").toString());
+
+            Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
+            if (reserva == null)
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"No Reservation with id '"+reservaID+"'");
+
+            if (!reserva.getEstado().equals("MARCADA"))
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Cannot perform the cancelation. State '"+reserva.getEstado()+"' can't be cancelled");
+
+            reserva.setEstado("CANCELADA");
+            ReservaDAO.save(reserva);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
 }

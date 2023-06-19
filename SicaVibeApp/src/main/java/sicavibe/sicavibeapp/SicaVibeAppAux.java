@@ -29,6 +29,10 @@ public class SicaVibeAppAux {
     }
 
     public static <T> List<T> paging(List<T> globalList, int page,int pageSize){
+
+        if(page <= 0 || pageSize <= 0)
+            throw new NumberFormatException("Invalid Page or PageSize");
+
         int startIndex = (page-1) * pageSize;
         int endIndex = startIndex + pageSize;
         int listSize = globalList.size();
