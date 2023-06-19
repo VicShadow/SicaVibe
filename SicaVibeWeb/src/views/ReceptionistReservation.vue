@@ -30,9 +30,11 @@ const formattedStatus = computed(() => {
   return status === ReservationStatus.DONE ? 'Done' : 'Pending'
 })
 
-const formattedScheduledAt = computed(() => {
+const _formattedScheduledAt = computed(() => {
   return formatDate(scheduledAt)
 })
+
+console.log(_formattedScheduledAt)
 
 const formattedScheduledTo = computed(() => {
   return formatDate(scheduledTo)

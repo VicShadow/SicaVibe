@@ -10,9 +10,12 @@ import {
   validatePassword,
   validatePhone
 } from '@/services/validator'
+import { register, RegisterProps } from '@/services/backend/auth/register'
+import { formatDateBackend } from '@/services/formatter'
+import { saveToken } from '@/services/storage/sessionStorage'
 
 const router = useRouter()
-const isSaved = ref(false)
+const success = ref(false)
 const errorMessageEmail = ref('')
 const errorMessageNif = ref('')
 const errorMessageCC = ref('')
@@ -20,16 +23,40 @@ const errorMessagePhone = ref('')
 const errorMessageBirthday = ref('')
 const errorMessagePassword = ref('')
 const errorMessageConfirmPassword = ref('')
+const errorMessage = ref('')
 
-const login = () => {
+const cancelOnClick = () => {
   router.push({ name: 'login' })
 }
 
-const saveData = () => {
+const registerService = async (props: RegisterProps) => {
+  try {
+    const token = await register({
+      ...props,
+      birthday: formatDateBackend(new Date(props.birthday))
+    })
+
+    console.log('JWT token: ', token)
+
+    saveToken(token)
+
+    return true
+  } catch (error) {
+    errorMessage.value = error.message // TODO: Improve user readability
+
+    return false
+  }
+}
+
+const registerOnClick = async () => {
+  const nameField = document.querySelector('#name') as HTMLInputElement
+  const nameValue = nameField.value
   const nifField = document.querySelector('#nif') as HTMLInputElement
   const nifValue = nifField.value
   const emailField = document.querySelector('#email') as HTMLInputElement
   const emailValue = emailField.value
+  const addressField = document.querySelector('#address') as HTMLInputElement
+  const addressValue = addressField.value
   const ccField = document.querySelector('#cc') as HTMLInputElement
   const ccValue = ccField.value
   const phoneField = document.querySelector('#phone') as HTMLInputElement
@@ -59,7 +86,21 @@ const saveData = () => {
     validatePassword(passwordValue) &&
     passwordValue === confirmPasswordValue
   ) {
-    isSaved.value = true
+    const registrationSuccess = await registerService({
+      email: emailValue,
+      password: passwordValue,
+      name: nameValue,
+      mobileNumber: phoneValue,
+      birthday: birthdayValue,
+      address: addressValue,
+      cc: ccValue,
+      nif: nifValue
+    })
+
+    if (!registrationSuccess) {
+      return
+    }
+    success.value = true
 
     setTimeout(() => {
       router.push({ name: 'login' })
@@ -88,6 +129,8 @@ const saveData = () => {
     }
 
     if (!validatePassword(passwordValue)) {
+      console.log('passwordValue', passwordValue)
+      console.log('password test', validatePassword(passwordValue))
       errorMessagePassword.value =
         'The password must have at least 8 characters, one uppercase letter, one lowercase letter, and one special character.'
     }
@@ -113,7 +156,7 @@ const saveData = () => {
             <div class="field-col">
               <div class="w-100 d-flex flex-column align-start">
                 <label>Name</label>
-                <TextField label=""></TextField>
+                <TextField id="name" label=""></TextField>
               </div>
               <div class="w-100 d-flex flex-column align-start">
                 <label>Email</label>
@@ -125,7 +168,7 @@ const saveData = () => {
             </div>
             <div class="w-100">
               <label>Address</label>
-              <TextField label=""></TextField>
+              <TextField id="address" label=""></TextField>
             </div>
             <div class="field-col">
               <div class="w-100 d-flex flex-column align-start">
@@ -171,15 +214,18 @@ const saveData = () => {
             </div>
           </div>
           <div class="button-container">
+            <div v-if="errorMessage" class="error-message">
+              {{ errorMessage }}
+            </div>
             <v-spacer></v-spacer>
-            <v-btn class="button2" @click="login">Cancel</v-btn>
-            <v-btn class="button" @click="saveData">Register</v-btn>
+            <v-btn class="button2" @click="cancelOnClick">Cancel</v-btn>
+            <v-btn class="button" @click="registerOnClick">Register</v-btn>
           </div>
         </form>
       </div>
     </div>
     <transition name="fade">
-      <div v-if="isSaved" class="confirmation-overlay">
+      <div v-if="success" class="confirmation-overlay">
         <div class="confirmation-message">
           Account created successfully! Login to start using our platform
         </div>
