@@ -255,7 +255,7 @@ public class SicaVibeAuthController {
 
         if (password.length() < MIN_LENGTH) return false;
         if (password.length() > MAX_LENGTH) return false;
-        if (REQUIRE_SPECIAL_CHARACTERS && !password.matches(".*[!@#$%^&*().,].*")) return false;
+        if (REQUIRE_SPECIAL_CHARACTERS && !password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) return false;
         if (REQUIRE_UPPERCASE && !password.matches(".*[A-Z].*")) return false;
         if (REQUIRE_LOWERCASE && !password.matches(".*[a-z].*")) return false;
 
