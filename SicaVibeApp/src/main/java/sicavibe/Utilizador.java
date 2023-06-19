@@ -29,7 +29,7 @@ public abstract class Utilizador {
 	
 	private java.util.Date dataNascimento;
 	
-	private String nTelemovel;
+	private String numTelemovel;
 	
 	private String morada;
 	
@@ -89,12 +89,12 @@ public abstract class Utilizador {
 		return dataNascimento;
 	}
 	
-	public void setnTelemovel(String value) {
-		this.nTelemovel = value;
+	public void setNumTelemovel(String value) {
+		this.numTelemovel = value;
 	}
 	
-	public String getnTelemovel() {
-		return nTelemovel;
+	public String getNumTelemovel() {
+		return numTelemovel;
 	}
 	
 	public void setMorada(String value) {

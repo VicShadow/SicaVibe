@@ -2,10 +2,7 @@ package sicavibe.sicavibeapp;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.ConstraintViolationException;
 import org.orm.PersistentException;
-import org.orm.PersistentManager;
-import org.orm.PersistentTransaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +32,7 @@ public class SicaVibeAuthController {
         private String nome;
         @Schema(example = "dd/MM/yyyy")
         private String dataNascimento;
-        private String nTelemovel;
+        private String numTelemovel;
         private String morada;
         private String cc;
         private String nif;
@@ -56,8 +53,8 @@ public class SicaVibeAuthController {
             return dataNascimento;
         }
 
-        public String getnTelemovel() {
-            return nTelemovel;
+        public String getNumTelemovel() {
+            return numTelemovel;
         }
 
         public String getMorada() {
@@ -118,15 +115,6 @@ public class SicaVibeAuthController {
             if (usr instanceof Administrador)
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
 
-            /*
-            if (HospedeDAO.getHospedeByORMID(usr.getID()) != null)
-                return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.HOSPEDE));
-            if (FuncionarioDAO.getFuncionarioByORMID(usr.getID()) != null)
-                return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.FUNCIONARIO));
-            if (AdministadorDAO.getAdministadorByORMID(usr.getID()) != null)
-                return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
-             */
-
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"User '"+email+"' found and authorized, but no User-Type found");
         } catch (PersistentException | NoSuchAlgorithmException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
@@ -144,7 +132,6 @@ public class SicaVibeAuthController {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String registerHospede (@RequestBody Map<String,Object> body) {
         try {
-            SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"),body);
 
             Hospede h = HospedeDAO.createHospede();
             setUserInfo(h,body);
@@ -229,7 +216,7 @@ public class SicaVibeAuthController {
 
         user.setEmail(body.get("email").toString());
         user.setNome(body.get("nome").toString());
-        user.setnTelemovel(body.get("nTelemovel").toString());
+        user.setNumTelemovel(body.get("numTelemovel").toString());
         user.setMorada(body.get("morada").toString());
         user.setCc(body.get("cc").toString());
         user.setNif(body.get("nif").toString());
