@@ -150,6 +150,7 @@ public class SicaVibeFuncionarioController {
                 throw new InvalidObjectException("Filter Type '"+reservaType+"' invalid");
 
             Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
+            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '"+reservaID+"' nor found");
 
             // Check validity of state change
             String estado = reserva.getEstado();
@@ -204,6 +205,7 @@ public class SicaVibeFuncionarioController {
 
             for (int id : quartosID) {
                 Quarto quarto = QuartoDAO.getQuartoByORMID(id);
+                if (quarto == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Room with id '"+id+"' not found");
                 quarto.setEstado("LIVRE");
                 QuartoDAO.save(quarto);
             }
