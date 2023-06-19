@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import sicavibe.*;
+import sicavibe.response.QuartoResponse;
 import sicavibe.response.UtilizadorResponse;
 
 import java.util.*;
@@ -95,11 +96,9 @@ public class SicaVibeAdminController {
             @Parameter(in= ParameterIn.HEADER, required = false, name = "hotelid", description = "ID do Hotel a Filtrar"),
             @Parameter(in= ParameterIn.HEADER,required = false,name = "tipoquarto",description = "Filtro de Tipo de Quarto (ID)"),
             @Parameter(in= ParameterIn.HEADER,required = true,name = "page",description = "Número da página (>0)"),
-            @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)")},
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SicaVibeAppAux.QuartosHotel.class))))
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)")})
     @GetMapping(value = "/admin/get-quartos-list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public SicaVibeAppAux.QuartosHotel getQuartosList (@RequestHeader Map<String, Object> headers) {
+    public Map<Integer, List<QuartoResponse>> getQuartosList (@RequestHeader Map<String, Object> headers) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token","page","pagesize"),headers);
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);

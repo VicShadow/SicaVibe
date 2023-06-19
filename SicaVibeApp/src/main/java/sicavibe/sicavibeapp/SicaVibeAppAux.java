@@ -49,17 +49,9 @@ public class SicaVibeAppAux {
     }
 
 
-    public static class QuartosHotel {
-        private Map<Integer, List<QuartoResponse>> quartosPorHotel;
 
-        public Map<Integer, List<QuartoResponse>> getQuartosPorHotel() {
-            return quartosPorHotel;
-        }
-    }
-
-    public static QuartosHotel getListQuartos (int hotelID, int tipoQuarto) throws PersistentException, SQLException, IOException {
-        QuartosHotel res = new QuartosHotel();
-        res.quartosPorHotel = new HashMap<>();
+    public static Map<Integer, List<QuartoResponse>> getListQuartos (int hotelID, int tipoQuarto) throws PersistentException, SQLException, IOException {
+        Map<Integer, List<QuartoResponse>> res = new HashMap<>();
 
         boolean hotelFilter = hotelID != -1;
 
@@ -67,14 +59,14 @@ public class SicaVibeAppAux {
             Hotel h = HotelDAO.getHotelByORMID(hotelID);
             if (h == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Hotel id '"+hotelID+"' not found!");
             List<QuartoResponse> quartos = filterQuartoByTipo(tipoQuarto, h.listaQuartos.toArray());
-            res.quartosPorHotel.put(hotelID, quartos);
+            res.put(hotelID, quartos);
         }
 
        else {  // todos os quartos de todos os hóteis
             Hotel[] hoteis = HotelDAO.listHotelByQuery(null,null);
             for (Hotel hotel : hoteis) {
                 List<QuartoResponse> quartos = filterQuartoByTipo(tipoQuarto, hotel.listaQuartos.toArray());
-                res.quartosPorHotel.put(hotel.getID(), quartos);
+                res.put(hotel.getID(), quartos);
             }
 
         }
