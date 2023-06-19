@@ -212,7 +212,7 @@ public class SicaVibeAuthController {
 
 
     public static void setUserInfo(Utilizador user,Map<String,Object> body) throws NoSuchAlgorithmException, ParseException {
-        SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "nTelemovel", "morada","cc","nif"), body);
+        SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "numTelemovel", "morada","cc","nif"), body);
 
         user.setEmail(body.get("email").toString());
         user.setNome(body.get("nome").toString());
