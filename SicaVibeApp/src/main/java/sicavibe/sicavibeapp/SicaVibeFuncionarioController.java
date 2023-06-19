@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sicavibe.*;
 import sicavibe.response.ReservaResponse;
-import sicavibe.response.UtilizadorResponse;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.*;
 
-import static sicavibe.sicavibeapp.SicaVibeAuthController.setUserInfo;
+import static sicavibe.sicavibeapp.SicaVibeAppAux.paging;
+
 
 @RestController
 public class SicaVibeFuncionarioController {
@@ -32,8 +32,8 @@ public class SicaVibeFuncionarioController {
             @Parameter(in= ParameterIn.HEADER,required = true,name = "page",description = "Número da página (>0)"),
             @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)"),
     })
-    @GetMapping(value = "/funcionario/list-reservations", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ReservaResponse> listReservas (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
+    @GetMapping(value = "/funcionario/list-reservations", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ReservaResponse> listReservas (@RequestHeader Map<String, Object> headers) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token","page","pagesize"),headers);
             int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
@@ -44,13 +44,27 @@ public class SicaVibeFuncionarioController {
             if (page < 1 || pageSize < 1) throw new NumberFormatException();
 
             //CHECK OPTIONAL ARGUMENTS
-            String reservaType = headers.get("tipo").toString();
-            String hospedeCC = headers.get("hospedecc").toString();
-            String hospedeNome = headers.get("hospedenome").toString();
+            String reservaType = "";
+            Object reservaTypeObj = headers.get("tipo");
+            String hospedeCC;
+            Object hospedeCCObj = headers.get("hospedecc");
+            String hospedeNome;
+            Object hospedeNomeObj = headers.get("hospedenome");
+
             boolean filtroTipo = false; boolean filtroCC = false; boolean filtroName = false;
-            if (reservaType != null) filtroTipo = true;
-            if (hospedeCC != null) filtroCC = true;
-            if (hospedeNome != null) filtroName = true;
+            if (reservaTypeObj != null) {
+                filtroTipo = true;
+                reservaType = reservaTypeObj.toString();
+            }
+            if (hospedeCCObj != null) {
+                filtroCC = true;
+                hospedeCC = hospedeCCObj.toString();
+            } else hospedeCC = "";
+            if (hospedeNomeObj != null) {
+                filtroName = true;
+                hospedeNome = hospedeNomeObj.toString();
+            } else hospedeNome = "";
+
             if (filtroTipo && !reservaType.equals("MARCADA") && !reservaType.equals("TERMINADA")
             && !reservaType.equals("A_DECORRER") && !reservaType.equals("CANCELADA"))
                 throw new InvalidObjectException("Filter Type '"+reservaType+"' invalid");
@@ -58,11 +72,38 @@ public class SicaVibeFuncionarioController {
             int hotelID = FuncionarioDAO.getFuncionarioByORMID(id).getMyWorkHotel().getID();
             String condition = "HotelId = "+hotelID;
             if(filtroTipo) condition+= " AND Estado = '"+reservaType+"'";
-            Reserva[] reservaList = ReservaDAO.listReservaByQuery("condition","DataEntrada DESC");
+            Reserva[] reservaList = ReservaDAO.listReservaByQuery(condition,"DataEntrada DESC");
+            List<Reserva> reservasFiltered = Arrays.stream(reservaList).toList();
 
-            //AGR TEM Q SE FILTRAR POR HOSPEDE AHAHAHHAHAHAH
 
-            return null;
+            if (filtroCC) {
+                Hospede[] hospede = HospedeDAO.listHospedeByQuery("Cc = " + hospedeCC, null);
+                if (hospede.length == 0) throw new InvalidObjectException("Invalid Hospede CC number: " +hospedeCC);
+
+                reservasFiltered = reservasFiltered.stream().filter(reserva -> reserva.getHospede().getCc().equals(hospedeCC)).toList();
+            }
+
+            if (filtroName) {
+                Hospede[] hospedes = HospedeDAO.listHospedeByQuery("Nome LIKE '%" + hospedeNome + "%'", null);
+                if (hospedes.length == 0) throw new InvalidObjectException("Invalid Hospede Name: " + hospedeNome);
+
+                List<Integer> hospedesIDs = Arrays.stream(hospedes).map(Utilizador::getID).toList();
+                reservasFiltered = reservasFiltered.stream().filter(reserva -> hospedesIDs.contains(reserva.getHospede().getID())).toList();
+            }
+
+
+            List<ReservaResponse> res = new ArrayList<>();
+
+            reservasFiltered = paging(reservasFiltered, page, pageSize);
+
+            reservasFiltered.forEach(r -> {
+                try {
+                    res.add(new ReservaResponse(r, false));
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            return res;
 
 
 
@@ -74,6 +115,63 @@ public class SicaVibeFuncionarioController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
+    }
+
+
+
+    private static class EstadoReserva {
+        private int reservaID;
+        private String reservaType;
+
+        public int getReservaID() {
+            return reservaID;
+        }
+
+        public String getReservaType() {
+            return reservaType;
+        }
+    }
+
+    @Operation(summary = "Alterar Estado Reserva", tags = {"Funcionario"}, parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json",
+                    schema = @Schema(implementation = EstadoReserva.class))))
+    @PostMapping(value = "/funcionario/alter-reservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ReservaResponse setCheckedIn (@RequestHeader Map<String, Object> headers, @RequestBody Map<String, Object> body) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
+
+            SicaVibeAppAux.checkRequestContent(List.of("reservaID","reservaType"),body);
+
+            int reservaID = (int) body.get("reservaID");
+
+            String reservaType = (String) body.get("reservaType");
+            if (!reservaType.equals("MARCADA") && !reservaType.equals("TERMINADA") && !reservaType.equals("A_DECORRER") && !reservaType.equals("CANCELADA"))
+                throw new InvalidObjectException("Filter Type '"+reservaType+"' invalid");
+
+            Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
+
+            // Check validity of state change
+            String estado = reserva.getEstado();
+            if (estado.equals("TERMINADA")) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation has already ended!");
+            if (estado.equals("MARCADA") && reservaType.equals("TERMINADA")) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation has not been checked-in yet!");
+            if (estado.equals("A_DECORRER") && (reservaType.equals("CANCELADA") || reservaType.equals("MARCADA"))) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation has already been initiated!");
+
+            reserva.setEstado(reservaType);
+            ReservaDAO.save(reserva);
+
+            return new ReservaResponse(reserva, false);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+
+
     }
 
 }

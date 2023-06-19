@@ -25,7 +25,7 @@ License Type: Academic
 		<subclass name="sicavibe.Funcionario" discriminator-value="Funcionario" lazy="false">
 			<property name="estado" column="Estado" type="string" length="255" not-null="false" lazy="false"/>
 		</subclass>
-		<subclass name="sicavibe.Administrador" discriminator-value="Administador" lazy="false">
+		<subclass name="sicavibe.Administrador" discriminator-value="Administrador" lazy="false">
 		</subclass>
 	</class>
 </hibernate-mapping>
