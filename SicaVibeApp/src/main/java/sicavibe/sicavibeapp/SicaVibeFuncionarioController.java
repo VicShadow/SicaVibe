@@ -1,6 +1,5 @@
 package sicavibe.sicavibeapp;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -158,6 +157,14 @@ public class SicaVibeFuncionarioController {
             if (estado.equals("MARCADA") && reservaType.equals("TERMINADA")) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation has not been checked-in yet!");
             if (estado.equals("A_DECORRER") && (reservaType.equals("CANCELADA") || reservaType.equals("MARCADA"))) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation has already been initiated!");
 
+
+            String estadoQuartos = reservaType.equals("A_DECORRER") ? "OCUPADO" : "POR_LIMPAR";
+            Quarto[] quartos = reserva.quartos.toArray();
+            for (Quarto quarto : quartos) {
+                quarto.setEstado(estadoQuartos);
+                QuartoDAO.save(quarto);
+            }
+
             reserva.setEstado(reservaType);
             ReservaDAO.save(reserva);
 
@@ -170,6 +177,46 @@ public class SicaVibeFuncionarioController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
+    }
+
+
+
+
+    private static class QuartoState {
+        private int[] quartosIDS;
+
+        public int[] getQuartosIDS() {
+            return quartosIDS;
+        }
+    }
+    @Operation(summary = "Alterar Estado Quarto Para LIVRE", tags = {"Funcionario"}, parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json",
+                    schema = @Schema(implementation = QuartoState.class))))
+    @PostMapping(value = "/funcionario/set-quarto-state", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void setQuartoState (@RequestHeader Map<String, Object> headers, @RequestBody Map<String, Object> body) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
+
+            SicaVibeAppAux.checkRequestContent(List.of("quartosID"),body);
+            int[] quartosID = (int[]) body.get("quartosID");
+
+            for (int id : quartosID) {
+                Quarto quarto = QuartoDAO.getQuartoByORMID(id);
+                quarto.setEstado("LIVRE");
+                QuartoDAO.save(quarto);
+            }
+
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+
 
 
     }

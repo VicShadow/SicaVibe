@@ -46,8 +46,10 @@ public class SicaVibeHospedeController {
         public List<Integer> getServicosextra() {return servicosextra;}
     }
 
-
-    @Operation(summary = "Obter informacao de um Hospede", tags = {"Hospede"})
+    @Operation(summary = "Obter informacao de um Hospede", tags = {"Hospede"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UtilizadorResponse.class))))
     @GetMapping(value = "/hospede", produces = MediaType.APPLICATION_JSON_VALUE)
     public UtilizadorResponse getHospede (@RequestHeader Map<String, Object> headers) {
         try {
@@ -66,8 +68,8 @@ public class SicaVibeHospedeController {
 
     }
 
-
-    @Operation(summary = "Obter Reservas de um Hospede", tags = {"Hospede"})
+    @Operation(summary = "Obter Reservas de um Hospede", tags = {"Hospede"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")})
     @GetMapping(value = "/hospede/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReservaResponse> getHospedeReservas (@RequestHeader Map<String, Object> headers) {
         try {
@@ -93,8 +95,10 @@ public class SicaVibeHospedeController {
 
 
     // EDIT HOSPEDE PROFILE
-    @Operation(summary = "Editar perfil de um Hospede", tags = {"Hospede"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UtilizadorResponse.class))))
+    @Operation(summary = "Editar perfil de um Hospede", tags = {"Hospede"},
+            parameters = { @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UtilizadorResponse.class))))
     @PostMapping(value = "/hospede/edit-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Hospede editHospedeProfile (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
@@ -121,7 +125,8 @@ public class SicaVibeHospedeController {
 
 
     // DELETE HOSPEDE ACCOUNT
-    @Operation(summary = "Eliminar conta de um Hospede", tags = {"Hospede"})
+    @Operation(summary = "Eliminar conta de um Hospede", tags = {"Hospede"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")})
     @PostMapping(value = "/hospede/delete-account", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void deleteHospedeAccount (@RequestHeader Map<String, Object> headers) {
         try {
@@ -141,10 +146,10 @@ public class SicaVibeHospedeController {
 
 
     @Operation(summary = "Verifcar a disponibilidade de Quartos", tags = {"Hospede"},parameters = {
-            @Parameter(in= ParameterIn.HEADER,name = "token",description = "Token de Autorização"),
-            @Parameter(in= ParameterIn.HEADER,name = "hotelid",description = "ID do Hotel a verificar a disponibilidade"),
-            @Parameter(in= ParameterIn.HEADER,name = "dataentrada",description = "Data de entrada da potencial reserva"),
-            @Parameter(in= ParameterIn.HEADER,name = "datasaida",description = "Data de saída da potencial reserva"),
+            @Parameter(in= ParameterIn.HEADER, required = true, name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER, required = true, name = "hotelid",description = "ID do Hotel a verificar a disponibilidade"),
+            @Parameter(in= ParameterIn.HEADER, required = true, name = "dataentrada",description = "Data de entrada da potencial reserva"),
+            @Parameter(in= ParameterIn.HEADER, required = true, name = "datasaida",description = "Data de saída da potencial reserva"),
     })
     @GetMapping(value = "/hospede/check-availability", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<Integer,Integer> checkRoomsAvailability (@RequestHeader Map<String, Object> headers) {
@@ -170,8 +175,10 @@ public class SicaVibeHospedeController {
 
 
 
-    @Operation(summary = "Marcar uma reserva", tags = {"Hospede"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = MakeReservaBody.class))))
+    @Operation(summary = "Marcar uma reserva", tags = {"Hospede"},
+            parameters = { @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = MakeReservaBody.class))))
     @PostMapping(value = "/hospede/make-reservation", consumes = MediaType.APPLICATION_JSON_VALUE)
     public float makeReservation (@RequestHeader Map<String, Object> headers,@RequestBody Map<String, Object> body) {
         try {
@@ -222,7 +229,9 @@ public class SicaVibeHospedeController {
     }
 
 
-    @Operation(summary = "Cancelar uma Reserva", tags = {"Hospede"})
+    @Operation(summary = "Cancelar uma Reserva", tags = {"Hospede"}, parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "reservaid",description = "ID da Reserva a Cancelar")})
     @PostMapping(value = "/hospede/reservation-cancel", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void cancelReservation (@RequestHeader Map<String, Object> headers,@RequestBody Map<String, Object> body) {
         try {

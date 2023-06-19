@@ -9,14 +9,14 @@ public class QuartoResponse {
     private int id;
     private int tipoQuartoID;
     private String tipoQuartoNome;
-    private int nPorta;
+    private int numPorta;
     private String estado;
 
     public QuartoResponse(Quarto quarto) throws SQLException, IOException {
         this.id = quarto.getID();
         this.tipoQuartoID = quarto.getTipoDeQuarto().getID();
         this.tipoQuartoNome = quarto.getTipoDeQuarto().getNome();
-        this.nPorta = quarto.getnPorta();
+        this.numPorta = quarto.getnPorta();
         this.estado = quarto.getEstado();
     }
 
@@ -32,8 +32,8 @@ public class QuartoResponse {
         return tipoQuartoNome;
     }
 
-    public int getnPorta() {
-        return nPorta;
+    public int getNumPorta() {
+        return numPorta;
     }
 
     public String getEstado() {

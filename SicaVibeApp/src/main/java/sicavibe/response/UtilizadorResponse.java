@@ -13,11 +13,10 @@ public class UtilizadorResponse {
     private final int ID;
     private final String email;
     private final String nome;
-    private final String nTelemovel;
+    private final String numTelemovel;
     private final String morada;
     private final String cc;
     private final String nif;
-    //@Schema(example = "dd/MM/yyyy")
     private final Date dataNascimento;
     private String hotelName = null;
 
@@ -27,7 +26,7 @@ public class UtilizadorResponse {
         this.ID = utilizador.getID();
         this.email = utilizador.getEmail();
         this.nome = utilizador.getNome();
-        this.nTelemovel = utilizador.getnTelemovel();
+        this.numTelemovel = utilizador.getNumTelemovel();
         this.morada = utilizador.getMorada();
         this.cc = utilizador.getCc();
         this.nif = utilizador.getNif();
@@ -69,8 +68,8 @@ public class UtilizadorResponse {
         return nif;
     }
 
-    public String getnTelemovel() {
-        return nTelemovel;
+    public String getNumTelemovel() {
+        return numTelemovel;
     }
 
     public String getHotelName() {

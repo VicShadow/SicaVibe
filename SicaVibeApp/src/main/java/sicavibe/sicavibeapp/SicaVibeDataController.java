@@ -1,9 +1,6 @@
 package sicavibe.sicavibeapp;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
-import javassist.NotFoundException;
-import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sicavibe.*;
 import sicavibe.response.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 public class SicaVibeDataController {
@@ -120,7 +114,7 @@ public class SicaVibeDataController {
         try {
             ServicoExtra serv = ServicoExtraDAO.getServicoExtraByORMID(id);
             if (serv == null)
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tipo de Quarto '"+id+"' not found");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Serviço Extra '"+id+"' not found");
 
             return new ServicoExtraResponse(serv);
 
@@ -130,10 +124,6 @@ public class SicaVibeDataController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),e);
         }
     }
-
-
-
-
 
     @Operation(summary = "Obter o conteúdo de uma imagem",tags = {"No Auth"})
     @GetMapping(value = "/imagem/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
