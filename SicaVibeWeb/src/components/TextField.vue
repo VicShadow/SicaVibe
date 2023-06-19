@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, toRefs } from 'vue'
+import { toRefs } from 'vue'
 
 interface Props {
   type?: string

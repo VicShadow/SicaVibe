@@ -13,3 +13,11 @@ export const formatDateTime = (dateTime: Date): string => {
 
   return `${date} ${hours}:${minutes}`
 }
+
+export const formatDateBackend = (date: Date): string => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+
+  return `${day}/${month}/${year}`
+}

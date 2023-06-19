@@ -63,15 +63,13 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: SignUp
-  }
-  /*
+  },
   {
     // Redirect to home if no route found
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     redirect: '/'
   }
-   */
 ]
 
 const router = createRouter({

@@ -16,7 +16,6 @@ const loading = ref(false)
 
 const addRoomHandler = () => {
   loading.value = true
-  console.log('addRoomHandler')
   setTimeout(() => (loading.value = false), 1000)
   // TODO: Implement add room action
 }
