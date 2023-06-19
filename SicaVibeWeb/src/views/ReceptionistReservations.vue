@@ -50,9 +50,7 @@ const reservations: Reservation[] = [
   }
 ]
 
-const addRoomHandler = () => {
-  console.log('id=', id.value)
-}
+const addRoomHandler = () => {}
 </script>
 
 <template>

@@ -34,8 +34,6 @@ const _formattedScheduledAt = computed(() => {
   return formatDate(scheduledAt)
 })
 
-console.log(_formattedScheduledAt)
-
 const formattedScheduledTo = computed(() => {
   return formatDate(scheduledTo)
 })
@@ -67,13 +65,11 @@ const isCheckOutDisabled = computed(() => {
 const checkInHandler = () => {
   // TODO: Implement check-in handler
   isCheckInModalOpen.value = false
-  console.log('Check In')
 }
 
 const checkOutHandler = () => {
   // TODO: Implement check-out handler
   isCheckOutModalOpen.value = false
-  console.log('Check Out')
 }
 
 const openCheckInModal = () => {

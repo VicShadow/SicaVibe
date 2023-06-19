@@ -36,8 +36,6 @@ const registerService = async (props: RegisterProps) => {
       birthday: formatDateBackend(new Date(props.birthday))
     })
 
-    console.log('JWT token: ', token)
-
     saveToken(token)
 
     return true
@@ -129,8 +127,6 @@ const registerOnClick = async () => {
     }
 
     if (!validatePassword(passwordValue)) {
-      console.log('passwordValue', passwordValue)
-      console.log('password test', validatePassword(passwordValue))
       errorMessagePassword.value =
         'The password must have at least 8 characters, one uppercase letter, one lowercase letter, and one special character.'
     }

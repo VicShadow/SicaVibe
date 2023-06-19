@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import { login } from '@/services/backend/auth/login'
 import { saveToken } from '@/services/storage/sessionStorage'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const email = ref('')
 const password = ref('')
@@ -16,9 +19,9 @@ const loginOnClick = async () => {
       password: password.value
     })
 
-    console.log('JWT token: ', token)
-
     saveToken(token)
+
+    await router.push('/guest')
   } catch (error) {
     errorMessage.value = error.message // TODO: Improve user readability
   }

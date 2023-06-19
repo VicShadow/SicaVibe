@@ -36,16 +36,11 @@ export const register = async ({
     nif: nif
   }
 
-  console.log(JSON.stringify(data))
-
   const response = await backend.post(REGISTER_ENDPOINT, data)
 
   if (response.status !== 200) {
-    console.log('Failed registration')
-    console.log('Failed response: ' + JSON.stringify(response.data))
     throw new Error(response.data)
   } else {
-    console.log('Successfull registration')
     return response.data as Token
   }
 }

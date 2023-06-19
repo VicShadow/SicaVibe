@@ -40,7 +40,6 @@ const rooms: Room[] = [
 ]
 
 const addRoomHandler = () => {
-  console.log('id=', id.value)
   isModalOpen.value = true
 }
 </script>
