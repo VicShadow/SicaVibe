@@ -3,7 +3,7 @@ import { type Reservation, type ReservationStatus } from '@/types/Reservation'
 import {
   type BackendReservation,
   convertBackendReservationToFrontend,
-  convertReservationStatusToBackend
+  convertFrontendReservationStatusToBackend
 } from '@/services/backend/reservations/converters'
 import type { Token } from '@/types/Token'
 
@@ -26,10 +26,9 @@ export const alterReservation = async ({
 
   const body = {
     reservaID: reservationId,
-    reservaType: convertReservationStatusToBackend(reservationType)
+    reservaType: convertFrontendReservationStatusToBackend(reservationType)
   }
 
-  // TODO: Testing missing
   const res = await backend.post(ALTER_RESERVATIONS_ENDPOINT, body, {
     headers
   })

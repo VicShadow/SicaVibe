@@ -4,7 +4,7 @@ import type { Token } from '@/types/Token'
 import type { BackendReservation } from '@/services/backend/reservations/converters'
 import {
   convertBackendReservationsToFrontend,
-  convertReservationStatusToBackend
+  convertFrontendReservationStatusToBackend
 } from '@/services/backend/reservations/converters'
 
 export interface GetReservationsProps {
@@ -14,11 +14,13 @@ export interface GetReservationsProps {
   guestName?: string
   page: number
   pagesize: number
+  isAdmin?: boolean
 }
 
 export type GetReservationsResponse = BackendReservation[]
 
-const GET_RESERVATIONS_ENDPOINT = '/funcionario/list-reservations'
+const GET_RECEPTIONIST_RESERVATIONS_ENDPOINT = '/funcionario/list-reservations'
+const GET_ADMIN_RESERVATIONS_ENDPOINT = '/admin/get-reservation-list'
 
 export const getReservations = async ({
   type,
@@ -26,8 +28,13 @@ export const getReservations = async ({
   guestName,
   page,
   pagesize,
-  token
+  token,
+  isAdmin = false
 }: GetReservationsProps): Promise<Reservation[]> => {
+  const endpoint = isAdmin
+    ? GET_ADMIN_RESERVATIONS_ENDPOINT
+    : GET_RECEPTIONIST_RESERVATIONS_ENDPOINT
+
   let headers = {
     token,
     page,
@@ -38,7 +45,7 @@ export const getReservations = async ({
     headers = {
       ...headers,
       // @ts-ignore
-      type: convertReservationStatusToBackend(type)
+      tipo: convertFrontendReservationStatusToBackend(type)
     }
   }
 
@@ -46,7 +53,7 @@ export const getReservations = async ({
     headers = {
       ...headers,
       // @ts-ignore
-      guestCC
+      hospedecc: guestCC
     }
   }
 
@@ -54,11 +61,11 @@ export const getReservations = async ({
     headers = {
       ...headers,
       // @ts-ignore
-      guestName
+      hospedenome: guestName
     }
   }
 
-  const res = await backend.get(GET_RESERVATIONS_ENDPOINT, {
+  const res = await backend.get(endpoint, {
     headers
   })
 
@@ -68,7 +75,6 @@ export const getReservations = async ({
   }
 
   console.log('Response data: ', res.data)
-
   const backendData = res.data as GetReservationsResponse
 
   return convertBackendReservationsToFrontend(backendData)

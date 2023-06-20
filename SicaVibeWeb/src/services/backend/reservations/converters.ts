@@ -1,4 +1,4 @@
-import { type Reservation, ReservationStatus, type Service } from '@/types/Reservation'
+import { type Guest, type Reservation, ReservationStatus, type Service } from '@/types/Reservation'
 import { type Room, RoomStatus } from '@/types/Room'
 import type { GetReservationsResponse } from '@/services/backend/reservations/getReservations'
 
@@ -31,6 +31,7 @@ interface ServicoExtra {
 }
 
 export interface BackendReservation {
+  id: number
   hospedeId: number
   hospedeNome: string
   hospede: Hospede | null // Only if the available is the logged-in user is an admin
@@ -42,7 +43,14 @@ export interface BackendReservation {
   servicosExtras: ServicoExtra[]
 }
 
-export const convertReservationStatusToBackend = (status: ReservationStatus): string => {
+export enum BackendReservationStatus {
+  ON_GOING = 'A_DECORRER',
+  DONE = 'TERMINADA',
+  CANCELLED = 'CANCELADA',
+  SCHEDULED = 'MARCADA'
+}
+
+export const convertFrontendReservationStatusToBackend = (status: ReservationStatus): string => {
   switch (status) {
     case ReservationStatus.ON_GOING:
       return 'A_DECORRER'
@@ -52,6 +60,23 @@ export const convertReservationStatusToBackend = (status: ReservationStatus): st
       return 'CANCELADA'
     case ReservationStatus.SCHEDULED:
       return 'MARCADA'
+    default:
+      throw new Error('Invalid reservation status')
+  }
+}
+
+export const convertBackendReservationStatusToFrontend = (
+  status: BackendReservationStatus
+): ReservationStatus => {
+  switch (status) {
+    case BackendReservationStatus.ON_GOING:
+      return ReservationStatus.ON_GOING
+    case BackendReservationStatus.DONE:
+      return ReservationStatus.DONE
+    case BackendReservationStatus.CANCELLED:
+      return ReservationStatus.CANCELLED
+    case BackendReservationStatus.SCHEDULED:
+      return ReservationStatus.SCHEDULED
     default:
       throw new Error('Invalid reservation status')
   }
@@ -75,14 +100,31 @@ export const convertBackendReservationToFrontend = (
     price: service.preco
   }))
 
+  const guest: Guest | undefined =
+    reservation.hospede === null
+      ? undefined
+      : {
+          id: reservation.hospede.id,
+          email: reservation.hospede.email,
+          name: reservation.hospede.nome,
+          birthDate: new Date(reservation.hospede.dataNascimento),
+          phoneNumber: reservation.hospede.numTelemovel,
+          address: reservation.hospede.morada,
+          cc: reservation.hospede.cc,
+          nif: reservation.hospede.nif
+        }
+
   return {
-    id: reservation.hospedeId,
+    id: reservation.id,
     guestId: reservation.hospedeId,
     guestName: reservation.hospedeNome,
+    guest: guest,
     inDate: new Date(reservation.dataEntrada),
     outDate: new Date(reservation.dataSaida),
     price: reservation.preco,
-    status: reservation.estado as ReservationStatus,
+    status: convertBackendReservationStatusToFrontend(
+      reservation.estado as BackendReservationStatus
+    ),
     rooms,
     services
   }

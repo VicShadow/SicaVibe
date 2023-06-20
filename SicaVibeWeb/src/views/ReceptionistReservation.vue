@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
-import { computed, ref, toRefs } from 'vue'
-import { Reservation, ReservationStatus } from '@/types/Reservation'
+import { computed, ref } from 'vue'
+import { ReservationStatus } from '@/types/Reservation'
 import { formatDate } from '@/services/formatter'
 import ConfirmationModal from '@/components/modals/ConfirmationModal.vue'
-import { RoomStatus } from '@/types/Room'
-import { checkInReservation } from '@/services/backend/reservations/checkInReservation'
 import { getToken } from '@/services/storage/sessionStorage'
-import { checkOutReservation } from '@/services/backend/reservations/checkOutReservation'
+import { useReservation } from '@/hooks/useReservation'
+import { VSkeletonLoader } from 'vuetify/labs/components'
+import { useReservationMutation } from '@/hooks/useReservationMutation'
 
 const isCheckInModalOpen = ref(false)
 const isCheckOutModalOpen = ref(false)
@@ -17,91 +17,76 @@ const route = useRoute()
 
 const { id } = route.params
 
-const mockReservation = ref<Reservation>({
-  id: 1,
-  guestId: 1,
-  inDate: new Date(),
-  outDate: new Date(),
-  price: 100,
-  status: ReservationStatus.DONE,
-  rooms: [
-    {
-      id: 1,
-      typeId: 1,
-      typeName: 'Single',
-      doorNumber: 1,
-      status: RoomStatus.AVAILABLE
-    }
-  ]
+const reservationId = computed(() => {
+  return parseInt(id as string)
 })
 
-const { guestId, inDate, outDate, price, status } = mockReservation // TODO: Add toRefs when the reservation becomes reactive
-
-/* --------------------- Formatted values --------------------- */
-const formattedStatus = computed(() => {
-  return status === ReservationStatus.DONE ? 'Done' : 'Pending'
-})
-
-const formattedInDate = computed(() => {
-  return formatDate(inDate)
-})
-
-const formattedOutDate = computed(() => {
-  return formatDate(outDate)
-})
-
-const isCheckInDisabled = computed(() => {
-  // TODO: Implement check-in disabled check
-  return false
-})
-
-const isCheckOutDisabled = computed(() => {
-  // TODO: Implement check-out disabled check
-  return true
-})
-
-const isCancelDisabled = computed(() => {
-  // TODO: Implement cancel disabled check
-  return false
-})
-
-/* --------------------- Handlers --------------------- */
 const token = getToken()
 
 if (!token) {
   throw new Error('Token not found')
 }
 
-const checkInHandler = async () => {
-  // TODO: Implement check-in handler
-  const reservation = await checkInReservation(token, id as number)
+const { reservation, isLoading, isError, isSuccess, error } = useReservation({
+  token,
+  reservationId
+})
 
-  if (reservation) {
-    mockReservation.value = reservation
-  }
+const { checkInMutation, checkOutMutation, cancelMutation } = useReservationMutation({
+  token,
+  reservationId: reservationId.value
+})
+
+/* --------------------- Formatted values --------------------- */
+const formattedStatus = computed(() => {
+  if (!reservation.value) return ''
+  return reservation.value.status
+})
+
+const formattedInDate = computed(() => {
+  if (!reservation.value) return ''
+
+  return formatDate(reservation.value.inDate)
+})
+
+const formattedOutDate = computed(() => {
+  if (!reservation.value) return ''
+  return formatDate(reservation.value.outDate)
+})
+
+const isCheckInDisabled = computed(() => {
+  if (!reservation.value) return true
+
+  return reservation.value.status !== ReservationStatus.SCHEDULED
+})
+
+const isCheckOutDisabled = computed(() => {
+  if (!reservation.value) return true
+
+  return reservation.value.status !== ReservationStatus.ON_GOING
+})
+
+const isCancelDisabled = computed(() => {
+  if (!reservation.value) return true
+
+  return reservation.value.status !== ReservationStatus.SCHEDULED
+})
+
+/* --------------------- Handlers --------------------- */
+const checkInHandler = () => {
+  checkInMutation.mutate()
 
   isCheckInModalOpen.value = false
 }
 
-const checkOutHandler = async () => {
-  // TODO: Implement check-out handler
-
-  const reservation = await checkOutReservation(token, id as number)
-
-  if (reservation) {
-    mockReservation.value = reservation
-  }
+const checkOutHandler = () => {
+  checkOutMutation.mutate()
 
   isCheckOutModalOpen.value = false
 }
 
 const cancelHandler = async () => {
-  // TODO: Implement cancel handler
-  const reservation = await checkOutReservation(token, id as number)
-
-  if (reservation) {
-    mockReservation.value = reservation
-  }
+  cancelMutation.mutate()
 
   isCancelModalOpen.value = false
 }
@@ -169,13 +154,16 @@ const breadcrumbItems = computed(() => {
       </div>
     </div>
   </div>
-  <div class="reservation-card">
-    <div>Made by user with id: {{ guestId }}.</div>
-    <div>Price: {{ price }} €</div>
-    <!-- TODO: Add user name -->
+  <v-skeleton-loader v-if="isLoading" type="table" />
+
+  <div v-if="isError" class="text-h6 text-red-darken-3">{{ error }}</div>
+
+  <div v-if="isSuccess && reservation" class="reservation-card">
+    <div>Made by user with id: {{ reservation.guestId }}.</div>
+    <div>Price: {{ reservation.price }} €</div>
+    <div>Guest Name: {{ reservation.guestName }}</div>
     <div class="schedule">
       Schedule from
-      <!--
       <span class="text-h6">
         {{ formattedInDate }}
       </span>
@@ -183,7 +171,6 @@ const breadcrumbItems = computed(() => {
       <span class="text-h6">
         {{ formattedOutDate }}
       </span>
-      -->
     </div>
     <div class="status">
       Reservation Status:
