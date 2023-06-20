@@ -106,9 +106,6 @@ public class SicaVibeFuncionarioController {
             });
             return res;
 
-
-
-
         } catch (ResponseStatusException e) {
             throw e;
         } catch (NumberFormatException | PersistentException e) {
@@ -145,14 +142,14 @@ public class SicaVibeFuncionarioController {
 
             SicaVibeAppAux.checkRequestContent(List.of("reservaID","reservaType"),body);
 
-            int reservaID = (int) body.get("reservaID");
+            int reservaID = Integer.parseInt(body.get("reservaID").toString());
 
             String reservaType = (String) body.get("reservaType");
             if (!reservaType.equals("MARCADA") && !reservaType.equals("TERMINADA") && !reservaType.equals("A_DECORRER") && !reservaType.equals("CANCELADA"))
                 throw new InvalidObjectException("Filter Type '"+reservaType+"' invalid");
 
             Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
-            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '"+reservaID+"' nor found");
+            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '"+reservaID+"' not found");
 
             // Check validity of state change
             String estado = reserva.getEstado();
@@ -226,22 +223,16 @@ public class SicaVibeFuncionarioController {
 
     @Operation(summary = "Listar Quartos do Hotel", tags = {"Funcionario"}, parameters = {
             @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
-            @Parameter(in= ParameterIn.HEADER,required = false,name = "tipoquarto", description = "Filtro de Tipo de Quarto (ID)"),
-            @Parameter(in= ParameterIn.HEADER,required = true,name = "page",description = "Número da página (>0)"),
-            @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)")})
+            @Parameter(in= ParameterIn.HEADER,required = false,name = "tipoquarto", description = "Filtro de Tipo de Quarto (ID)")
+    })
     @GetMapping(value = "/funcionario/list-quartos", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<Integer, List<QuartoResponse>> listQuartos (@RequestHeader Map<String, Object> headers) {
         try {
-            SicaVibeAppAux.checkRequestContent(List.of("token","page","pagesize"),headers);
+            SicaVibeAppAux.checkRequestContent(List.of("token"), headers);
             int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
 
             Funcionario funcionario = FuncionarioDAO.getFuncionarioByORMID(id);
             int hotelID = funcionario.getMyWorkHotel().getID();
-
-            //PARSE PAGES
-            int page = Integer.parseInt(headers.get("page").toString());
-            int pageSize = Integer.parseInt(headers.get("pagesize").toString());
-            if (page < 1 || pageSize < 1) throw new NumberFormatException();
 
             //CHECK OPTIONAL FILTER
             int filterTipo = -1;
@@ -249,6 +240,40 @@ public class SicaVibeFuncionarioController {
             if (filterTipoObj != null) filterTipo = Integer.parseInt(filterTipoObj.toString());
 
             return getListQuartos(hotelID, filterTipo);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
+
+
+
+
+    @Operation(summary = "Obter Reserva", tags = {"Funcionario"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "reservaid",description = "ID da Reserva a pesquisar"),
+    })
+    @GetMapping(value = "/funcionario/reservation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ReservaResponse getReservaById (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token","reservaid"), headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
+
+            Funcionario funcionario = FuncionarioDAO.getFuncionarioByORMID(id);
+            Hotel hotel = funcionario.getMyWorkHotel();
+
+            int reservaID = Integer.parseInt(headers.get("reservaid").toString());
+            Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
+            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '" + reservaID + "' not found!");
+            if (!hotel.listaReservas.contains(reserva)) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation is not from Hotel '" + hotel.getNome() + "'!");
+
+            return new ReservaResponse(reserva, false);
 
         } catch (ResponseStatusException e) {
             throw e;

@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <v-app-bar :elevation="0" image="/torreBelem.jpg">
+  <v-app-bar :elevation="0" color="transparent">
     <template v-slot:image>
       <v-img
         gradient="to top right"

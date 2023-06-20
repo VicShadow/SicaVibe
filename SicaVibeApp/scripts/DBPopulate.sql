@@ -32,7 +32,7 @@ WHERE ID = 3;
 
 UPDATE Hotel
 SET Descricao = 'Experience the enchantment of SicaVibe Coimbra, a contemporary hotel nestled in the heart of vibrant Coimbra, Portugal. Immerse yourself in modern comfort and local authenticity as you explore the rich history and vibrant culture of this captivating city. Relax in our stylish and well-appointed rooms, designed to provide a tranquil retreat amidst the urban energy. Indulge in delectable cuisine at our on-site restaurant, where a fusion of local and international flavors awaits. Unwind and socialize in our inviting lounge area, or take in panoramic views of the city from our rooftop terrace.\nImmerse yourself in the charm of the historic Alfama district, explore the vibrant nightlife of Bairro Alto, or discover the architectural wonders of Belém. Experience the vibrant energy and warm hospitality of Coimbra, where modern comfort meets the authentic charm of Coimbra.'
-WHERE ID = 3;
+WHERE ID = 4;
 
 
 
