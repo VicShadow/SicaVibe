@@ -15,6 +15,7 @@ public class ReservaResponse {
 
     private int ID;
     private int hospedeId;
+    private String hospedeNome;
     private Hospede hospede;
     private Date dataEntrada;
     private Date dataSaida;
@@ -31,6 +32,7 @@ public class ReservaResponse {
         this.preco = reserva.getPreco();
         this.hospedeId = reserva.getHospede().getID();
 
+        if (!isAdmin) this.hospedeNome = reserva.getHospede().getNome();
         if (isAdmin) this.hospede = reserva.getHospede();
         else this.hospede = null;
 
@@ -54,6 +56,10 @@ public class ReservaResponse {
 
     public int getHospedeId() {
         return hospedeId;
+    }
+
+    public String getHospedeNome() {
+        return hospedeNome;
     }
 
     public Hospede getHospede() {

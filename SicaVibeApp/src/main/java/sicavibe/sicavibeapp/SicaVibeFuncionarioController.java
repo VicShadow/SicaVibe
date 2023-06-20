@@ -257,4 +257,38 @@ public class SicaVibeFuncionarioController {
     }
 
 
+
+
+
+
+    @Operation(summary = "Listar Reservas", tags = {"Funcionario"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "reservaid",description = "ID da Reserva a pesquisar"),
+    })
+    @GetMapping(value = "/funcionario/reservation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ReservaResponse getReservaById (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token","reservaid"), headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
+
+            Funcionario funcionario = FuncionarioDAO.getFuncionarioByORMID(id);
+            Hotel hotel = funcionario.getMyWorkHotel();
+
+            int reservaID = Integer.parseInt(headers.get("reservaid").toString());
+            Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
+            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '" + reservaID + "' not found!");
+            if (!hotel.listaReservas.contains(reserva)) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation is not from Hotel '" + hotel.getNome() + "'!");
+
+            return new ReservaResponse(reserva, false);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
 }
