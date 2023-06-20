@@ -4,19 +4,18 @@
     color="black" variant="tonal">
   
     <v-img class="hotelImage"
-    aspect-ratio="4/3"
-    height="150"
-    cover
-    :src="imageUrl">
-  </v-img>
+      aspect-ratio="4/3"
+      height="150"
+      cover
+      :src="imageUrl">
+    </v-img>
 
-  <div class="card">
-    <v-card-title> {{ nameSplit }} </v-card-title>
-    <v-card-text> {{  desc }} </v-card-text>
-  </div>
+    <div class="card">
+      <v-card-title> {{ nameSplit }} </v-card-title>
+      <v-card-text> {{  desc }} </v-card-text>
+    </div>
 
-
-</v-card>
+  </v-card>
 </template>
 
 

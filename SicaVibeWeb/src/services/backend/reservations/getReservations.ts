@@ -15,6 +15,7 @@ export interface GetReservationsProps {
   page: number
   pagesize: number
   isAdmin?: boolean
+  hotelid?: number
 }
 
 export type GetReservationsResponse = BackendReservation[]
@@ -29,17 +30,24 @@ export const getReservations = async ({
   page,
   pagesize,
   token,
-  isAdmin = false
+  isAdmin = false,
+  hotelid,
 }: GetReservationsProps): Promise<Reservation[]> => {
   const endpoint = isAdmin
     ? GET_ADMIN_RESERVATIONS_ENDPOINT
     : GET_RECEPTIONIST_RESERVATIONS_ENDPOINT
 
-  let headers = {
+  let headers = isAdmin ? {
     token,
     page,
-    pagesize
+    pagesize,
+    hotelid
+  } : {
+    token,
+    page,
+    pagesize,
   }
+
 
   if (type) {
     headers = {
