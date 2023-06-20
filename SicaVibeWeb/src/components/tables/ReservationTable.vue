@@ -32,7 +32,7 @@ const onReservationClick = (id: number) => {
         <th class="text-left">Status</th>
         <th class="text-left">Room Number</th>
         <th class="text-left">Any Services?</th>
-        <th class="text-left w-0" />
+        <th class="text-left w-0"></th>
       </tr>
     </thead>
     <tbody>
@@ -59,7 +59,8 @@ const onReservationClick = (id: number) => {
 
 <style scoped>
 .table {
-  //max-width: 1000px; width: 100%;
+  max-width: 1000px; 
+  width: 100%;
 }
 
 .status {
