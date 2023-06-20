@@ -16,6 +16,7 @@ export interface Service {
 export interface Reservation {
   id: number
   guestId: number
+  guestName: string
   inDate: Date
   outDate: Date
   price: number

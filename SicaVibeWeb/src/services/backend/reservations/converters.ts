@@ -32,7 +32,8 @@ interface ServicoExtra {
 
 export interface BackendReservation {
   hospedeId: number
-  hospede: Hospede | null
+  hospedeNome: string
+  hospede: Hospede | null // Only if the available is the logged-in user is an admin
   dataEntrada: string
   dataSaida: string
   preco: number
@@ -77,6 +78,7 @@ export const convertBackendReservationToFrontend = (
   return {
     id: reservation.hospedeId,
     guestId: reservation.hospedeId,
+    guestName: reservation.hospedeNome,
     inDate: new Date(reservation.dataEntrada),
     outDate: new Date(reservation.dataSaida),
     price: reservation.preco,

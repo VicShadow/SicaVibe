@@ -25,6 +25,7 @@ const onReservationClick = (id: number) => {
       <tr>
         <th class="text-left px-0">Id</th>
         <th class="text-left">Guest Id</th>
+        <th class="text-left">Guest Name</th>
         <th class="text-left">In Date</th>
         <th class="text-left">Out Date</th>
         <th class="text-left">Price</th>
@@ -38,6 +39,7 @@ const onReservationClick = (id: number) => {
       <tr v-for="reservation in reservations" :key="reservation.id">
         <td class="px-0">{{ reservation.id }}</td>
         <td>{{ reservation.guestId }}</td>
+        <td>{{ reservation.guestName }}</td>
         <td>{{ formatDate(reservation.inDate) }}</td>
         <td>{{ formatDate(reservation.outDate) }}</td>
         <td>{{ reservation.price }}</td>
