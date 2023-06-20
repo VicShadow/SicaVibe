@@ -8,7 +8,7 @@
                 v-model:value="hotelid" label="Hotel ID" max-width="100px" type="number">a</TextField>
         </div>
 
-        <ReservationTable class="marginTop" :reservations="reservas" />
+        <!-- <ReservationTable class="marginTop" :reservations="reservas" /> -->
     </div>
 </template>
 
@@ -17,9 +17,11 @@ import { ref } from 'vue'
 import TextField from '@/components/TextField.vue'
 import ReservationTable from '@/components/tables/ReservationTable.vue'
 import type { Reservation } from '@/types/Reservation'
-import { getReservations } from '@/services/backend/reservations/getReservations'
+import { getReservations } from '@/services/backend/reservations/adminGetReservations'
 import { getToken } from '@/services/storage/sessionStorage'
 import type { Token } from '@/types/Token'
+import type { GetReservationsAdmin } from '@/services/backend/reservations/adminGetReservations'
+
 
 const currentPage = ref<number>(1)
 const pagesize = ref<number>(10)
@@ -34,19 +36,20 @@ const headersSimple = {
     token: token,
     page: currentPage.value,
     pagesize: pagesize.value,
-    isAdmin: true
 }
 const headersFilter = {
     token: token,
     page: currentPage.value,
     pagesize: pagesize.value,
-    isAdmin: true,
     hotelid: Number(hotelid.value)
 }
 
 
-let reservas = ref<Reservation[]>([])
-getReservations(headersSimple).then(res => reservas.value = res)
+let reservas = ref<GetReservationsAdmin>([])
+getReservations(headersSimple).then(res => {
+    reservas.value = res
+ })
+
 
 function filterByHotel () {
     if (hotelid.value === "") getReservations(headersSimple).then(res => reservas.value = res)
