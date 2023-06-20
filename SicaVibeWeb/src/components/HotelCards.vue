@@ -1,5 +1,7 @@
 <template>
-  <v-card color="black" variant="tonal">
+  <v-card @click.prevent="clickedCard"
+    class="vcard"
+    color="black" variant="tonal">
   
     <v-img class="hotelImage"
     aspect-ratio="4/3"
@@ -23,6 +25,7 @@
 <script lang="ts" setup>
 
 interface Props {
+  hotelid: number,
   hotelName: string,
   hotelDescription: string,
   imageID: number
@@ -36,6 +39,10 @@ const desc = limit(props.hotelDescription, 200)
 
 function limit (string = '', limit = 0) {  
   return string.substring(0, limit) + "..."
+}
+
+function clickedCard () {
+  console.log("go to Hotel'" + props.hotelName + "'")
 }
 
 </script>
@@ -56,6 +63,11 @@ function limit (string = '', limit = 0) {
   margin-top: 100px;
   
 }
+
+.vcard:hover {
+  box-shadow: 0px 10px 20px grey;
+}
+
  
 .hotelImage {
   border-radius: 15px 15px 0 0;

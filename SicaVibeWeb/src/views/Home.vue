@@ -1,10 +1,14 @@
 <template>
-  <v-app>
+  <v-app class="padding">
     <NavBar />
     
-    <div class="flex">
-      <HotelCard class="card" v-for="hotel in hoteis" :key="hotel.id" :hotel-name="hotel.nome" :hotel-description="hotel.descricao" :image-i-d="hotel.imgID"/>
-    </div>
+    <section>
+      <span class="title">Our Hotels</span>
+      <div class="flex">
+        <HotelCard class="card" v-for="hotel in hoteis" :key="hotel.id" :hotelid="hotel.id" :hotel-name="hotel.nome" :hotel-description="hotel.descricao" :image-i-d="hotel.imgID"/>
+      </div>
+    </section>
+
     
   </v-app>
 </template>
@@ -34,7 +38,7 @@ function fetchHoteis () {
 .flex {
   display: flex;
   gap: 30px;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 @media (max-width: 800px) {
@@ -48,4 +52,14 @@ function fetchHoteis () {
   max-width: 300px;
 }
 
+.padding {
+  padding: 30px;
+}
+
+.title {
+  color: #023E7D;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+}
 </style>
