@@ -106,9 +106,6 @@ public class SicaVibeFuncionarioController {
             });
             return res;
 
-
-
-
         } catch (ResponseStatusException e) {
             throw e;
         } catch (NumberFormatException | PersistentException e) {
@@ -145,14 +142,14 @@ public class SicaVibeFuncionarioController {
 
             SicaVibeAppAux.checkRequestContent(List.of("reservaID","reservaType"),body);
 
-            int reservaID = (int) body.get("reservaID");
+            int reservaID = Integer.parseInt(body.get("reservaID").toString());
 
             String reservaType = (String) body.get("reservaType");
             if (!reservaType.equals("MARCADA") && !reservaType.equals("TERMINADA") && !reservaType.equals("A_DECORRER") && !reservaType.equals("CANCELADA"))
                 throw new InvalidObjectException("Filter Type '"+reservaType+"' invalid");
 
             Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
-            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '"+reservaID+"' nor found");
+            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '"+reservaID+"' not found");
 
             // Check validity of state change
             String estado = reserva.getEstado();
