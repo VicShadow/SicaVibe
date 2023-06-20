@@ -1,3 +1,5 @@
+import type { Room } from '@/types/Room'
+
 export enum ReservationStatus {
   ON_GOING = 'On going',
   DONE = 'Done',
@@ -11,15 +13,41 @@ export interface Service {
   price: number
 }
 
+/*
+"hospede": {
+      "email": "string",
+      "password": "string",
+      "salt": "string",
+      "nome": "string",
+      "dataNascimento": "2023-06-19T14:06:29.573Z",
+      "numTelemovel": "string",
+      "morada": "string",
+      "cc": "string",
+      "nif": "string",
+      "id": 0,
+      "ormid": 0
+    },
+ */
+export interface Guest {
+  id: number
+  email: string
+  name: string
+  birthDate: Date
+  phoneNumber: string
+  address: string
+  cc: string
+  nif: string
+}
+
 export interface Reservation {
   id: number
-  userId: number
-  description?: string
+  guestId: number
+  guestName: string
+  guest?: Guest
+  inDate: Date
+  outDate: Date
+  price: number
   status: ReservationStatus
-  scheduledAt: Date
-  scheduledTo: Date
-  scheduledUntil: Date
-  checkedInAt?: Date // Only set when reservation is ON_GOING or DONE
-  checkedOutAt?: Date // Only set when reservation is DONE
+  rooms: Room[]
   services?: Service[] // Only set when reservation is ON_GOING or DONE
 }

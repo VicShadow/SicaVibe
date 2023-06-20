@@ -1,54 +1,28 @@
 <script lang="ts" setup>
 import ReservationTable from '@/components/tables/ReservationTable.vue'
-import type { Reservation } from '@/types/Reservation'
-import { ReservationStatus } from '@/types/Reservation'
 import TextField from '@/components/TextField.vue'
 import { ref } from 'vue'
+import { useReservations } from '@/hooks/useReservations'
+import { getToken } from '@/services/storage/sessionStorage'
+import { VSkeletonLoader } from 'vuetify/labs/components'
 
-const id = ref('')
+const guestName = ref('')
+const currentPage = ref(1)
+const pagesize = ref(10)
+new Date()
+new Date()
+const token = getToken()
 
-const reservations: Reservation[] = [
-  {
-    id: 1,
-    userId: 1,
-    status: ReservationStatus.DONE,
-    checkedInAt: new Date('2021-10-10'),
-    checkedOutAt: new Date('2021-10-11'),
-    scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10'),
-    scheduledUntil: new Date('2021-10-10')
-  },
-  {
-    id: 2,
-    userId: 2,
-    status: ReservationStatus.DONE,
-    checkedInAt: new Date('2021-10-10'),
-    checkedOutAt: new Date('2021-10-11'),
-    scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10'),
-    scheduledUntil: new Date('2021-10-10')
-  },
-  {
-    id: 3,
-    userId: 3,
-    status: ReservationStatus.DONE,
-    checkedInAt: new Date('2021-10-10'),
-    checkedOutAt: new Date('2021-10-11'),
-    scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10'),
-    scheduledUntil: new Date('2021-10-10')
-  },
-  {
-    id: 4,
-    userId: 4,
-    status: ReservationStatus.DONE,
-    checkedInAt: new Date('2021-10-10'),
-    checkedOutAt: new Date('2021-10-11'),
-    scheduledAt: new Date('2021-10-09'),
-    scheduledTo: new Date('2021-10-10'),
-    scheduledUntil: new Date('2021-10-10')
-  }
-]
+if (!token) {
+  throw new Error('No token found')
+}
+
+const { reservations, isLoading } = useReservations({
+  token,
+  guestName: guestName,
+  page: currentPage,
+  pagesize: pagesize
+})
 
 const addRoomHandler = () => {}
 </script>
@@ -63,8 +37,9 @@ const addRoomHandler = () => {}
       </v-btn>
     </div>
   </div>
-  <TextField v-model:value="id" label="Identificador" max-width="250px" type="number"></TextField>
-  <ReservationTable :reservations="reservations" />
+  <TextField v-model:value="guestName" label="Guest Name" max-width="250px" type="text"></TextField>
+  <v-skeleton-loader v-if="isLoading" type="table" />
+  <ReservationTable v-if="reservations" :reservations="reservations" />
 </template>
 
 <style scoped></style>

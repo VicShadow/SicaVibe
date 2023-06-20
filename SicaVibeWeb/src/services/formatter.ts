@@ -3,7 +3,7 @@ export const formatDate = (date: Date): string => {
   const month = date.getMonth() + 1
   const day = date.getDate()
 
-  return `${year}-${month}-${day}`
+  return `${day}/${month}/${year}`
 }
 
 export const formatDateTime = (dateTime: Date): string => {
