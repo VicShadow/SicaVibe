@@ -5,7 +5,8 @@ import { useRouter } from 'vue-router'
 import { formatDate } from '@/services/formatter'
 
 interface Props {
-  reservations: Reservation[]
+  reservations: Reservation[],
+  isAdmin?: boolean
 }
 
 const props = defineProps<Props>()
@@ -15,7 +16,8 @@ const { reservations } = toRefs(props)
 const router = useRouter()
 
 const onReservationClick = (id: number) => {
-  router.push(`/receptionist/reservations/${id}`)
+  if (!props.isAdmin) router.push(`/receptionist/reservations/${id}`)
+  else router.push(`/admin/reservations/${id}`)
 }
 </script>
 
@@ -39,7 +41,7 @@ const onReservationClick = (id: number) => {
       <tr v-for="reservation in reservations" :key="reservation.id">
         <td class="px-0">{{ reservation.id }}</td>
         <td>{{ reservation.guestId }}</td>
-        <td>{{ reservation.guestName }}</td>
+        <td>{{ isAdmin ? reservation.guest?.name : reservation.guestName }}</td>
         <td>{{ formatDate(reservation.inDate) }}</td>
         <td>{{ formatDate(reservation.outDate) }}</td>
         <td>{{ reservation.price }}</td>

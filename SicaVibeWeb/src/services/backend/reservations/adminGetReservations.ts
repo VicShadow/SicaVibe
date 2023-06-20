@@ -1,27 +1,15 @@
 import { backend } from '@/services/backend/backend'
-import { type Reservation, ReservationStatus } from '@/types/Reservation'
+import { type Reservation } from '@/types/Reservation'
 import type { Token } from '@/types/Token'
 import type { BackendReservation } from '@/services/backend/reservations/converters'
-import {
-    convertBackendReservationsAdminToFrontend,
-    convertFrontendReservationStatusToBackend
-} from '@/services/backend/reservations/converters'
+import { convertBackendReservationsAdminToFrontend } from '@/services/backend/reservations/converters'
 
 export interface GetReservationsProps {
-  token: Token
-  page: number
-  pagesize: number
-  hotelid?: number
+    token: Token
+    page: number
+    pagesize: number
+    hotelid?: number
 }
-
-export interface GetReservationsAdminBackend {
-    [key: number]: BackendReservation[];
-}
-
-export interface GetReservationsAdmin {
-    [key: number]: Reservation[];
-}
-
 
 const GET_ADMIN_RESERVATIONS_ENDPOINT = '/admin/get-reservation-list'
 
@@ -31,7 +19,7 @@ export const getReservations = async ({
     pagesize,
     token,
     hotelid,
-  }: GetReservationsProps): Promise<GetReservationsAdmin> => {
+  }: GetReservationsProps): Promise<Map<string, Reservation[]>> => {
     const endpoint = GET_ADMIN_RESERVATIONS_ENDPOINT
   
     let headers = {
@@ -61,7 +49,7 @@ export const getReservations = async ({
     }
   
     console.log('Response data: ', res.data)
-    const backendData = res.data as GetReservationsAdminBackend
+    const backendData = res.data as Map<string, BackendReservation[]>
   
     return convertBackendReservationsAdminToFrontend(backendData)
   }

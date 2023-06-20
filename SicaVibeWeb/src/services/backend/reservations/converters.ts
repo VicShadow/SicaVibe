@@ -1,8 +1,6 @@
 import { type Guest, type Reservation, ReservationStatus, type Service } from '@/types/Reservation'
 import { type Room, RoomStatus } from '@/types/Room'
 import type { GetReservationsResponse } from '@/services/backend/reservations/getReservations'
-import type { GetReservationsAdminBackend, GetReservationsAdmin } from '@/services/backend/reservations/adminGetReservations'
-
 
 interface Hospede {
   email: string
@@ -141,10 +139,25 @@ export const convertBackendReservationsToFrontend = (
 }
 
 
+
+export const convertBackendReservationsToFrontendAdmin = (
+  reservations: BackendReservation[]
+): Reservation[] => {
+  return reservations.map((reservation) => {
+    return convertBackendReservationToFrontend(reservation)
+  })
+}
+
+
 export const convertBackendReservationsAdminToFrontend = (
-  hotelReservations: GetReservationsAdminBackend
-): GetReservationsAdmin => {
-  return Object.fromEntries(Object.entries(hotelReservations).map(([key, reservations]) => {
-    return [key, convertBackendReservationsToFrontend(reservations)]
-  }))
+  hotelReservations: Map<string, BackendReservation[]>
+): Map<string, Reservation[]> => {
+
+  const result : Map<string, Reservation[]> = new Map()
+
+  Object.entries(hotelReservations).map( values => {
+    result.set(values[0], convertBackendReservationsToFrontendAdmin(values[1]))
+  })
+
+  return result
 }
