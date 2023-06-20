@@ -183,4 +183,32 @@ public class SicaVibeAdminController {
 
         return res;
     }
+
+
+
+
+    @Operation(summary = "Obter Reserva", tags = {"Admin"}, parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "reservaid",description = "ID da Reserva a pesquisar"),
+    })
+    @GetMapping(value = "/admin/reservation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ReservaResponse getReservaById (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token","reservaid"), headers);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
+
+            int reservaID = Integer.parseInt(headers.get("reservaid").toString());
+            Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
+            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '" + reservaID + "' not found!");
+
+            return new ReservaResponse(reserva, false);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
 }
