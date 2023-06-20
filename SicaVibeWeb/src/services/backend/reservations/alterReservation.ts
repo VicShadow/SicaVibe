@@ -1,26 +1,43 @@
 import { backend } from '@/services/backend/backend'
-import { type ReservationStatus } from '@/types/Reservation'
+import { type Reservation, type ReservationStatus } from '@/types/Reservation'
+import {
+  type BackendReservation,
+  convertBackendReservationToFrontend,
+  convertReservationStatusToBackend
+} from '@/services/backend/reservations/converters'
+import type { Token } from '@/types/Token'
 
 export interface AlterReservationsProps {
-  reservationId: string
+  token: Token
+  reservationId: number
   reservationType: ReservationStatus
 }
 
-const ALTER_RESERVATIONS_ENDPOINT = 'reservations'
+const ALTER_RESERVATIONS_ENDPOINT = '/funcionario/alter-reservation'
 
-export const alterReservation = async ({ reservationId, reservationType }: AlterReservationsProps) => {
+export const alterReservation = async ({
+  token,
+  reservationId,
+  reservationType
+}: AlterReservationsProps): Promise<Reservation> => {
+  const headers = {
+    token
+  }
+
   const body = {
     reservaID: reservationId,
-    reservaType: reservationType
+    reservaType: convertReservationStatusToBackend(reservationType)
   }
 
   // TODO: Testing missing
-  const res = await backend.post(ALTER_RESERVATIONS_ENDPOINT, body)
+  const res = await backend.post(ALTER_RESERVATIONS_ENDPOINT, body, {
+    headers
+  })
 
   if (res.status !== 200) {
     // TODO: Improve error handling
     throw new Error('Failed to get reservations')
   }
 
-  return res.data
+  return convertBackendReservationToFrontend(res.data as BackendReservation)
 }

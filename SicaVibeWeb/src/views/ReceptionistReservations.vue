@@ -33,7 +33,7 @@ const addRoomHandler = () => {}
     <div class="d-flex justify-space-between">
       <h1 class="text-h5 d-inline">Reservations</h1>
       <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize" @click="addRoomHandler">
-        Make Reservation {{ guestName }}
+        Make Reservation
       </v-btn>
     </div>
   </div>
