@@ -1,7 +1,7 @@
-<script lang="ts" setup></script>
-
 <template>
   <v-card></v-card>
 </template>
+
+<script lang="ts" setup></script>
 
 <style scoped></style>
