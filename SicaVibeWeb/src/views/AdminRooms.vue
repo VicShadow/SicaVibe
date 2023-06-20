@@ -1,23 +1,16 @@
 <script lang="ts" setup>
 import RoomTable from '@/components/tables/RoomTable.vue'
-import { Room, RoomStatus } from '@/types/Room'
 import TextField from '@/components/TextField.vue'
 import { ref } from 'vue'
 import AddRoomModal from '@/components/modals/AddRoomModal.vue'
+import { useRooms } from '@/hooks/useRooms'
+import { VSkeletonLoader } from 'vuetify/labs/components'
 
 const isModalOpen = ref(false)
 
-const id = ref('')
+const id = ref<number>()
 
-const rooms: Room[] = [
-  {
-    id: 1,
-    typeId: 1,
-    typeName: 'Single',
-    doorNumber: 101,
-    status: RoomStatus.OCCUPIED
-  }
-]
+const { rooms, isLoading, isSuccess, isError } = useRooms({ id })
 
 const addRoomHandler = () => {
   isModalOpen.value = true
@@ -34,8 +27,17 @@ const addRoomHandler = () => {
       </v-btn>
     </div>
   </div>
-  <TextField v-model:value="id" label="Identificador" max-width="250px" type="number"></TextField>
-  <RoomTable :rooms="rooms" />
+  <TextField
+    v-model.number:value="id"
+    label="Identificador"
+    max-width="250px"
+    type="number"
+  ></TextField>
+  <v-alert v-if="isError" class="mt-4" type="error">
+    <span class="text-h6">Erro ao carregar os quartos</span>
+  </v-alert>
+  <v-skeleton-loader v-if="isLoading" type="table" />
+  <RoomTable v-if="isSuccess && rooms" :rooms="rooms" />
   <AddRoomModal v-model:is-modal-open="isModalOpen" />
 </template>
 
