@@ -21,8 +21,8 @@
     <DriverFiles>&lt;&lt;MySQL Connector/J 8.0.31&gt;&gt;</DriverFiles>
     <Dialect>org.hibernate.dialect.MySQL5InnoDBDialect</Dialect>
     <DriverClass>com.mysql.cj.jdbc.Driver</DriverClass>
-    <URL>jdbc:mysql://localhost:3306/SicaVibe</URL>
-    <UserName>aa-sic-sicavibe</UserName>
+    <URL>jdbc:mysql://database:3306/SicaVibe</URL>
+    <UserName>root</UserName>
     <EncryptedPassword>1B4D590CA9809276048A84C237D14012</EncryptedPassword>
     <HostName>localhost</HostName>
     <PortNO>3306</PortNO>

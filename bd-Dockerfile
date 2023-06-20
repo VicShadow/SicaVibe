@@ -1,0 +1,18 @@
+# Base image
+FROM mysql:8.0.26
+
+# Set the mysql root password
+ENV MYSQL_USER root
+ENV MYSQL_ROOT_PASSWORD root
+
+# Copy the application files
+COPY SicaVibeApp/ /SicaVibe/SicaVibeApp/
+
+# Copy the SQL scripts
+COPY SicaVibeApp/scripts/0* /docker-entrypoint-initdb.d/
+
+# Create a directory for image files
+RUN mkdir -p /var/lib/mysql-files/SicaVibeImgs
+
+# Expose the port for the database
+EXPOSE 3306
