@@ -223,22 +223,16 @@ public class SicaVibeFuncionarioController {
 
     @Operation(summary = "Listar Quartos do Hotel", tags = {"Funcionario"}, parameters = {
             @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
-            @Parameter(in= ParameterIn.HEADER,required = false,name = "tipoquarto", description = "Filtro de Tipo de Quarto (ID)"),
-            @Parameter(in= ParameterIn.HEADER,required = true,name = "page",description = "Número da página (>0)"),
-            @Parameter(in= ParameterIn.HEADER,required = true,name = "pagesize",description = "Tamanho da Página (>0)")})
+            @Parameter(in= ParameterIn.HEADER,required = false,name = "tipoquarto", description = "Filtro de Tipo de Quarto (ID)")
+    })
     @GetMapping(value = "/funcionario/list-quartos", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<Integer, List<QuartoResponse>> listQuartos (@RequestHeader Map<String, Object> headers) {
         try {
-            SicaVibeAppAux.checkRequestContent(List.of("token","page","pagesize"),headers);
+            SicaVibeAppAux.checkRequestContent(List.of("token"), headers);
             int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
 
             Funcionario funcionario = FuncionarioDAO.getFuncionarioByORMID(id);
             int hotelID = funcionario.getMyWorkHotel().getID();
-
-            //PARSE PAGES
-            int page = Integer.parseInt(headers.get("page").toString());
-            int pageSize = Integer.parseInt(headers.get("pagesize").toString());
-            if (page < 1 || pageSize < 1) throw new NumberFormatException();
 
             //CHECK OPTIONAL FILTER
             int filterTipo = -1;
