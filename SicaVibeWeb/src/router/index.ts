@@ -7,6 +7,7 @@ import GuestLayoutVue from '@/layouts/GuestLayout.vue'
 import Home from '@/views/Home.vue'
 import AdminLayoutVue from '@/layouts/AdminLayout.vue'
 import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
+import HostProfile from '@/views/HostProfile.vue'
 
 const routes = [
   {
@@ -63,6 +64,11 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: SignUp
+  },
+  {
+    path: '/hostprofile',
+    name: 'hostprofile',
+    component: HostProfile
   },
   {
     // Redirect to home if no route found
