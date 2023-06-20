@@ -79,14 +79,14 @@ public class SicaVibeFuncionarioController {
 
             if (filtroCC) {
                 Hospede[] hospede = HospedeDAO.listHospedeByQuery("Cc = " + hospedeCC, null);
-                if (hospede.length == 0) throw new InvalidObjectException("Invalid Hospede CC number: " +hospedeCC);
+                if (hospede.length == 0) return new ArrayList<>();
 
                 reservasFiltered = reservasFiltered.stream().filter(reserva -> reserva.getHospede().getCc().equals(hospedeCC)).toList();
             }
 
             if (filtroName) {
                 Hospede[] hospedes = HospedeDAO.listHospedeByQuery("Nome LIKE '%" + hospedeNome + "%'", null);
-                if (hospedes.length == 0) throw new InvalidObjectException("Invalid Hospede Name: " + hospedeNome);
+                if (hospedes.length == 0) return new ArrayList<>();
 
                 List<Integer> hospedesIDs = Arrays.stream(hospedes).map(Utilizador::getID).toList();
                 reservasFiltered = reservasFiltered.stream().filter(reserva -> hospedesIDs.contains(reserva.getHospede().getID())).toList();
@@ -135,7 +135,7 @@ public class SicaVibeFuncionarioController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json",
                     schema = @Schema(implementation = EstadoReserva.class))))
     @PostMapping(value = "/funcionario/alter-reservation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ReservaResponse setCheckedIn (@RequestHeader Map<String, Object> headers, @RequestBody Map<String, Object> body) {
+    public ReservaResponse setReservaEstado (@RequestHeader Map<String, Object> headers, @RequestBody Map<String, Object> body) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
