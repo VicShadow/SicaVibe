@@ -255,7 +255,7 @@ public class SicaVibeFuncionarioController {
 
 
 
-    @Operation(summary = "Listar Reservas", tags = {"Funcionario"},parameters = {
+    @Operation(summary = "Obter Reserva", tags = {"Funcionario"},parameters = {
             @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
             @Parameter(in= ParameterIn.HEADER,required = true,name = "reservaid",description = "ID da Reserva a pesquisar"),
     })
