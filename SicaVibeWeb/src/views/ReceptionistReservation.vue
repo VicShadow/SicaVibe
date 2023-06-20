@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 import { Reservation, ReservationStatus } from '@/types/Reservation'
 import { formatDate } from '@/services/formatter'
 import ConfirmationModal from '@/components/modals/ConfirmationModal.vue'
+import { RoomStatus } from '@/types/Room'
 
 const isCheckInModalOpen = ref(false)
 const isCheckOutModalOpen = ref(false)
@@ -14,42 +15,34 @@ const { id } = route.params
 
 const mockReservation: Reservation = {
   id: 1,
-  userId: 1,
+  guestId: 1,
+  inDate: new Date(),
+  outDate: new Date(),
+  price: 100,
   status: ReservationStatus.DONE,
-  checkedInAt: new Date('2021-10-10'),
-  checkedOutAt: new Date('2021-10-11'),
-  scheduledUntil: new Date('2021-10-09'),
-  scheduledAt: new Date('2021-10-09'),
-  scheduledTo: new Date('2021-10-10')
+  rooms: [
+    {
+      id: 1,
+      typeId: 1,
+      typeName: 'Single',
+      doorNumber: 1,
+      status: RoomStatus.AVAILABLE
+    }
+  ]
 }
 
-const { userId, status, checkedInAt, checkedOutAt, scheduledAt, scheduledTo, scheduledUntil } =
-  mockReservation
+const { guestId, inDate, outDate, price, status, rooms, services } = mockReservation
 
 const formattedStatus = computed(() => {
   return status === ReservationStatus.DONE ? 'Done' : 'Pending'
 })
 
-const _formattedScheduledAt = computed(() => {
-  return formatDate(scheduledAt)
+const formattedInDate = computed(() => {
+  return formatDate(inDate)
 })
 
-const formattedScheduledTo = computed(() => {
-  return formatDate(scheduledTo)
-})
-
-const formattedScheduledUntil = computed(() => {
-  return formatDate(scheduledUntil)
-})
-
-const formattedCheckedInAt = computed(() => {
-  if (!checkedInAt) return 'Not checked in'
-  return formatDate(checkedInAt)
-})
-
-const formattedCheckedOutAt = computed(() => {
-  if (!checkedOutAt) return 'Not checked out'
-  return formatDate(checkedOutAt)
+const formattedOutDate = computed(() => {
+  return formatDate(outDate)
 })
 
 const isCheckInDisabled = computed(() => {
@@ -123,21 +116,18 @@ const breadcrumbItems = computed(() => {
     </div>
   </div>
   <div class="reservation-card">
-    <div>Made by user with id: {{ userId }}.</div>
+    <div>Made by user with id: {{ guestId }}.</div>
+    <div>Price: {{ price }} €</div>
     <!-- TODO: Add user name -->
     <div class="schedule">
       Schedule from
       <span class="text-h6">
-        {{ formattedScheduledTo }}
+        {{ formattedInDate }}
       </span>
       until
       <span class="text-h6">
-        {{ formattedScheduledUntil }}
+        {{ formattedOutDate }}
       </span>
-    </div>
-    <div class="checks">
-      <div>Checked in at {{ formattedCheckedInAt }}.</div>
-      <div>Checked out at {{ formattedCheckedOutAt }}.</div>
     </div>
     <div class="status">
       Reservation Status:
@@ -177,9 +167,6 @@ const breadcrumbItems = computed(() => {
   flex-direction: row;
   justify-content: space-between;
   gap: 1rem;
-}
-
-.checks {
 }
 
 .status {

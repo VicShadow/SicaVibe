@@ -1,3 +1,5 @@
+import type { Room } from '@/types/Room'
+
 export enum ReservationStatus {
   ON_GOING = 'On going',
   DONE = 'Done',
@@ -13,13 +15,11 @@ export interface Service {
 
 export interface Reservation {
   id: number
-  userId: number
-  description?: string
+  guestId: number
+  inDate: Date
+  outDate: Date
+  price: number
   status: ReservationStatus
-  scheduledAt: Date
-  scheduledTo: Date
-  scheduledUntil: Date
-  checkedInAt?: Date // Only set when reservation is ON_GOING or DONE
-  checkedOutAt?: Date // Only set when reservation is DONE
+  rooms: Room[]
   services?: Service[] // Only set when reservation is ON_GOING or DONE
 }

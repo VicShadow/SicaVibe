@@ -48,7 +48,7 @@ Write-Host "Waiting for the instance to start..."
 
 while ($true) {
     #gcloud compute ssh $vmName --command="echo instance now up" --strict-host-key-checking=no 2>$null
-    ssh -o "StrictHostKeyChecking=no" $vmIP -C "echo VM is up" #2>$null
+    $sshOutput = ssh -o "StrictHostKeyChecking=no" $vmIP -C "echo VM is up" #2>$null
 
     if ($LASTEXITCODE -eq 0) {
         break

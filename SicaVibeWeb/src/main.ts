@@ -12,6 +12,9 @@ import { createVuetify, type ThemeDefinition } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+// Vue Query
+import { VueQueryPlugin } from '@tanstack/vue-query'
+
 const app = createApp(App)
 
 const mainTheme: ThemeDefinition = {
@@ -32,5 +35,6 @@ const vuetify = createVuetify({
 app.use(router)
 app.use(createPinia())
 app.use(vuetify)
+app.use(VueQueryPlugin)
 
 app.mount('#app')
