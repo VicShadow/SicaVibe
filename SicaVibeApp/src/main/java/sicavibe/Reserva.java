@@ -53,11 +53,13 @@ public class Reserva {
 	
 	private java.util.Date dataSaida;
 	
-	private java.util.Date dataCheckIn;
+	private java.sql.Timestamp dataCheckIn;
 	
-	private java.util.Date dataCheckout;
+	private java.sql.Timestamp dataCheckout;
 	
 	private float preco;
+	
+	private String estado;
 	
 	private java.util.Set ORM_quartos = new java.util.HashSet();
 	
@@ -91,19 +93,19 @@ public class Reserva {
 		return dataSaida;
 	}
 	
-	public void setDataCheckIn(java.util.Date value) {
+	public void setDataCheckIn(java.sql.Timestamp value) {
 		this.dataCheckIn = value;
 	}
 	
-	public java.util.Date getDataCheckIn() {
+	public java.sql.Timestamp getDataCheckIn() {
 		return dataCheckIn;
 	}
 	
-	public void setDataCheckout(java.util.Date value) {
+	public void setDataCheckout(java.sql.Timestamp value) {
 		this.dataCheckout = value;
 	}
 	
-	public java.util.Date getDataCheckout() {
+	public java.sql.Timestamp getDataCheckout() {
 		return dataCheckout;
 	}
 	
@@ -115,12 +117,12 @@ public class Reserva {
 		return preco;
 	}
 	
-	public void setHospede(sicavibe.Hospede value) {
-		this.hospede = value;
+	public void setEstado(String value) {
+		this.estado = value;
 	}
 	
-	public sicavibe.Hospede getHospede() {
-		return hospede;
+	public String getEstado() {
+		return estado;
 	}
 	
 	private void setORM_Quartos(java.util.Set value) {
@@ -142,6 +144,14 @@ public class Reserva {
 	}
 	
 	public final sicavibe.ServicoExtraSetCollection servicosExtras = new sicavibe.ServicoExtraSetCollection(this, _ormAdapter, sicavibe.ORMConstants.KEY_RESERVA_SERVICOSEXTRAS, sicavibe.ORMConstants.KEY_MUL_MANY_TO_MANY);
+	
+	public void setHospede(sicavibe.Hospede value) {
+		this.hospede = value;
+	}
+	
+	public sicavibe.Hospede getHospede() {
+		return hospede;
+	}
 	
 	public String toString() {
 		return String.valueOf(getID());

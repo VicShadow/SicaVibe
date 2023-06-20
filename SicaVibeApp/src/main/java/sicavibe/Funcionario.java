@@ -13,89 +13,14 @@
  */
 package sicavibe;
 
-public class Funcionario {
+import javassist.NotFoundException;
+import org.orm.PersistentException;
 
-	public static final String estadoATIVO = "ATIVO";
-	public static final String estadoINATIVO = "INATIVO";
-	public static final String estadoEM_PAUSA = "EM_PAUSA";
+public class Funcionario extends sicavibe.Utilizador {
 	public Funcionario() {
 	}
 	
-	private int ID;
-	
-	private String email;
-	
-	private String password;
-	
-	private String nome;
-	
-	private java.util.Date dataNascimento;
-	
-	private String morada;
-	
-	private String nTelemovel;
-	
 	private String estado;
-	
-	private void setID(int value) {
-		this.ID = value;
-	}
-	
-	public int getID() {
-		return ID;
-	}
-	
-	public int getORMID() {
-		return getID();
-	}
-	
-	public void setEmail(String value) {
-		this.email = value;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setPassword(String value) {
-		this.password = value;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	
-	public void setNome(String value) {
-		this.nome = value;
-	}
-	
-	public String getNome() {
-		return nome;
-	}
-	
-	public void setDataNascimento(java.util.Date value) {
-		this.dataNascimento = value;
-	}
-	
-	public java.util.Date getDataNascimento() {
-		return dataNascimento;
-	}
-	
-	public void setMorada(String value) {
-		this.morada = value;
-	}
-	
-	public String getMorada() {
-		return morada;
-	}
-	
-	public void setnTelemovel(String value) {
-		this.nTelemovel = value;
-	}
-	
-	public String getnTelemovel() {
-		return nTelemovel;
-	}
 	
 	public void setEstado(String value) {
 		this.estado = value;
@@ -106,7 +31,16 @@ public class Funcionario {
 	}
 	
 	public String toString() {
-		return String.valueOf(getID());
+		return super.toString();
+	}
+
+	public Hotel getMyWorkHotel() throws NotFoundException, PersistentException {
+		for (Hotel h : HotelDAO.listHotelByQuery(null,null)){
+			for (Funcionario func : h.listaFuncionarios.toArray()){
+				if (func.getID() == this.getID()) return h;
+			}
+		}
+		throw new NotFoundException("Employer '"+this.getID()+"' has no working hotel");
 	}
 	
 }

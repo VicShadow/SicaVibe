@@ -20,20 +20,22 @@ import org.orm.criteria.*;
 
 public class TipoDeQuartoCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
+	public final IntegerExpression imgId;
+	public final AssociationExpression img;
 	public final StringExpression nome;
 	public final IntegerExpression capacidade;
 	public final FloatExpression preco;
 	public final StringExpression descricao;
-	public final BlobExpression img;
 	
 	public TipoDeQuartoCriteria(Criteria criteria) {
 		super(criteria);
 		ID = new IntegerExpression("ID", this);
+		imgId = new IntegerExpression("img.ID", this);
+		img = new AssociationExpression("img", this);
 		nome = new StringExpression("nome", this);
 		capacidade = new IntegerExpression("capacidade", this);
 		preco = new FloatExpression("preco", this);
 		descricao = new StringExpression("descricao", this);
-		img = new BlobExpression("img", this);
 	}
 	
 	public TipoDeQuartoCriteria(PersistentSession session) {
@@ -42,6 +44,10 @@ public class TipoDeQuartoCriteria extends AbstractORMCriteria {
 	
 	public TipoDeQuartoCriteria() throws PersistentException {
 		this(sicavibe.SicaVibeMainVPPersistentManager.instance().getSession());
+	}
+	
+	public ImagemCriteria createImgCriteria() {
+		return new ImagemCriteria(createCriteria("img"));
 	}
 	
 	public TipoDeQuarto uniqueTipoDeQuarto() {

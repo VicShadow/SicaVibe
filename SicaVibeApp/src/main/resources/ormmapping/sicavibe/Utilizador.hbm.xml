@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Licensee: vicshadow(Universidade do Minho)
+License Type: Academic
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="sicavibe.Utilizador" table="Utilizador" lazy="false" discriminator-value="Utilizador">
+		<id name="ID" column="ID" type="integer" unsaved-value="0">
+			<generator class="native">
+			</generator>
+		</id>
+		<discriminator column="Discriminator" type="string"/>
+		<property name="email" column="Email" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="password" column="Password" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="salt" column="Salt" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="nome" column="Nome" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="dataNascimento" column="DataNascimento" type="date" not-null="false" lazy="false"/>
+		<property name="numTelemovel" column="NTelemovel" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="morada" column="Morada" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="cc" column="Cc" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="nif" column="Nif" type="string" length="255" not-null="false" lazy="false"/>
+		<subclass name="sicavibe.Hospede" discriminator-value="Hospede" lazy="false">
+		</subclass>
+		<subclass name="sicavibe.Funcionario" discriminator-value="Funcionario" lazy="false">
+			<property name="estado" column="Estado" type="string" length="255" not-null="false" lazy="false"/>
+		</subclass>
+		<subclass name="sicavibe.Administrador" discriminator-value="Administrador" lazy="false">
+		</subclass>
+	</class>
+</hibernate-mapping>

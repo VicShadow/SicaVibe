@@ -16,7 +16,7 @@ public class TipoDeQuartoResponse {
 
     private String descricao;
 
-    private byte[] img;
+    private int imgID;
 
     public TipoDeQuartoResponse(TipoDeQuarto tipoDeQuarto) throws SQLException, IOException {
         this.ID = tipoDeQuarto.getID();
@@ -24,7 +24,7 @@ public class TipoDeQuartoResponse {
         this.descricao = tipoDeQuarto.getDescricao();
         this.capacidade = tipoDeQuarto.getCapacidade();
         this.preco = tipoDeQuarto.getPreco();
-        this.img = tipoDeQuarto.getImg().getBinaryStream().readAllBytes();
+        this.imgID = tipoDeQuarto.getImg().getID();
     }
 
     public int getID() {
@@ -47,7 +47,7 @@ public class TipoDeQuartoResponse {
         return descricao;
     }
 
-    public byte[] getImg() {
-        return img;
+    public int getImgID() {
+        return imgID;
     }
 }

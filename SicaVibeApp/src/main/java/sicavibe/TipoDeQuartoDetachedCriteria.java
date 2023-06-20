@@ -20,30 +20,37 @@ import org.orm.criteria.*;
 
 public class TipoDeQuartoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
+	public final IntegerExpression imgId;
+	public final AssociationExpression img;
 	public final StringExpression nome;
 	public final IntegerExpression capacidade;
 	public final FloatExpression preco;
 	public final StringExpression descricao;
-	public final BlobExpression img;
 	
 	public TipoDeQuartoDetachedCriteria() {
 		super(sicavibe.TipoDeQuarto.class, sicavibe.TipoDeQuartoCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
+		imgId = new IntegerExpression("img.ID", this.getDetachedCriteria());
+		img = new AssociationExpression("img", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		capacidade = new IntegerExpression("capacidade", this.getDetachedCriteria());
 		preco = new FloatExpression("preco", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		img = new BlobExpression("img", this.getDetachedCriteria());
 	}
 	
 	public TipoDeQuartoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
 		super(aDetachedCriteria, sicavibe.TipoDeQuartoCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
+		imgId = new IntegerExpression("img.ID", this.getDetachedCriteria());
+		img = new AssociationExpression("img", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		capacidade = new IntegerExpression("capacidade", this.getDetachedCriteria());
 		preco = new FloatExpression("preco", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		img = new BlobExpression("img", this.getDetachedCriteria());
+	}
+	
+	public ImagemDetachedCriteria createImgCriteria() {
+		return new ImagemDetachedCriteria(createCriteria("img"));
 	}
 	
 	public TipoDeQuarto uniqueTipoDeQuarto(PersistentSession session) {

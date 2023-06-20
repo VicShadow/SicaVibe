@@ -20,42 +20,46 @@ import org.orm.criteria.*;
 
 public class HotelDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
+	public final IntegerExpression imgId;
+	public final AssociationExpression img;
 	public final StringExpression nome;
 	public final StringExpression descricao;
-	public final BlobExpression img;
 	public final StringExpression endereco;
 	public final CollectionExpression listaReservas;
 	public final CollectionExpression listaQuartos;
 	public final CollectionExpression listaFuncionarios;
 	public final CollectionExpression listaServicosExtra;
-	public final CollectionExpression listaTipoDeQuarto;
 	
 	public HotelDetachedCriteria() {
 		super(sicavibe.Hotel.class, sicavibe.HotelCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
+		imgId = new IntegerExpression("img.ID", this.getDetachedCriteria());
+		img = new AssociationExpression("img", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		img = new BlobExpression("img", this.getDetachedCriteria());
 		endereco = new StringExpression("endereco", this.getDetachedCriteria());
 		listaReservas = new CollectionExpression("ORM_ListaReservas", this.getDetachedCriteria());
 		listaQuartos = new CollectionExpression("ORM_ListaQuartos", this.getDetachedCriteria());
 		listaFuncionarios = new CollectionExpression("ORM_ListaFuncionarios", this.getDetachedCriteria());
 		listaServicosExtra = new CollectionExpression("ORM_ListaServicosExtra", this.getDetachedCriteria());
-		listaTipoDeQuarto = new CollectionExpression("ORM_ListaTipoDeQuarto", this.getDetachedCriteria());
 	}
 	
 	public HotelDetachedCriteria(DetachedCriteria aDetachedCriteria) {
 		super(aDetachedCriteria, sicavibe.HotelCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
+		imgId = new IntegerExpression("img.ID", this.getDetachedCriteria());
+		img = new AssociationExpression("img", this.getDetachedCriteria());
 		nome = new StringExpression("nome", this.getDetachedCriteria());
 		descricao = new StringExpression("descricao", this.getDetachedCriteria());
-		img = new BlobExpression("img", this.getDetachedCriteria());
 		endereco = new StringExpression("endereco", this.getDetachedCriteria());
 		listaReservas = new CollectionExpression("ORM_ListaReservas", this.getDetachedCriteria());
 		listaQuartos = new CollectionExpression("ORM_ListaQuartos", this.getDetachedCriteria());
 		listaFuncionarios = new CollectionExpression("ORM_ListaFuncionarios", this.getDetachedCriteria());
 		listaServicosExtra = new CollectionExpression("ORM_ListaServicosExtra", this.getDetachedCriteria());
-		listaTipoDeQuarto = new CollectionExpression("ORM_ListaTipoDeQuarto", this.getDetachedCriteria());
+	}
+	
+	public ImagemDetachedCriteria createImgCriteria() {
+		return new ImagemDetachedCriteria(createCriteria("img"));
 	}
 	
 	public sicavibe.ReservaDetachedCriteria createListaReservasCriteria() {
@@ -72,10 +76,6 @@ public class HotelDetachedCriteria extends AbstractORMDetachedCriteria {
 	
 	public sicavibe.ServicoExtraDetachedCriteria createListaServicosExtraCriteria() {
 		return new sicavibe.ServicoExtraDetachedCriteria(createCriteria("ORM_ListaServicosExtra"));
-	}
-	
-	public sicavibe.TipoDeQuartoDetachedCriteria createListaTipoDeQuartoCriteria() {
-		return new sicavibe.TipoDeQuartoDetachedCriteria(createCriteria("ORM_ListaTipoDeQuarto"));
 	}
 	
 	public Hotel uniqueHotel(PersistentSession session) {

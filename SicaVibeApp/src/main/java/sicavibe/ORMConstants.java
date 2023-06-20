@@ -14,6 +14,8 @@
 package sicavibe;
 
 public interface ORMConstants extends org.orm.util.ORMBaseConstants {
+	final int KEY_HOTEL_IMG = 1756147352;
+	
 	final int KEY_HOTEL_LISTAFUNCIONARIOS = 1675503408;
 	
 	final int KEY_HOTEL_LISTAQUARTOS = -609863765;
@@ -22,8 +24,6 @@ public interface ORMConstants extends org.orm.util.ORMBaseConstants {
 	
 	final int KEY_HOTEL_LISTASERVICOSEXTRA = -1592390492;
 	
-	final int KEY_HOTEL_LISTATIPODEQUARTO = 1806749437;
-	
 	final int KEY_QUARTO_TIPODEQUARTO = -709659916;
 	
 	final int KEY_RESERVA_HOSPEDE = -161140005;
@@ -31,5 +31,7 @@ public interface ORMConstants extends org.orm.util.ORMBaseConstants {
 	final int KEY_RESERVA_QUARTOS = -608315588;
 	
 	final int KEY_RESERVA_SERVICOSEXTRAS = 991785886;
+	
+	final int KEY_TIPODEQUARTO_IMG = -1447762327;
 	
 }

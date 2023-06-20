@@ -3,16 +3,21 @@ package sicavibe.sicavibeapp;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.exception.ConstraintViolationException;
+import org.orm.PersistentException;
+import org.orm.*;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 public class SicaVibeErrorController implements ErrorController {
+
 
     @Hidden
     @RequestMapping(value = "/error",produces = MediaType.TEXT_HTML_VALUE)
@@ -33,8 +38,8 @@ public class SicaVibeErrorController implements ErrorController {
         }
 
         model.addAttribute("errorCode",code);
-        model.addAttribute("errorException",errorMsg);
-        model.addAttribute("errorMsg",errorException);
+        model.addAttribute("errorMsg",errorMsg);
+        model.addAttribute("errorException",errorException);
 
 
         if (code != null) {
@@ -51,4 +56,6 @@ public class SicaVibeErrorController implements ErrorController {
         return "error";
     }
 
+
 }
+

@@ -1,118 +1,65 @@
 <template>
-    <v-app id="page">
-      <div class="group1">
-        <NavBar/>
-        <h1 class="text-h4" id="texth3" >Your perfect stay,</h1>
-        <h1 class="text-h4" id="texth31">every time</h1>
-        <!--<img src = "/torreBelem.jpg" alt="img" class="image-fit" />-->
+  <v-app class="padding">
+    <NavBar />
+    
+    <section>
+      <span class="title">Our Hotels</span>
+      <div class="flex">
+        <HotelCard class="card" v-for="hotel in hoteis" :key="hotel.id" :hotelid="hotel.id" :hotel-name="hotel.nome" :hotel-description="hotel.descricao" :image-i-d="hotel.imgID"/>
       </div>
-      <div class="content">
-        <h1 class="text-h4" id="texth4">Our Hotels</h1>
-        <img src = "/hotel1.jpg" alt="img" class="image1" />
-        <div class="container">
-          
-        </div>
-        <h1 class="text-h4" id="texth41">About Us</h1>
+    </section>
 
-        <img src = "/Hotel.jpg" alt="img" class="image2" />
-      </div>
-      <Footer></Footer>
-    </v-app>
+    
+  </v-app>
 </template>
 
+
+
 <script lang="ts" setup>
-  import NavBar from '@/components/NavBar.vue'
-  import Footer from '@/components/Footer.vue'
-  import type HotelCards from '@/components/HotelCards.vue';
+import { ref } from 'vue'
+import NavBar from '@/components/navbar/NavBar.vue'
+import HotelCard from '@/components/HotelCards.vue'
+import type {Hotel} from '@/types/Hotel'
+import { getHoteis } from '@/services/backend/hoteis/getHoteis'
+
+let hoteis = ref<Hotel[]>([])
+
+fetchHoteis()
+
+function fetchHoteis () {
+  getHoteis().then(res => hoteis.value = res)
+}
+
 </script>
 
+
 <style scoped>
-  #page{
-    position: relative;
-    min-height: 100vh;
+
+.flex {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+  .flex {
+    flex-direction: column;
   }
+}
 
-  #content{
-    padding-bottom: 13.5rem;
-  }
+.card {
+  flex:1;
+  max-width: 300px;
+}
 
-  #Footer{
-    bottom: 0;
-  }
+.padding {
+  padding: 30px;
+}
 
-  .group1{
-    position: relative;
-    height: 70vh;
-  }
-
-  .image-fit{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    box-shadow: inset 700px 200px 250px 5px rgba(255, 255, 255, 0.2);
-    border-radius: 0px 0px 20px 20px;
-  }
-
-  #texth3{
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    font-weight: bolder;
-    z-index: 1;
-    position: absolute;
-    top:40%;
-    left: 11%;
-    color: #023E7D;
-  }
-
-  #texth31{
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    font-weight: bolder;
-    z-index: 1;
-    position: absolute;
-    top:47%;
-    left: 15%;
-    color: #023E7D;
-  }
-
-  #texth4{
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    font-weight: bolder; 
-    color: #023E7D;
-    position: absolute;
-    top:70%;
-    left: 10%;
-    position: absolute;
-  }
-
-  
-  #texth41{
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    font-weight: bolder; 
-    color: #023E7D;
-    position: absolute;
-    top:80%;
-    left: 10%;
-    position: absolute;
-  }
-
-
-  .image1{
-    position: absolute;
-    width: 300px;
-    height: 286px;
-    left: 50%;
-    top: 1092px;
-    border-radius: 197.5px;
-  }
-
-  .image2{
-    position: absolute;
-    width: 414px;
-    height: 414px;
-    left: 63%;
-    top: 1200px;
-    border-radius: 211.5px;
-  }
-
+.title {
+  color: #023E7D;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+}
 </style>
-  

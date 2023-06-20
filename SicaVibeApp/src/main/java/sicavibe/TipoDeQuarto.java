@@ -19,6 +19,8 @@ public class TipoDeQuarto {
 	
 	private int ID;
 	
+	private sicavibe.Imagem img;
+	
 	private String nome;
 	
 	private int capacidade;
@@ -26,8 +28,6 @@ public class TipoDeQuarto {
 	private float preco;
 	
 	private String descricao;
-	
-	private java.sql.Blob img;
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -73,11 +73,11 @@ public class TipoDeQuarto {
 		return descricao;
 	}
 	
-	public void setImg(java.sql.Blob value) {
+	public void setImg(sicavibe.Imagem value) {
 		this.img = value;
 	}
 	
-	public java.sql.Blob getImg() {
+	public sicavibe.Imagem getImg() {
 		return img;
 	}
 	

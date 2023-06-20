@@ -1,91 +1,110 @@
-<template>
-    <v-app>
-      <v-app-bar app color="blue-grey-lighten-5">
-          <div class="circle"></div>
-          <v-app-bar-title class="header-text">
-              SicaVibe
-          </v-app-bar-title>
-      </v-app-bar>
-      <v-container fluid class="page-container">
-          <v-row justify="space-between" align="center">
-              <v-col class="card-col">
-                  <v-card class="card-width" variant="outlined">
-                      <v-sheet class="pa-2 ma-2">
-                      <v-card-item>
-                          <v-card-title class="welcome-title text-center">
-                              Welcome back!
-                          </v-card-title>
-                          <v-responsive class="mx-auto mt-8" max-width="344">
-                              <v-text-field
-                              label="Email"
-                              type="input"
-                              hint="Enter your email to access this website"
-                              ></v-text-field>
-                          </v-responsive>
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { login } from '@/services/backend/auth/login'
+import { saveToken } from '@/services/storage/sessionStorage'
+import { useRouter } from 'vue-router'
 
-                          <v-responsive class="mx-auto mt-4" max-width="344">
-                              <v-text-field
-                              label="Password"
-                              type="password"
-                              hint="Enter your password to access this website"
-                              ></v-text-field>
-                          </v-responsive>                
-                      </v-card-item>
+const router = useRouter()
 
-                      <v-card-text class="d-flex justify-center">
-                          Don't have an account? 
-                          <router-link class="router-link" to="/signup">Sign up</router-link>
-                      </v-card-text>
-          
-                      <v-card-actions  class="d-flex justify-center">
-                          <v-btn class="button">
-                          Login
-                          </v-btn>
-                      </v-card-actions>
-                      </v-sheet>
-                  </v-card>
-              </v-col>
-      
-              <v-col class="card-col">
-                  <v-card class="card-width" variant="outlined">
-                      <v-sheet class="pa-2 ma-2">
-                          <div class="image-gradient"></div>
-                          <div class="image-container">
-                              <v-img
-                                  class="image-fill"
-                                  src="../torreBelem.jpg"
-                                  contain
-                              ></v-img>
-                          </div>
-                      </v-sheet>
-                  </v-card>
-              </v-col>
-          </v-row>
-      </v-container>
-    </v-app>
-</template>
+const email = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const isLoggingIn = ref(false)
+const loginOnClick = async () => {
+  isLoggingIn.value = true
 
-<script lang="ts">
-export default {
-name: 'Login'
+  try {
+    const token = await login({
+      email: email.value,
+      password: password.value
+    })
+
+    saveToken(token)
+
+    await router.push('/guest')
+  } catch (error) {
+    errorMessage.value = error.message // TODO: Improve user readability
+  }
+
+  isLoggingIn.value = false
 }
 </script>
+<template>
+  <v-app>
+    <v-app-bar app color="blue-grey-lighten-5">
+      <div class="circle"></div>
+      <v-app-bar-title class="header-text"> SicaVibe</v-app-bar-title>
+    </v-app-bar>
+    <v-container class="page-container" fluid>
+      <v-row align="center" justify="space-between">
+        <v-col class="card-col">
+          <v-card class="card-width" variant="outlined">
+            <v-sheet class="pa-2 ma-2">
+              <v-card-item>
+                <v-card-title class="welcome-title text-center">Welcome back!</v-card-title>
+                <v-responsive class="mx-auto mt-8" max-width="344">
+                  <v-text-field
+                    v-model="email"
+                    hint="Enter your email to access this website"
+                    label="Email"
+                    type="input"
+                  ></v-text-field>
+                </v-responsive>
+
+                <v-responsive class="mx-auto mt-4" max-width="344">
+                  <v-text-field
+                    v-model="password"
+                    hint="Enter your password to access this website"
+                    label="Password"
+                    type="password"
+                  ></v-text-field>
+                </v-responsive>
+              </v-card-item>
+
+              <v-card-text class="d-flex justify-center text-red">
+                {{ errorMessage }}
+              </v-card-text>
+
+              <v-card-text class="d-flex justify-center">
+                Don't have an account?
+                <router-link class="router-link" to="/signup">Sign up</router-link>
+              </v-card-text>
+
+              <v-card-actions class="d-flex justify-center">
+                <v-btn :loading="isLoggingIn" class="button" @click="loginOnClick">Login</v-btn>
+              </v-card-actions>
+            </v-sheet>
+          </v-card>
+        </v-col>
+
+        <v-col class="card-col">
+          <v-card class="card-width" variant="outlined">
+            <v-sheet class="pa-2 ma-2">
+              <div class="image-gradient"></div>
+              <div class="image-container">
+                <v-img class="image-fill" contain src="../torreBelem.jpg"></v-img>
+              </div>
+            </v-sheet>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app>
+</template>
 
 <style scoped>
-
 .header-text {
   font-weight: bold;
   font-size: 2.1rem;
-  color: #0D47A1;
+  color: #0d47a1;
 }
 
 .circle {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #0D47A1;
+  background-color: #0d47a1;
   margin-left: 25px;
-  padding: 1;
 }
 
 .page-container {
@@ -102,6 +121,7 @@ name: 'Login'
   margin: 0 auto;
   border: none;
 }
+
 .image-container {
   position: relative;
   overflow: hidden;
@@ -126,12 +146,12 @@ name: 'Login'
 .button {
   color: white;
   border-radius: 0.8em;
-  background-color: #0D47A1;
+  background-color: #0d47a1;
 }
 
 .welcome-title {
   font-size: 2rem;
-  color: #0D47A1;
+  color: #0d47a1;
 }
 
 .router-link {
@@ -141,5 +161,3 @@ name: 'Login'
   cursor: pointer;
 }
 </style>
-  
-

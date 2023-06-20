@@ -1,21 +1,27 @@
 <script lang="ts" setup>
-import { defineProps, toRefs } from 'vue'
+import { toRefs } from 'vue'
 
 interface Props {
   type?: string
   label?: string
+  value?: string
   maxWidth?: string
 }
 
 const props = defineProps<Props>()
 
-const { type, label } = toRefs(props)
+const { type, label, value } = toRefs(props)
 
 const maxWidth = props.maxWidth ?? 'unset'
 </script>
 
 <template>
-  <input :placeholder="label" :type="type ?? 'text'" />
+  <input
+    :placeholder="label"
+    :type="type ?? 'text'"
+    :value="value"
+    @input="$emit('update:value', $event.target.value)"
+  />
 </template>
 
 <style scoped>
@@ -26,6 +32,7 @@ input {
   padding: 6px 8px;
   box-sizing: border-box;
   max-width: v-bind(maxWidth);
+  width: 100%;
 }
 
 input:focus-visible,

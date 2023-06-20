@@ -1,14 +1,20 @@
 <script lang="ts" setup>
-import RoomTable from '@/components/RoomTable.vue'
+import RoomTable from '@/components/tables/RoomTable.vue'
 import { Room, RoomStatus } from '@/types/Room'
 import TextField from '@/components/TextField.vue'
+import { ref } from 'vue'
+import AddRoomModal from '@/components/modals/AddRoomModal.vue'
+
+const isModalOpen = ref(false)
+
+const id = ref('')
 
 const rooms: Room[] = [
   {
     id: 1,
     description: 'Room 1',
     status: RoomStatus.OCCUPIED,
-    user_id: 2
+    userId: 2
   },
   {
     id: 2,
@@ -24,7 +30,7 @@ const rooms: Room[] = [
     id: 4,
     description: 'Room 4',
     status: RoomStatus.RESERVED,
-    user_id: 1
+    userId: 1
   },
   {
     id: 5,
@@ -32,18 +38,25 @@ const rooms: Room[] = [
     status: RoomStatus.AVAILABLE
   }
 ]
+
+const addRoomHandler = () => {
+  isModalOpen.value = true
+}
 </script>
 
 <template>
   <div>
-    <v-breadcrumbs :items="['Quartos']" class="pa-0"></v-breadcrumbs>
+    <v-breadcrumbs :items="['Quartos']" class="pa-0" />
     <div class="d-flex justify-space-between">
       <h1 class="text-h5 d-inline">Quartos</h1>
-      <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize"> Adicionar Quarto</v-btn>
+      <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize" @click="addRoomHandler"
+        >Adicionar Quarto
+      </v-btn>
     </div>
   </div>
-  <TextField label="Identificador" max-width="250px"></TextField>
+  <TextField v-model:value="id" label="Identificador" max-width="250px" type="number"></TextField>
   <RoomTable :rooms="rooms" />
+  <AddRoomModal v-model:is-modal-open="isModalOpen" />
 </template>
 
 <style scoped></style>

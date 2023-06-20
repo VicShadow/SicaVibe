@@ -10,7 +10,7 @@ License Type: Academic
 			<generator class="native">
 			</generator>
 		</id>
-		<many-to-one name="tipoDeQuarto" column="TipoDeQuartoID" class="sicavibe.TipoDeQuarto" cascade="save-update,lock" unique="true" not-null="true" lazy="proxy" access="field">
+		<many-to-one name="tipoDeQuarto" cascade="lock" column="TipoDeQuartoID" class="sicavibe.TipoDeQuarto" not-null="true" lazy="proxy" access="field">
 		</many-to-one>
 		<property name="nPorta" column="NPorta" type="integer" length="10" not-null="true" lazy="false"/>
 		<property name="estado" column="Estado" type="string" length="255" not-null="false" lazy="false"/>

@@ -24,8 +24,8 @@ public class HospedeCriteria extends AbstractORMCriteria {
 	public final StringExpression password;
 	public final StringExpression nome;
 	public final DateExpression dataNascimento;
+	public final StringExpression numTelemovel;
 	public final StringExpression morada;
-	public final StringExpression nTelemovel;
 	public final StringExpression cc;
 	public final StringExpression nif;
 	
@@ -36,8 +36,8 @@ public class HospedeCriteria extends AbstractORMCriteria {
 		password = new StringExpression("password", this);
 		nome = new StringExpression("nome", this);
 		dataNascimento = new DateExpression("dataNascimento", this);
+		numTelemovel = new StringExpression("numTelemovel", this);
 		morada = new StringExpression("morada", this);
-		nTelemovel = new StringExpression("nTelemovel", this);
 		cc = new StringExpression("cc", this);
 		nif = new StringExpression("nif", this);
 	}

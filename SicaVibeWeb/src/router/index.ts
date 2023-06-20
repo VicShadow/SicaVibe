@@ -7,6 +7,7 @@ import GuestLayoutVue from '@/layouts/GuestLayout.vue'
 import Home from '@/views/Home.vue'
 import AdminLayoutVue from '@/layouts/AdminLayout.vue'
 import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
+import HostProfile from '@/views/HostProfile.vue'
 
 const routes = [
   {
@@ -36,7 +37,18 @@ const routes = [
     path: '/receptionist/',
     name: 'receptionist',
     component: ReceptionistLayoutVue,
-    children: []
+    children: [
+      {
+        path: 'reservations',
+        name: 'receptionist-reservations',
+        component: () => import('@/views/ReceptionistReservations.vue')
+      },
+      {
+        path: 'reservations/:id/',
+        name: 'reservation',
+        component: () => import('@/views/ReceptionistReservation.vue')
+      }
+    ]
   },
   {
     path: '/about',
@@ -52,6 +64,11 @@ const routes = [
     path: '/signup',
     name: 'signup',
     component: SignUp
+  },
+  {
+    path: '/hostprofile',
+    name: 'hostprofile',
+    component: HostProfile
   },
   {
     // Redirect to home if no route found

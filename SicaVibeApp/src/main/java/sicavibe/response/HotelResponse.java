@@ -1,13 +1,8 @@
 package sicavibe.response;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import sicavibe.*;
 
@@ -16,7 +11,7 @@ public class HotelResponse {
     private int ID;
     private String nome;
     private String descricao;
-    private byte[] img;
+    private int imgID;
     private String endereco;
     private java.util.Set<ServicoExtraResponse> servicoExtraSet = new java.util.HashSet();
     private java.util.Set<TipoDeQuartoResponse> tipoDeQuartoSet = new java.util.HashSet();
@@ -26,13 +21,13 @@ public class HotelResponse {
         this.ID = hotel.getID();
         this.nome = hotel.getNome();
         this.descricao = hotel.getDescricao();
-        this.img = hotel.getImg().getBinaryStream().readAllBytes();
+        this.imgID = hotel.getImg().getID();
         this.endereco = hotel.getEndereco();
         if (completeInfo){
             for (ServicoExtra servicoExtra : hotel.listaServicosExtra.toArray()){
                 servicoExtraSet.add(new ServicoExtraResponse(servicoExtra));
             }
-            for (TipoDeQuarto tipoDeQuarto : hotel.listaTipoDeQuarto.toArray()){
+            for (TipoDeQuarto tipoDeQuarto : hotel.getTiposDeQuarto()){
                 tipoDeQuartoSet.add(new TipoDeQuartoResponse(tipoDeQuarto));
             }
         }
@@ -51,8 +46,8 @@ public class HotelResponse {
         return descricao;
     }
 
-    public byte[] getImg() {
-        return img;
+    public int getImgID() {
+        return imgID;
     }
 
     public String getEndereco() {

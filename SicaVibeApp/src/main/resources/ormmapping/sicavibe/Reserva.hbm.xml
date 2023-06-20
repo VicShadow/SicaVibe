@@ -10,13 +10,14 @@ License Type: Academic
 			<generator class="native">
 			</generator>
 		</id>
-		<many-to-one name="hospede" cascade="lock" column="HospedeID" class="sicavibe.Hospede" not-null="true" lazy="proxy" access="field">
+		<many-to-one name="hospede" cascade="lock" column="UtilizadorID" class="sicavibe.Hospede" not-null="true" lazy="proxy" access="field">
 		</many-to-one>
 		<property name="dataEntrada" column="DataEntrada" type="date" not-null="false" lazy="false"/>
 		<property name="dataSaida" column="DataSaida" type="date" not-null="false" lazy="false"/>
-		<property name="dataCheckIn" column="DataCheckIn" type="date" not-null="false" lazy="false"/>
-		<property name="dataCheckout" column="DataCheckout" type="date" not-null="false" lazy="false"/>
+		<property name="dataCheckIn" column="DataCheckIn" type="timestamp" not-null="false" lazy="false"/>
+		<property name="dataCheckout" column="DataCheckout" type="timestamp" not-null="false" lazy="false"/>
 		<property name="preco" column="Preco" type="float" not-null="false" lazy="false"/>
+		<property name="estado" column="Estado" type="string" length="255" not-null="false" lazy="false"/>
 		<set name="ORM_Quartos" table="Reserva_Quarto" lazy="true" cascade="save-update,lock">
 			<key column="ReservaID" not-null="true"/>
 			<many-to-many column="QuartoID" class="sicavibe.Quarto">

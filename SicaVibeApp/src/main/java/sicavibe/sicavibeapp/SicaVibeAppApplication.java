@@ -3,25 +3,20 @@ package sicavibe.sicavibeapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import sicavibe.ISicaVibeFacade;
-import sicavibe.SicaVibeFacade;
 
 
 @SpringBootApplication
 @Controller
 public class SicaVibeAppApplication {
 
-	public static ISicaVibeFacade sicaVibeFacade = new SicaVibeFacade();
+	public static JwtUtils jwtUtils = new JwtUtils();
+
 	public static void main(String[] args) {
 		SpringApplication.run(SicaVibeAppApplication.class, args);
 	}

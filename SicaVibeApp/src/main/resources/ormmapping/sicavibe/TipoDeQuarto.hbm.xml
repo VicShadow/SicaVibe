@@ -10,10 +10,11 @@ License Type: Academic
 			<generator class="native">
 			</generator>
 		</id>
+		<many-to-one name="img" cascade="lock" column="ImagemID" class="sicavibe.Imagem" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
 		<property name="nome" column="Nome" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="capacidade" column="Capacidade" type="integer" length="10" not-null="false" lazy="false"/>
 		<property name="preco" column="Preco" type="float" not-null="false" lazy="false"/>
 		<property name="descricao" column="Descricao" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="img" column="Img" type="blob" not-null="false" lazy="false"/>
 	</class>
 </hibernate-mapping>
