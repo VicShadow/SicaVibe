@@ -3,7 +3,7 @@ package sicavibe.sicavibeapp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
+import javassist.NotFoundException;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -155,7 +155,7 @@ public class SicaVibeAdminController {
 
 
 
-    public static Map<Integer, List<ReservaResponse>> getHotelReservas (int hotelID) throws PersistentException, SQLException, IOException {
+    public static Map<Integer, List<ReservaResponse>> getHotelReservas (int hotelID) throws PersistentException, SQLException, IOException, NotFoundException {
         Map<Integer, List<ReservaResponse>> res = new HashMap<>();
 
         boolean hotelFilter = hotelID != -1;

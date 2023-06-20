@@ -1,6 +1,7 @@
 package sicavibe.response;
 
-import sicavibe.Hospede;
+import javassist.NotFoundException;
+import org.orm.PersistentException;
 import sicavibe.Quarto;
 import sicavibe.Reserva;
 import sicavibe.ServicoExtra;
@@ -16,7 +17,7 @@ public class ReservaResponse {
     private int ID;
     private int hospedeId;
     private String hospedeNome;
-    private Hospede hospede;
+    private UtilizadorResponse hospede;
     private Date dataEntrada;
     private Date dataSaida;
     private float preco;
@@ -26,14 +27,14 @@ public class ReservaResponse {
 
 
 
-    public ReservaResponse(Reserva reserva, boolean isAdmin) throws SQLException, IOException {
+    public ReservaResponse(Reserva reserva, boolean isAdmin) throws SQLException, IOException, PersistentException, NotFoundException {
         this.ID = reserva.getID();
         this.estado = reserva.getEstado();
         this.preco = reserva.getPreco();
         this.hospedeId = reserva.getHospede().getID();
 
         if (!isAdmin) this.hospedeNome = reserva.getHospede().getNome();
-        if (isAdmin) this.hospede = reserva.getHospede();
+        if (isAdmin) this.hospede = new UtilizadorResponse(reserva.getHospede());
         else this.hospede = null;
 
         this.dataEntrada = reserva.getDataEntrada();
@@ -62,7 +63,7 @@ public class ReservaResponse {
         return hospedeNome;
     }
 
-    public Hospede getHospede() {
+    public UtilizadorResponse getHospede() {
         return hospede;
     }
 

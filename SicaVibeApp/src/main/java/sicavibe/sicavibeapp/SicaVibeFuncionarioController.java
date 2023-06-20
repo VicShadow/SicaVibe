@@ -13,9 +13,7 @@ import sicavibe.*;
 import sicavibe.response.QuartoResponse;
 import sicavibe.response.ReservaResponse;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
-import java.sql.SQLException;
 import java.util.*;
 
 import static sicavibe.sicavibeapp.SicaVibeAppAux.getListQuartos;
@@ -97,13 +95,10 @@ public class SicaVibeFuncionarioController {
 
             reservasFiltered = paging(reservasFiltered, page, pageSize);
 
-            reservasFiltered.forEach(r -> {
-                try {
-                    res.add(new ReservaResponse(r, false));
-                } catch (SQLException | IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            for (Reserva r : reservasFiltered) {
+                res.add(new ReservaResponse(r, false));
+            }
+
             return res;
 
         } catch (ResponseStatusException e) {
