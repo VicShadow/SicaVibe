@@ -12,30 +12,10 @@ const id = ref('')
 const rooms: Room[] = [
   {
     id: 1,
-    description: 'Room 1',
-    status: RoomStatus.OCCUPIED,
-    userId: 2
-  },
-  {
-    id: 2,
-    description: 'Room 2',
-    status: RoomStatus.AVAILABLE
-  },
-  {
-    id: 3,
-    description: 'Room 3',
-    status: RoomStatus.MAINTENANCE
-  },
-  {
-    id: 4,
-    description: 'Room 4',
-    status: RoomStatus.RESERVED,
-    userId: 1
-  },
-  {
-    id: 5,
-    description: 'Room 5',
-    status: RoomStatus.AVAILABLE
+    typeId: 1,
+    typeName: 'Single',
+    doorNumber: 101,
+    status: RoomStatus.OCCUPIED
   }
 ]
 
