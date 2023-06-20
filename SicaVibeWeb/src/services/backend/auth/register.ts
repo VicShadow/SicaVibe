@@ -24,7 +24,7 @@ export const register = async ({
   nif,
   cc
 }: RegisterProps) => {
-  const data = {
+  const body = {
     email: email,
     password: password,
     nome: name,
@@ -36,7 +36,7 @@ export const register = async ({
     nif: nif
   }
 
-  const response = await backend.post(REGISTER_ENDPOINT, data)
+  const response = await backend.post(REGISTER_ENDPOINT, body)
 
   if (response.status !== 200) {
     throw new Error(response.data)

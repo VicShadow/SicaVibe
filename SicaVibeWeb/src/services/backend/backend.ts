@@ -11,7 +11,7 @@ if (!import.meta.env.VITE_BACKEND_URL) {
 
 export const backend = axios.create({
   baseURL: BACKEND_URL,
-  timeout: 1000,
+  timeout: 2000,
   headers: {
     'Content-Type': 'application/json'
   }

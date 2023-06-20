@@ -1,83 +1,107 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
 import { computed, ref } from 'vue'
-import { Reservation, ReservationStatus } from '@/types/Reservation'
+import { ReservationStatus } from '@/types/Reservation'
 import { formatDate } from '@/services/formatter'
 import ConfirmationModal from '@/components/modals/ConfirmationModal.vue'
+import { getToken } from '@/services/storage/sessionStorage'
+import { useReservation } from '@/hooks/useReservation'
+import { VSkeletonLoader } from 'vuetify/labs/components'
+import { useReservationMutation } from '@/hooks/useReservationMutation'
 
 const isCheckInModalOpen = ref(false)
 const isCheckOutModalOpen = ref(false)
+const isCancelModalOpen = ref(false)
 
 const route = useRoute()
 
 const { id } = route.params
 
-const mockReservation: Reservation = {
-  id: 1,
-  userId: 1,
-  status: ReservationStatus.DONE,
-  checkedInAt: new Date('2021-10-10'),
-  checkedOutAt: new Date('2021-10-11'),
-  scheduledUntil: new Date('2021-10-09'),
-  scheduledAt: new Date('2021-10-09'),
-  scheduledTo: new Date('2021-10-10')
+const reservationId = computed(() => {
+  return parseInt(id as string)
+})
+
+const token = getToken()
+
+if (!token) {
+  throw new Error('Token not found')
 }
 
-const { userId, status, checkedInAt, checkedOutAt, scheduledAt, scheduledTo, scheduledUntil } =
-  mockReservation
+const { reservation, isLoading, isError, isSuccess, error } = useReservation({
+  token,
+  reservationId
+})
 
+const { checkInMutation, checkOutMutation, cancelMutation } = useReservationMutation({
+  token,
+  reservationId: reservationId.value
+})
+
+/* --------------------- Formatted values --------------------- */
 const formattedStatus = computed(() => {
-  return status === ReservationStatus.DONE ? 'Done' : 'Pending'
+  if (!reservation.value) return ''
+  return reservation.value.status
 })
 
-const _formattedScheduledAt = computed(() => {
-  return formatDate(scheduledAt)
+const formattedInDate = computed(() => {
+  if (!reservation.value) return ''
+
+  return formatDate(reservation.value.inDate)
 })
 
-const formattedScheduledTo = computed(() => {
-  return formatDate(scheduledTo)
-})
-
-const formattedScheduledUntil = computed(() => {
-  return formatDate(scheduledUntil)
-})
-
-const formattedCheckedInAt = computed(() => {
-  if (!checkedInAt) return 'Not checked in'
-  return formatDate(checkedInAt)
-})
-
-const formattedCheckedOutAt = computed(() => {
-  if (!checkedOutAt) return 'Not checked out'
-  return formatDate(checkedOutAt)
+const formattedOutDate = computed(() => {
+  if (!reservation.value) return ''
+  return formatDate(reservation.value.outDate)
 })
 
 const isCheckInDisabled = computed(() => {
-  // TODO: Implement check-in disabled check
-  return false
+  if (!reservation.value) return true
+
+  return reservation.value.status !== ReservationStatus.SCHEDULED
 })
 
 const isCheckOutDisabled = computed(() => {
-  // TODO: Implement check-out disabled check
-  return true
+  if (!reservation.value) return true
+
+  return reservation.value.status !== ReservationStatus.ON_GOING
 })
 
+const isCancelDisabled = computed(() => {
+  if (!reservation.value) return true
+
+  return reservation.value.status !== ReservationStatus.SCHEDULED
+})
+
+/* --------------------- Handlers --------------------- */
 const checkInHandler = () => {
-  // TODO: Implement check-in handler
+  checkInMutation.mutate()
+
   isCheckInModalOpen.value = false
 }
 
 const checkOutHandler = () => {
-  // TODO: Implement check-out handler
+  checkOutMutation.mutate()
+
   isCheckOutModalOpen.value = false
 }
 
+const cancelHandler = async () => {
+  cancelMutation.mutate()
+
+  isCancelModalOpen.value = false
+}
+
+/* --------------------- Modals --------------------- */
 const openCheckInModal = () => {
   isCheckInModalOpen.value = true
 }
 
 const openCheckOutModal = () => {
   isCheckOutModalOpen.value = true
+}
+
+const openCancelModal = () => {
+  isCancelModalOpen.value = true
 }
 
 const breadcrumbItems = computed(() => {
@@ -119,25 +143,34 @@ const breadcrumbItems = computed(() => {
         >
           Check Out
         </v-btn>
+        <v-btn
+          :disabled="isCancelDisabled"
+          :ripple="false"
+          class="bg-red-darken-3 elevation-0 text-capitalize"
+          @click="openCancelModal"
+        >
+          Cancel
+        </v-btn>
       </div>
     </div>
   </div>
-  <div class="reservation-card">
-    <div>Made by user with id: {{ userId }}.</div>
-    <!-- TODO: Add user name -->
+  <v-skeleton-loader v-if="isLoading" type="table" />
+
+  <div v-if="isError" class="text-h6 text-red-darken-3">{{ error }}</div>
+
+  <div v-if="isSuccess && reservation" class="reservation-card">
+    <div>Made by user with id: {{ reservation.guestId }}.</div>
+    <div>Price: {{ reservation.price }} €</div>
+    <div>Guest Name: {{ reservation.guestName }}</div>
     <div class="schedule">
       Schedule from
       <span class="text-h6">
-        {{ formattedScheduledTo }}
+        {{ formattedInDate }}
       </span>
       until
       <span class="text-h6">
-        {{ formattedScheduledUntil }}
+        {{ formattedOutDate }}
       </span>
-    </div>
-    <div class="checks">
-      <div>Checked in at {{ formattedCheckedInAt }}.</div>
-      <div>Checked out at {{ formattedCheckedOutAt }}.</div>
     </div>
     <div class="status">
       Reservation Status:
@@ -147,7 +180,7 @@ const breadcrumbItems = computed(() => {
   <ConfirmationModal
     v-model:is-open="isCheckInModalOpen"
     :is-open="isCheckInModalOpen"
-    message="Are you sure you want to check in?"
+    message="Are you sure you want to check in the reservation?"
     title="Check In"
     @cancel="isCheckInModalOpen = false"
     @confirm="checkInHandler"
@@ -155,10 +188,18 @@ const breadcrumbItems = computed(() => {
   <ConfirmationModal
     v-model:is-open="isCheckOutModalOpen"
     :is-open="isCheckOutModalOpen"
-    message="Are you sure you want to check out?"
+    message="Are you sure you want to check out the reservation?"
     title="Check Out"
     @cancel="isCheckOutModalOpen = false"
     @confirm="checkOutHandler"
+  />
+  <ConfirmationModal
+    v-model:is-open="isCancelModalOpen"
+    :is-open="isCancelModalOpen"
+    message="Are you sure you want to cancel the reservation?"
+    title="Cancel"
+    @cancel="isCancelModalOpen = false"
+    @confirm="cancelHandler"
   />
 </template>
 
@@ -177,9 +218,6 @@ const breadcrumbItems = computed(() => {
   flex-direction: row;
   justify-content: space-between;
   gap: 1rem;
-}
-
-.checks {
 }
 
 .status {

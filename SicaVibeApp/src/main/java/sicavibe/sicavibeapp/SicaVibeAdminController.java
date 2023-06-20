@@ -3,7 +3,7 @@ package sicavibe.sicavibeapp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
+import javassist.NotFoundException;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -130,7 +130,7 @@ public class SicaVibeAdminController {
             @Parameter(in= ParameterIn.HEADER, required = false, name = "hotelid", description = "ID do Hotel a Filtrar")
     })
     @GetMapping(value = "/admin/get-reservation-list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<Integer, List<ReservaResponse>> getReservasList (@RequestHeader Map<String, Object> headers) {
+    public Map<String, List<ReservaResponse>> getReservasList (@RequestHeader Map<String, Object> headers) {
         try {
             SicaVibeAppAux.checkRequestContent(List.of("token"), headers);
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
@@ -155,8 +155,8 @@ public class SicaVibeAdminController {
 
 
 
-    public static Map<Integer, List<ReservaResponse>> getHotelReservas (int hotelID) throws PersistentException, SQLException, IOException {
-        Map<Integer, List<ReservaResponse>> res = new HashMap<>();
+    public static Map<String, List<ReservaResponse>> getHotelReservas (int hotelID) throws PersistentException, SQLException, IOException, NotFoundException {
+        Map<String, List<ReservaResponse>> res = new HashMap<>();
 
         boolean hotelFilter = hotelID != -1;
 
@@ -168,7 +168,7 @@ public class SicaVibeAdminController {
             List<ReservaResponse> resHotel = new ArrayList<>();
             for (Reserva r : reservas) resHotel.add(new ReservaResponse(r, true));
 
-            res.put(hotelID, resHotel);
+            res.put(h.getNome(), resHotel);
             return res;
         }
 
@@ -177,10 +177,38 @@ public class SicaVibeAdminController {
             for (Hotel hotel : hoteis) {
                 List<ReservaResponse> resHotel = new ArrayList<>();
                 for (Reserva r : hotel.listaReservas.toArray()) resHotel.add(new ReservaResponse(r, true));
-                res.put(hotel.getID(), resHotel);
+                res.put(hotel.getNome(), resHotel);
             }
         }
 
         return res;
+    }
+
+
+
+
+    @Operation(summary = "Obter Reserva", tags = {"Admin"}, parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização"),
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "reservaid",description = "ID da Reserva a pesquisar"),
+    })
+    @GetMapping(value = "/admin/reservation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ReservaResponse getReservaById (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token","reservaid"), headers);
+            SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
+
+            int reservaID = Integer.parseInt(headers.get("reservaid").toString());
+            Reserva reserva = ReservaDAO.getReservaByORMID(reservaID);
+            if (reserva == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Reservation with id '" + reservaID + "' not found!");
+
+            return new ReservaResponse(reserva, false);
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
     }
 }

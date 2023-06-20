@@ -19,7 +19,7 @@ $bootDiskSize = "64GB"
 $bootDiskType = "pd-ssd"
 $customMemory = "16GB"
 $customCpu = "8"
-$zone = "us-central1-a"
+$zone = "us-central1-b"
 $scopes = "https://www.googleapis.com/auth/cloud-platform"
 $network = "address=34.28.141.169,network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default"
 
@@ -48,7 +48,7 @@ Write-Host "Waiting for the instance to start..."
 
 while ($true) {
     #gcloud compute ssh $vmName --command="echo instance now up" --strict-host-key-checking=no 2>$null
-    ssh -o "StrictHostKeyChecking=no" $vmIP -C "echo VM is up" #2>$null
+    $sshOutput = ssh -o "StrictHostKeyChecking=no" $vmIP -C "echo VM is up" #2>$null
 
     if ($LASTEXITCODE -eq 0) {
         break
