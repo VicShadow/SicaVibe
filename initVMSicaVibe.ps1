@@ -19,7 +19,7 @@ $bootDiskSize = "64GB"
 $bootDiskType = "pd-ssd"
 $customMemory = "16GB"
 $customCpu = "8"
-$zone = "us-central1-a"
+$zone = "us-central1-b"
 $scopes = "https://www.googleapis.com/auth/cloud-platform"
 $network = "address=34.28.141.169,network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default"
 
