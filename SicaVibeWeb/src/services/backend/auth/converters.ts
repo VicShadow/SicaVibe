@@ -38,6 +38,7 @@ export const convertUserBackendToFrontend = (user: UserBackend, token: Token): U
     id: user.id,
     name: user.nome,
     email: user.email,
+    address: user.morada,
     phoneNumber: user.numTelemovel,
     cc: user.cc,
     nif: user.nif,

@@ -54,12 +54,6 @@ const routes = [
     ]
   },
   {
-    path: '/guest/',
-    name: 'guest',
-    component: GuestLayoutVue,
-    children: []
-  },
-  {
     path: '/receptionist/',
     name: 'receptionist',
     component: ReceptionistLayoutVue,
