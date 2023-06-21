@@ -8,7 +8,7 @@
           <div>
             <div class="title"> {{ hotel?.nome.split(" ")[1] }}</div>
             <span class="normalText"> {{  hotel?.descricao }}</span>
-            
+
             <template v-if="hotel?.servicoExtraSet">
               <div class="amenities">Main Amenities</div>
 
@@ -33,19 +33,19 @@
       <div class="btn paddingHorizontal">
         <v-btn rounded="lg" color="#CD519D">BOOK A RESERVATION</v-btn>
       </div>
-      
+
 
       <!-- HOTEL ROOMS -->
       <div class="paddingHorizontal titleRooms"> {{ hotel?.nome.split(" ")[1] }} Rooms</div>
 
       <div class="paddingHorizontal">
         <TipoQuartoCard class="mt-10"
-        v-for="tipo in hotel?.tipoDeQuartoSet" 
-        :key="tipo.id" 
+        v-for="tipo in hotel?.tipoDeQuartoSet"
+        :key="tipo.id"
         :tipo-quarto="tipo"/>
       </div>
 
-     
+
       </v-app>
 </template>
 
@@ -148,4 +148,4 @@ section{
   margin-top: 20px;
 }
 </style>
-  
+
