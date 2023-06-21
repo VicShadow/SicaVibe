@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Role, useUserStore } from '@/stores/userStore'
 
-const INITIAL_GUEST_ENDPOINT = '/guest' // TODO: Change this to the correct guest endpoint
+const INITIAL_GUEST_ENDPOINT = '/guest/make-reservation' // TODO: Change this to the correct guest endpoint
 const INITIAL_RECEPTIONIST_ENDPOINT = '/receptionist/reservations'
 const INITIAL_ADMIN_ENDPOINT = '/admin/reservations'
 

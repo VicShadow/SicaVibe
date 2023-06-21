@@ -57,7 +57,13 @@ const routes = [
     path: '/guest/',
     name: 'guest',
     component: GuestLayoutVue,
-    children: []
+    children: [
+      {
+        path: 'make-reservation',
+        name: 'make-reservation',
+        component: () => import('@/views/MakeReservation.vue')
+      }
+    ]
   },
   {
     path: '/receptionist/',
@@ -105,11 +111,6 @@ const routes = [
     path: '/changepassword',
     name: 'change-passowrd',
     component: ChangePasssword,
-  },
-  {
-    path: '/make-reservation',
-    name: 'make-reservation',
-    component: () => import('@/views/MakeReservation.vue')
   },
   {
     // Redirect to home if no route found
