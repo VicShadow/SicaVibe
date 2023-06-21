@@ -156,8 +156,9 @@ public class SicaVibeAuthController {
     @Operation(summary = "Registo de um novo Funcionário",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioInfoBody.class))))
     @PostMapping(value = "/admin/register-func", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
+    public void registerFuncionario (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
+            SicaVibeAppAux.checkRequestContent(List.of("token"), headers);
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
             //Check Extra (Set Info ja verifica o resto)
@@ -170,7 +171,6 @@ public class SicaVibeAuthController {
             Hotel hotel = HotelDAO.getHotelByORMID((Integer) body.get("hotelID"));
             hotel.listaFuncionarios.add(f);
             HotelDAO.save(hotel);
-            return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(f.getID(), JwtToken.TipoUtilizador.FUNCIONARIO));
 
         } catch (ResponseStatusException e) {
             throw e;
@@ -189,15 +189,15 @@ public class SicaVibeAuthController {
     @Operation(summary = "Registo de um novo Administrador",tags = {"Admin"},requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = SicaVibeAuthController.UserInfoBody.class))))
     @PostMapping(value = "/admin/register-admin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String registerAmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
+    public void registerAdmin (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
+            SicaVibeAppAux.checkRequestContent(List.of("token"), headers);
             SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
 
             Administrador admin = AdministradorDAO.createAdministrador();
             setUserInfo(admin,body);
             AdministradorDAO.save(admin);
             AdministradorDAO.refresh(admin);
-            return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(admin.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
 
         } catch (ResponseStatusException e) {
             throw e;

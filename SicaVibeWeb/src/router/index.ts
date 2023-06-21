@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import SignUp from '@/views/SignUp.vue'
 import AdminRooms from '@/views/AdminRooms.vue'
 import AdminReservas from '@/views/AdminReservas.vue'
+import AdminEmployees from '@/views/AdminEmployees.vue'
 import GuestLayoutVue from '@/layouts/GuestLayout.vue'
 import Home from '@/views/Home.vue'
 import AdminLayoutVue from '@/layouts/AdminLayout.vue'
@@ -38,7 +39,12 @@ const routes = [
         path: 'reservations',
         name: 'admin-reservations',
         component: AdminReservas
-      }
+      },
+      {
+        path: 'employees',
+        name: 'admin-employees',
+        component: AdminEmployees
+      },
     ]
   },
   {

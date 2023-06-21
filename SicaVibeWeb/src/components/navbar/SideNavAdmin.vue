@@ -2,34 +2,36 @@
 import type { Props as SideNavItemProps } from '@/components/navbar/SideNavItem.vue'
 import SideNavItem from '@/components/navbar/SideNavItem.vue'
 import { ref } from 'vue'
-import HotelAvatar from '@/components/HotelAvatar.vue'
+import SicaVibeAvatar from '@/components/SicaVibeAvatar.vue'
 import { useRouter } from 'vue-router'
 
 const items = ref<SideNavItemProps[]>([
-  { title: 'Reservas', icon: '', value: '/admin/reservations' },
-  { title: 'Funcionários', icon: '', value: '/admin/employees' },
-  { title: 'Quartos', icon: '', value: '/admin/rooms' },
-  { title: 'Promoções', icon: '', value: '/admin/promotions' }
+  { title: 'Reservations', icon: '', value: '/admin/reservations' },
+  { title: 'Employees', icon: '', value: '/admin/employees' },
+  { title: 'Rooms', icon: '', value: '/admin/rooms' },
+  // { title: 'Promoções', icon: '', value: '/admin/promotions' }
 ])
 
 const router = useRouter()
 
-const currentRoute = router.currentRoute.value.path
-
 const isSelected = (value: string) => {
+  const currentRoute = router.currentRoute.value.path
   return value === currentRoute
 }
+
+isSelected('/admin/reservations')
 </script>
 
 <template>
   <v-navigation-drawer class="position-sticky px-2">
-    <HotelAvatar img="https://picsum.photos/200/300" />
+    <SicaVibeAvatar />
     <v-list v-for="item in items" :key="item.title" density="compact">
       <SideNavItem
         :icon="item.icon"
         :selected="isSelected(item.value)"
         :title="item.title"
         :value="item.value"
+        @click.prevent=""
       />
     </v-list>
   </v-navigation-drawer>
