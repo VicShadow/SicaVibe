@@ -37,7 +37,7 @@ const loginOnClick = async () => {
   <v-app>
     <v-app-bar app color="blue-grey-lighten-5">
       <div class="circle"></div>
-      <v-app-bar-title class="header-text"> SicaVibe</v-app-bar-title>
+      <v-app-bar-title class="header-text" @click.prevent="router.push({ name : 'home'})"> SicaVibe</v-app-bar-title>
     </v-app-bar>
     <v-container class="page-container" fluid>
       <v-row align="center" justify="space-between">
@@ -64,6 +64,8 @@ const loginOnClick = async () => {
                   ></v-text-field>
                 </v-responsive>
               </v-card-item>
+
+              <v-text class="router-link d-flex justify-center">Forgot your password?</v-text>
 
               <v-card-text class="d-flex justify-center text-red">
                 {{ errorMessage }}
