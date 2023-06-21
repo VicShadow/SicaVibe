@@ -10,5 +10,5 @@ export interface Room {
   typeId: number
   typeName: string
   doorNumber: number
-  status: RoomStatus
+  status: string
 }

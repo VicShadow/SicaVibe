@@ -12,6 +12,8 @@ const props = defineProps<Props>()
 
 const { type, label, value } = toRefs(props)
 
+const emit = defineEmits(['update:value'])
+
 const maxWidth = props.maxWidth ?? 'unset'
 </script>
 
@@ -20,7 +22,7 @@ const maxWidth = props.maxWidth ?? 'unset'
     :placeholder="label"
     :type="type ?? 'text'"
     :value="value"
-    @input="$emit('update:value', $event.target.value)"
+    @input="emit('update:value', $event.target.value)"
   />
 </template>
 

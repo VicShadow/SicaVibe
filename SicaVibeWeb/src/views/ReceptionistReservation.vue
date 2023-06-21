@@ -34,7 +34,7 @@ const { reservation, isLoading, isError, isSuccess, error } = useReservation({
 
 const { checkInMutation, checkOutMutation, cancelMutation } = useReservationMutation({
   token,
-  reservationId: reservationId.value
+  reservationId: reservationId
 })
 
 /* --------------------- Formatted values --------------------- */

@@ -37,7 +37,9 @@ export const useReservations = (props: useReservationsProps): useReservationsRet
     isSuccess
   } = useQuery<Reservation[]>({
     queryKey: [queryKey, props.page, props.pagesize, props.type, props.guestCC, props.guestName],
-    queryFn
+    queryFn,
+    cacheTime: 0,
+    staleTime: 0
   })
 
   return {
