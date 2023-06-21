@@ -10,6 +10,7 @@ import AdminLayoutVue from '@/layouts/AdminLayout.vue'
 import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
 import HostProfile from '@/views/HostProfile.vue'
 import EditProfile from '@/views/EditProfile.vue'
+import HotelSpecificPage from '@/views/HotelSpecificPage.vue'
 import { useUserStore } from '@/stores/userStore'
 
 const routes = [
@@ -17,6 +18,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/hotel/:id',
+    name: 'hotel',
+    component: HotelSpecificPage
   },
   {
     path: '/admin/',
@@ -96,7 +102,7 @@ const router = createRouter({
   routes
 })
 
-const ALLOWED_ROUTES = ['', '/login', '/signup', '/home', '/about']
+const ALLOWED_ROUTES = ['', '/login', '/signup', '/home', '/about', '/hotel']
 
 /* // FIXME: This is not working
 router.beforeEach((to, from) => {

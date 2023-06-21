@@ -8,7 +8,7 @@ VALUES  ('SicaVibe Faro'              , LOAD_FILE('/var/lib/mysql-files/SicaVibe
         ('SicaVibe Single Room'       , LOAD_FILE('/var/lib/mysql-files/SicaVibeImgs/singleRoom.jpg')),
         ('SicaVibe Twin Room'         , LOAD_FILE('/var/lib/mysql-files/SicaVibeImgs/twinRoom.jpg')),
         ('SicaVibe Deluxe Room'       , LOAD_FILE('/var/lib/mysql-files/SicaVibeImgs/doubleRoom.jpg')),
-        ('SicaVibe Presidential Suite', LOAD_FILE('/var/lib/mysql-files/SicaVibeImgs/presidentialRoom.jpg'));
+        ('SicaVibe Presidential Suite', LOAD_FILE('/var/lib/mysql-files/SicaVibeImgs/presidentialRomm.jpg'));
 
 
 
@@ -60,10 +60,10 @@ VALUES (null, 'hospede1@example.com', '33e69e7270efae510fba1c24526a929a52b61dbfd
 
 
 INSERT INTO TipoDeQuarto (ImagemID, Nome, Capacidade, Preco, Descricao)
-VALUES (4, 'Single Room', 1, 50.00, 'Welcome to our cozy single room, a comfortable retreat designed for solo travelers. Enjoy a restful nights sleep on a cozy bed, relax in a well-appointed space, and make use of modern amenities. Experience a tranquil and convenient stay in our inviting single room.'),
-       (5, 'Twin Room', 2, 100.00, 'Our twin room offers comfort and functionality with a cozy ambiance. Rest peacefully on a comfortable bed, enjoy modern amenities, and refresh in the en-suite bathroom. Experience a delightful blend of comfort and convenience in our standard room.'),
-       (6, 'Deluxe Room', 3, 150.00, 'Indulge in our deluxe room, where luxury meets relaxation. Experience spacious comfort, elegant decor, and upscale amenities. Unwind in style, enjoy the plush bedding, and rejuvenate in the lavish en-suite bathroom. Escape to a haven of tranquility in our deluxe room.'),
-       (7, 'Presidential Suite', 4, 200.00, 'Indulge in luxury with our suite room, a haven of elegance and sophistication. Enjoy spacious accommodations, a separate living area, and upscale amenities. Retreat to a plush bedroom, relax in style, and experience the pinnacle of comfort and refinement in our exquisite suite room.');
+VALUES (5, 'Single Room', 1, 50.00, 'Welcome to our cozy single room, a comfortable retreat designed for solo travelers. Enjoy a restful nights sleep on a cozy bed, relax in a well-appointed space, and make use of modern amenities. Experience a tranquil and convenient stay in our inviting single room.'),
+       (6, 'Twin Room', 2, 100.00, 'Our twin room offers comfort and functionality with a cozy ambiance. Rest peacefully on a comfortable bed, enjoy modern amenities, and refresh in the en-suite bathroom. Experience a delightful blend of comfort and convenience in our standard room.'),
+       (7, 'Deluxe Room', 3, 150.00, 'Indulge in our deluxe room, where luxury meets relaxation. Experience spacious comfort, elegant decor, and upscale amenities. Unwind in style, enjoy the plush bedding, and rejuvenate in the lavish en-suite bathroom. Escape to a haven of tranquility in our deluxe room.'),
+       (8, 'Presidential Suite', 4, 200.00, 'Indulge in luxury with our suite room, a haven of elegance and sophistication. Enjoy spacious accommodations, a separate living area, and upscale amenities. Retreat to a plush bedroom, relax in style, and experience the pinnacle of comfort and refinement in our exquisite suite room.');
 
 
 

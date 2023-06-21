@@ -1,5 +1,5 @@
 <template>
-  <v-card @click.prevent="clickedCard"
+  <v-card @click="clickedCard"
     class="vcard"
     color="black" variant="tonal">
   
@@ -22,6 +22,8 @@
 
 
 <script lang="ts" setup>
+import router from '@/router';
+
 
 interface Props {
   hotelid: number,
@@ -41,7 +43,7 @@ function limit (string = '', limit = 0) {
 }
 
 function clickedCard () {
-  console.log("go to Hotel'" + props.hotelName + "'")
+  router.push({ name:'hotel', params:{ id:props.hotelid }})
 }
 
 </script>
