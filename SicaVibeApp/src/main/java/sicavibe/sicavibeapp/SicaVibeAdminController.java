@@ -3,6 +3,7 @@ package sicavibe.sicavibeapp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javassist.NotFoundException;
 import org.orm.PersistentException;
 import org.springframework.http.HttpStatus;
@@ -211,4 +212,32 @@ public class SicaVibeAdminController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
+
+
+
+
+
+    @Operation(summary = "Obter informacao de um Admin", tags = {"Admin"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UtilizadorResponse.class))))
+    @GetMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UtilizadorResponse getHospede (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.ADMINISTRADOR);
+
+            return new UtilizadorResponse(AdministradorDAO.getAdministradorByORMID(id));
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
+
 }

@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sicavibe.*;
 import sicavibe.response.QuartoResponse;
 import sicavibe.response.ReservaResponse;
+import sicavibe.response.UtilizadorResponse;
 
 import java.io.InvalidObjectException;
 import java.util.*;
@@ -273,6 +274,29 @@ public class SicaVibeFuncionarioController {
         } catch (ResponseStatusException e) {
             throw e;
         } catch (NumberFormatException | PersistentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+
+
+    @Operation(summary = "Obter informacao de um Funcionario", tags = {"Funcionario"},parameters = {
+            @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UtilizadorResponse.class))))
+    @GetMapping(value = "/funcionario", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UtilizadorResponse getHospede (@RequestHeader Map<String, Object> headers) {
+        try {
+            SicaVibeAppAux.checkRequestContent(List.of("token"), headers);
+            int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String) headers.get("token"), JwtToken.TipoUtilizador.FUNCIONARIO);
+
+            return new UtilizadorResponse(FuncionarioDAO.getFuncionarioByORMID(id));
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (PersistentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
