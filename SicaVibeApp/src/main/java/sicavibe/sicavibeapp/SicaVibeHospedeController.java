@@ -96,9 +96,7 @@ public class SicaVibeHospedeController {
 
     // EDIT HOSPEDE PROFILE
     @Operation(summary = "Editar perfil de um Hospede", tags = {"Hospede"},
-            parameters = { @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")},
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = UtilizadorResponse.class))))
+            parameters = { @Parameter(in= ParameterIn.HEADER,required = true,name = "token",description = "Token de Autorização")})
     @PostMapping(value = "/hospede/edit-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Hospede editHospedeProfile (@RequestHeader Map<String, Object> headers, @RequestBody Map<String,Object> body) {
         try {
