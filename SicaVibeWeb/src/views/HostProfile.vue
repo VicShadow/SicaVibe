@@ -12,6 +12,10 @@ const editOnClick = async () => {
   router.push('/edit')
 }
 
+const changePasswordOnClick = async () => {
+  router.push('/changepassword')
+}
+
 const user = {
     "email" : "hospede9@gmail.com",
     "password" : "Password.123",
@@ -38,9 +42,23 @@ const user = {
                 <label class="subtitle-text">Profile</label>
                 <div class="background-rect">
                   <v-row class="align-right">
-                    <v-btn class="edit-button"  @click="editOnClick">
-                      <v-img class="image-fill-2" contain src="../edit_button.jpg"></v-img>
-                    </v-btn>
+                  <div>
+                      <v-menu open-on-hover>
+                        <template v-slot:activator="{ props }">
+                          <v-btn v-bind="props">
+                            <v-img class="image-fill-2" contain src="../menu_button.jpg"></v-img>
+                          </v-btn>
+                        </template>
+                        <v-list>
+                          <v-row class="fill-height">
+                            <v-btn class="fill-width lowercase-text" @click="editOnClick">Edit Profile</v-btn>
+                          </v-row>
+                          <v-row class="fill-height">
+                            <v-btn class="fill-width lowercase-text" @click="changePasswordOnClick">Change Password</v-btn>
+                          </v-row>
+                        </v-list>
+                      </v-menu>
+                    </div>
                   </v-row>
                   <v-row>
                     <v-img class="user-img" contain src="../user_button.jpg"></v-img>
@@ -226,5 +244,16 @@ const user = {
   margin-left: auto;
 }
 
+.fill-height {
+  height: 100%;
+}
+
+.fill-width {
+  width: 100%;
+}
+
+.lowercase-text {
+  text-transform: lowercase;
+}
 </style>
   

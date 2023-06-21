@@ -3,13 +3,13 @@ import TextField from '@/components/TextField.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import {
-  validatePassword,
-  validatePhone
+  validatePassword
 } from '@/services/validator'
 
 const router = useRouter()
 const success = ref(false)
-const errorMessagePhone = ref('')
+const errorMessagePassword = ref('')
+const errorMessageConfirmPassword = ref('')
 const errorMessage = ref('')
 
 const cancelOnClick = () => {
@@ -17,19 +17,21 @@ const cancelOnClick = () => {
 }
 
 const saveOnClick = async () => {
-  const nameField = document.querySelector('#name') as HTMLInputElement
-  const nameValue = nameField.value
-  const addressField = document.querySelector('#address') as HTMLInputElement
-  const addressValue = addressField.value
-  const phoneField = document.querySelector('#phone') as HTMLInputElement
-  const phoneValue = phoneField.value
+    const passwordField = document.querySelector('#password') as HTMLInputElement
+  const passwordValue = passwordField.value
+  const confirmPasswordField = document.querySelector('#confirmPassword') as HTMLInputElement
+  const confirmPasswordValue = confirmPasswordField.value
 
   // Reset error messages
-  errorMessagePhone.value = ''
+  errorMessagePassword.value = ''
+  errorMessageConfirmPassword.value = ''
 
   if (
-    validatePhone(phoneValue)
+    validatePassword(passwordValue) &&
+    passwordValue === confirmPasswordValue
   ) {
+    console.log("entrei")
+
     success.value = true
 
     setTimeout(() => {
@@ -38,14 +40,16 @@ const saveOnClick = async () => {
     }, 2000)
   } else {
 
-    if (!validatePhone(phoneValue)) {
-      errorMessagePhone.value += 'The phone number must have 9 digits.'
+    if (!validatePassword(passwordValue)) {
+      errorMessagePassword.value =
+        'The password must have at least 8 characters, one uppercase letter, one lowercase letter, and one special character.'
+    }
+
+    if (passwordValue !== confirmPasswordValue) {
+      errorMessageConfirmPassword.value = 'The passwords do not match.'
     }
   }
 }
-const name = ref<string>('Filipa')
-const phone = ref<string>('123456789')
-const address = ref<string>('Rua da Filipa')
 </script>
 
 <template>
@@ -56,23 +60,22 @@ const address = ref<string>('Rua da Filipa')
     </div>
     <div class="page-container">
       <div class="background-rect">
-        <div class="register-title">Edit Profile</div>
+        <div class="password-title">Change Password</div>
         <form class="form">
           <div class="fields">
-            <div class="field-col">
-              <div class="w-100 d-flex flex-column align-start">
-                <label>Name</label>
-                <TextField id="name" v-model:value='name'></TextField>
-              </div>
-              <div class="w-100 d-flex flex-column align-start">
-                <label>Phone Number</label>
-                <TextField id="phone" maxlength="9" v-model:value='phone'></TextField>
-                <div v-if="errorMessagePhone" class="error-message">{{ errorMessagePhone }}</div>
-              </div>
+            <div class="w-100 d-flex flex-column align-start">
+                <label>New Password</label>
+                <TextField id="password" type="password"></TextField>
+                <div v-if="errorMessagePassword" class="error-message">
+                  {{ errorMessagePassword }}
+                </div>
             </div>
             <div class="w-100">
-              <label>Address</label>
-              <TextField id="address" v-model:value='address'></TextField>
+                <label>Confirm Password</label>
+                <TextField id="confirmPassword" type="password"></TextField>
+                <div v-if="errorMessageConfirmPassword" class="error-message">
+                  {{ errorMessageConfirmPassword }}
+                </div>
             </div>
           </div>
           <div class="button-container">
@@ -89,7 +92,7 @@ const address = ref<string>('Rua da Filipa')
     <transition name="fade">
       <div v-if="success" class="confirmation-overlay">
         <div class="confirmation-message">
-            Profile updated successfully!
+            Password updated successfully!
         </div>
       </div>
     </transition>
@@ -133,7 +136,7 @@ const address = ref<string>('Rua da Filipa')
   align-items: center;
 }
 
-.register-title {
+.password-title {
   font-weight: bold;
   font-size: 1.5rem;
   color: #0d47a1;
