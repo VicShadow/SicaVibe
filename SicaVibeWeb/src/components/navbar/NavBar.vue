@@ -1,4 +1,18 @@
 <script lang='ts' setup>
+
+import { computed, toRefs } from 'vue'
+
+interface NavBarProps {
+  transparent?: boolean
+}
+
+const props = defineProps<NavBarProps>()
+
+const { transparent } = toRefs(props)
+
+const position = computed(() => {
+  return transparent.value ? 'fixed' : 'sticky'
+})
 </script>
 
 <template>
@@ -20,7 +34,7 @@
 
 <style scoped>
 .navbar {
-  position: fixed;
+  position: v-bind(position);
   background: transparent;
   display: flex;
   flex-direction: row;
@@ -36,6 +50,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
+  cursor: pointer;
 }
 
 .header-text {
