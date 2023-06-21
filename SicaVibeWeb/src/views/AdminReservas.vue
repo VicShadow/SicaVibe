@@ -6,7 +6,7 @@
       <span>Filter: </span>
       <input
         placeholder='Hotel ID'
-        type="number'"
+        type="number"
         @input.prevent='event => filterByHotel(event.target.value)'
       />
 
