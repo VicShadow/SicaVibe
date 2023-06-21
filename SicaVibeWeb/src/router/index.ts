@@ -13,6 +13,7 @@ import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
 import HostProfile from '@/views/HostProfile.vue'
 import EditProfile from '@/views/EditProfile.vue'
 import HotelSpecificPage from '@/views/HotelSpecificPage.vue'
+import ChangePasssword from '@/views/ChangePassword.vue'
 
 const routes = [
   {
@@ -99,6 +100,11 @@ const routes = [
     path: '/edit',
     name: 'edit-profile',
     component: EditProfile,
+  },
+  {
+    path: '/changepassword',
+    name: 'change-passowrd',
+    component: ChangePasssword,
   },
   {
     // Redirect to home if no route found
