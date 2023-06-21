@@ -152,26 +152,55 @@ span {
 }
 
 .image1 {
-  width: 282px;
-  height: 264px;
+  width: 278px;
+  height: 260px;
   border-radius: 100%;
-  left: 9.5%;
-  top: -0.5%;
-
   position: absolute;
+  left: 9.5%;
+  top: -20%;
 }
 
 .image2 {
-  display: none;
-  width: 390px;
-  height: 375px;
+  width: 380px;
+  height: 355px;
   border-radius: 100%;
   position: absolute;
   left: 37%;
-  top: 10%;
-  max-width: 300px;
-  max-height: 200px;
-  aspect-ratio: 1;
+  top: -10%;
 }
 
+@media (max-width: 1300px) {
+
+  .image1{
+    width: 268px;
+    height: 250px;
+    left: 9.5%;
+    top: -10%;
+  }
+
+  .image2{
+    width: 350px;
+    height: 325px;
+    left: 40%;
+    top: 5%;
+  }
+  
+}
+
+@media (max-width: 1200px) {
+
+  .image1{
+    width: 250px;
+    height: 238px;
+    left: 9.5%;
+  }
+
+  .image2{
+    width: 315px;
+    height: 290px;
+    left: 37%;
+    top: 20%;
+  }
+
+}
 </style>
