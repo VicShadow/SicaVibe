@@ -19,11 +19,11 @@ const addRoomHandler = () => {
 
 <template>
   <div>
-    <v-breadcrumbs :items="['Quartos']" class="pa-0" />
+    <v-breadcrumbs :items="['Rooms']" class="pa-0" />
     <div class="d-flex justify-space-between">
-      <h1 class="text-h5 d-inline">Quartos</h1>
+      <h1 class="text-h5 d-inline">Rooms</h1>
       <v-btn class="bg-blue-darken-2 elevation-0 text-capitalize" @click="addRoomHandler"
-        >Adicionar Quarto
+        >Add New Room
       </v-btn>
     </div>
   </div>
@@ -34,7 +34,7 @@ const addRoomHandler = () => {
     type="number"
   ></TextField>
   <v-alert v-if="isError" class="mt-4" type="error">
-    <span class="text-h6">Erro ao carregar os quartos</span>
+    <span class="text-h6">Error loading rooms</span>
   </v-alert>
   <v-skeleton-loader v-if="isLoading" type="table" />
   <RoomTable v-if="isSuccess && rooms" :rooms="rooms" />

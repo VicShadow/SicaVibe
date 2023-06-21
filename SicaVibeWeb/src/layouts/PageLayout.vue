@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
 interface Props {}

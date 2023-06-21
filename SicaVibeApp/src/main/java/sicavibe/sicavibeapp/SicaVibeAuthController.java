@@ -115,7 +115,7 @@ public class SicaVibeAuthController {
             if (usr instanceof Administrador)
                 return SicaVibeAppApplication.jwtUtils.generateToken(new JwtToken(usr.getID(), JwtToken.TipoUtilizador.ADMINISTRADOR));
 
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"User '"+email+"' found and authorized, but no User-Type found");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"UserStore '"+email+"' found and authorized, but no UserStore-Type found");
         } catch (PersistentException | NoSuchAlgorithmException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }

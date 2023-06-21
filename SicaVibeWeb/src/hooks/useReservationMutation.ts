@@ -15,20 +15,23 @@ export const useReservationMutation = ({ token, reservationId }: useReservationM
 
   const checkInMutation = useMutation({
     mutationFn: async () => checkInReservation(token, reservationId),
-    onSuccess: async () =>
-      await queryClient.invalidateQueries({ queryKey: [queryKey, reservationId] }) // Invalidate and refetch
+    onSuccess: async (data) =>
+      queryClient.setQueryData([queryKey, reservationId], data)
+      //await queryClient.invalidateQueries({ queryKey: [queryKey, reservationId] }) // Invalidate and refetch
   })
 
   const checkOutMutation = useMutation({
     mutationFn: async () => checkOutReservation(token, reservationId),
-    onSuccess: async () =>
-      await queryClient.invalidateQueries({ queryKey: [queryKey, reservationId] }) // Invalidate and refetch
+    onSuccess: async (data) =>
+      queryClient.setQueryData([queryKey, reservationId], data)
+      //await queryClient.invalidateQueries({ queryKey: [queryKey, reservationId], exact: true }) // Invalidate and refetch
   })
 
   const cancelMutation = useMutation({
     mutationFn: async () => cancelReservation(token, reservationId),
-    onSuccess: async () =>
-      await queryClient.invalidateQueries({ queryKey: [queryKey, reservationId] }) // Invalidate and refetch
+    onSuccess: async (data) =>
+      queryClient.setQueryData([queryKey, reservationId], data)
+      //await queryClient.invalidateQueries({ queryKey: [queryKey, reservationId], exact:true }) // Invalidate and refetch
   })
 
   return {

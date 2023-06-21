@@ -21,15 +21,15 @@ export const getReservations = async ({
     hotelid,
   }: GetReservationsProps): Promise<Map<string, Reservation[]>> => {
     const endpoint = GET_ADMIN_RESERVATIONS_ENDPOINT
-  
+
     let headers = {
       token,
       page,
       pagesize,
       hotelid
     }
-  
-  
+
+
     if (hotelid) {
       headers = {
         ...headers,
@@ -38,18 +38,17 @@ export const getReservations = async ({
       }
     }
 
-  
+
     const res = await backend.get(endpoint, {
       headers
     })
-  
+
     if (res.status !== 200) {
       // TODO: Improve error handling
       throw new Error('Failed to get reservations')
     }
-  
-    console.log('Response data: ', res.data)
+
     const backendData = res.data as Map<string, BackendReservation[]>
-  
+
     return convertBackendReservationsAdminToFrontend(backendData)
   }

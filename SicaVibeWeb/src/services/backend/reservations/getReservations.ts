@@ -70,7 +70,6 @@ export const getReservations = async ({
     throw new Error('Failed to get reservations')
   }
 
-  console.log('Response data: ', res.data)
   const backendData = res.data as GetReservationsResponse
 
   return convertBackendReservationsToFrontend(backendData)

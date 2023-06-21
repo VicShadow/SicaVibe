@@ -61,7 +61,6 @@ const onReservationClick = (id: number) => {
 
 <style scoped>
 .table {
-  max-width: 1000px; 
   width: 100%;
 }
 

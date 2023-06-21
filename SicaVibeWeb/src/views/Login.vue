@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { login } from '@/services/backend/auth/login'
-import { saveToken } from '@/services/storage/sessionStorage'
 import { useRouter } from 'vue-router'
+import { Role, useUserStore } from '@/stores/userStore'
+
+const INITIAL_GUEST_ENDPOINT = '/guest' // TODO: Change this to the correct guest endpoint
+const INITIAL_RECEPTIONIST_ENDPOINT = '/receptionist/reservations'
+const INITIAL_ADMIN_ENDPOINT = '/admin/reservations'
 
 const router = useRouter()
+
+const { user,  login } = useUserStore()
 
 const email = ref('')
 const password = ref('')
@@ -14,14 +19,13 @@ const loginOnClick = async () => {
   isLoggingIn.value = true
 
   try {
-    const token = await login({
-      email: email.value,
-      password: password.value
-    })
+    const role = await login(email.value, password.value)
 
-    saveToken(token)
+    if (role === Role.Admin) await router.push(INITIAL_ADMIN_ENDPOINT)
+    else if (role === Role.Receptionist) await router.push(INITIAL_RECEPTIONIST_ENDPOINT)
+    else if (role === Role.Guest) await router.push(INITIAL_GUEST_ENDPOINT)
+    else await router.push('/login')
 
-    await router.push('/guest')
   } catch (error) {
     errorMessage.value = error.message // TODO: Improve user readability
   }

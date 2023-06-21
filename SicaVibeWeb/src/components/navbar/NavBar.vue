@@ -15,7 +15,6 @@
     </template>
     <div class="circle"></div>
     <v-app-bar-title class="header-text"> SicaVibe</v-app-bar-title>
-    <v-space></v-space>
     <router-link to="/login">
       <v-btn class="bt1" density="comfortable" rounded="xl" variant="outlined"> Login</v-btn>
     </router-link>

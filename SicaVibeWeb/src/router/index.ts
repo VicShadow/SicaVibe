@@ -9,6 +9,7 @@ import Home from '@/views/Home.vue'
 import AdminLayoutVue from '@/layouts/AdminLayout.vue'
 import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
 import HostProfile from '@/views/HostProfile.vue'
+import { useUserStore } from '@/stores/userStore'
 
 const routes = [
   {
@@ -88,5 +89,28 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
+
+const ALLOWED_ROUTES = ['', '/login', '/signup', '/home', '/about']
+
+/* // FIXME: This is not working
+router.beforeEach((to, from) => {
+  const { isLogged } = useUserStore()
+
+  console.log("Allowing routes: ", ALLOWED_ROUTES)
+  console.log("Current route: ", to.path)
+
+  const isNOTLogged = !isLogged()
+  const isNOTAllowedRoute = !ALLOWED_ROUTES.includes(to.path)
+
+  console.log("isNOTLogged:", isNOTLogged ? "NOT LOGGED" : "LOGGED")
+  console.log("isNOTAllowedRoute:", isNOTAllowedRoute ? "NOT ALLOWED" : "ALLOWED")
+
+  if (isNOTLogged && isNOTAllowedRoute) {
+    return '/login'
+  } else {
+    return true
+  }
+})
+ */
 
 export default router
