@@ -9,6 +9,7 @@ import Home from '@/views/Home.vue'
 import AdminLayoutVue from '@/layouts/AdminLayout.vue'
 import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
 import HostProfile from '@/views/HostProfile.vue'
+import EditProfile from '@/views/EditProfile.vue'
 import { useUserStore } from '@/stores/userStore'
 
 const routes = [
@@ -75,7 +76,12 @@ const routes = [
   {
     path: '/hostprofile',
     name: 'hostprofile',
-    component: HostProfile
+    component: HostProfile,
+  },
+  {
+    path: '/edit',
+    name: 'edit-profile',
+    component: EditProfile,
   },
   {
     // Redirect to home if no route found

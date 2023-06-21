@@ -8,6 +8,10 @@ const logoutOnClick = async () => {
   router.push('/')
 }
 
+const editOnClick = async () => {
+  router.push('/edit')
+}
+
 const user = {
     "email" : "hospede9@gmail.com",
     "password" : "Password.123",
@@ -33,17 +37,15 @@ const user = {
             <div class="profile">
                 <label class="subtitle-text">Profile</label>
                 <div class="background-rect">
-                  <v-row>
-                    <v-col cols="8">
-                      <v-img class="user-img" contain src="../user_button.jpg"></v-img>
-                      <h2 class="name">{{  user.nome }}</h2>
-                    </v-col>
-                    <v-col cols="4">
-                      <v-btn class="edit-button">
-                        <v-img class="image-fill-2" contain src="../edit_button.jpg"></v-img>
-                      </v-btn>
-                    </v-col>
+                  <v-row class="align-right">
+                    <v-btn class="edit-button"  @click="editOnClick">
+                      <v-img class="image-fill-2" contain src="../edit_button.jpg"></v-img>
+                    </v-btn>
                   </v-row>
+                  <v-row>
+                    <v-img class="user-img" contain src="../user_button.jpg"></v-img>
+                  </v-row>
+                  <h2 class="name">{{  user.nome }}</h2>
                   <div class="profile-fields">
                     <label class="field">Email</label>
                     <label class="field-text">{{  user.email }}</label>
@@ -220,7 +222,9 @@ const user = {
   margin: auto;
 }
 
-
+.align-right {
+  margin-left: auto;
+}
 
 </style>
   
