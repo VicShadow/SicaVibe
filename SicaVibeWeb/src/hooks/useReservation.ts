@@ -38,7 +38,8 @@ export const useReservation = (props: useReservationProps): useReservationReturn
     error
   } = useQuery<Reservation>({
     queryKey: [queryKey, props.reservationId.value],
-    queryFn
+    queryFn,
+    cacheTime: 0
   })
 
   return {

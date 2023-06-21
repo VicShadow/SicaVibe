@@ -107,6 +107,11 @@ const routes = [
     component: ChangePasssword,
   },
   {
+    path: '/make-reservation',
+    name: 'make-reservation',
+    component: () => import('@/views/MakeReservation.vue')
+  },
+  {
     // Redirect to home if no route found
     path: '/:pathMatch(.*)*',
     name: 'not-found',
