@@ -5,6 +5,7 @@ import SignUp from '@/views/SignUp.vue'
 import AdminRooms from '@/views/AdminRooms.vue'
 import AdminReservas from '@/views/AdminReservas.vue'
 import AdminEmployees from '@/views/AdminEmployees.vue'
+import AdminReservation from  '@/views/AdminReservation.vue'
 import GuestLayoutVue from '@/layouts/GuestLayout.vue'
 import Home from '@/views/Home.vue'
 import AdminLayoutVue from '@/layouts/AdminLayout.vue'
@@ -12,7 +13,6 @@ import ReceptionistLayoutVue from '@/layouts/ReceptionistLayout.vue'
 import HostProfile from '@/views/HostProfile.vue'
 import EditProfile from '@/views/EditProfile.vue'
 import HotelSpecificPage from '@/views/HotelSpecificPage.vue'
-import { useUserStore } from '@/stores/userStore'
 
 const routes = [
   {
@@ -39,6 +39,11 @@ const routes = [
         path: 'reservations',
         name: 'admin-reservations',
         component: AdminReservas
+      },
+      {
+        path: 'reservation/:id',
+        name: 'admin-reservation',
+        component: AdminReservation
       },
       {
         path: 'employees',

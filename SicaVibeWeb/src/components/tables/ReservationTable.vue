@@ -17,7 +17,7 @@ const router = useRouter()
 
 const onReservationClick = (id: number) => {
   if (!props.isAdmin) router.push(`/receptionist/reservations/${id}`)
-  else router.push(`/admin/reservations/${id}`)
+  else router.push(`/admin/reservation/${id}`)
 }
 </script>
 
