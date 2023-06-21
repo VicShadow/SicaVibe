@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import { useUserStore } from '@/stores/userStore'
+import { toRefs } from 'vue'
 
 const {
-  user: { name }
+  user
 } = useUserStore()
+
+const {name} = toRefs(user)
 </script>
 
 <template>
