@@ -131,6 +131,9 @@ public class SicaVibeHospedeController {
             SicaVibeAppAux.checkRequestContent(List.of("token"),headers);
             int id = SicaVibeAuthController.readTokenAndCheckAuthLevel((String)headers.get("token"), JwtToken.TipoUtilizador.HOSPEDE);
 
+            Reserva[] hospedeReservas = ReservaDAO.listReservaByQuery("UtilizadorID = " + id, null);
+            for (Reserva r : hospedeReservas) ReservaDAO.delete(r);
+
             HospedeDAO.delete(HospedeDAO.getHospedeByORMID(id));
 
         } catch (ResponseStatusException e) {
