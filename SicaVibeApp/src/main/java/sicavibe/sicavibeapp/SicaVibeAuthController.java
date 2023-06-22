@@ -212,7 +212,7 @@ public class SicaVibeAuthController {
 
 
     public static void setUserInfo(Utilizador user,Map<String,Object> body) throws NoSuchAlgorithmException, ParseException {
-        SicaVibeAppAux.checkRequestContent(List.of("email","password","nome","dataNascimento", "numTelemovel", "morada","cc","nif"), body);
+        SicaVibeAppAux.checkRequestContent(List.of("email","nome","dataNascimento", "numTelemovel", "morada","cc","nif"), body);
 
         user.setEmail(body.get("email").toString());
         user.setNome(body.get("nome").toString());
@@ -221,13 +221,15 @@ public class SicaVibeAuthController {
         user.setCc(body.get("cc").toString());
         user.setNif(body.get("nif").toString());
 
-        String basePass = body.get("password").toString();
-        if(!SicaVibeAuthController.isAcceptablePassword(basePass))
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Password provided doesn't meet the criteria");
-        String salt = SicaVibeAuthController.generateSalt();
-        String hashed = SicaVibeAuthController.hashPassword(basePass.concat(salt));
-        user.setPassword(hashed);
-        user.setSalt(salt);
+        if (body.get("password") != null) {
+            String basePass = body.get("password").toString();
+            if(!SicaVibeAuthController.isAcceptablePassword(basePass))
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Password provided doesn't meet the criteria");
+            String salt = SicaVibeAuthController.generateSalt();
+            String hashed = SicaVibeAuthController.hashPassword(basePass.concat(salt));
+            user.setPassword(hashed);
+            user.setSalt(salt);
+        }
 
         String stringDate = body.get("dataNascimento").toString();
         Date date = new SimpleDateFormat("dd/MM/yyyy").parse(stringDate);

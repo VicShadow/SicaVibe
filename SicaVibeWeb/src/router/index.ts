@@ -103,7 +103,7 @@ const routes = [
   {
     path: '/make-reservation',
     name: 'make-reservation',
-    component: () => import('@/views/MakeReservation.vue')
+    component: () => import('@/views/MakeReservations.vue')
   },
   {
     // Redirect to home if no route found

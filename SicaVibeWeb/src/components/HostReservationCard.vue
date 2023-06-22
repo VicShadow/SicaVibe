@@ -1,20 +1,12 @@
 <template>
     <v-card class="reservation" color="white" >
-      <v-row>
-        <v-col cols="2">
-          <v-img class="hotelImage"
-            aspect-ratio="4/3"
-            height="10"
-            cover
-            :src="imageUrl"
-          ></v-img>
-        </v-col>
+     
         <v-col cols="10">
             <v-row class="top">
-                <v-col>{{  reservation.inDate  }}</v-col>
+                <v-col>{{  reservation.inDate.toISOString().split("T")[0]  }}</v-col>
                 <v-col><v-img class="image-fill" contain src="../arrow.jpg"></v-img></v-col>
-                <v-col>{{  reservation.outDate }}</v-col>
-                <v-col><v-btn :class="getButtonClass(reservation.status)">{{reservation.status}}</v-btn></v-col>
+                <v-col>{{  reservation.outDate.toISOString().split("T")[0] }}</v-col>
+                <v-col><v-btn  :class="getButtonClass(reservation.status)">{{reservation.status}}</v-btn></v-col>
             </v-row>
             <v-row>
                 <v-col class="text"> Rooms 
@@ -33,12 +25,13 @@
                 <v-col class="d-flex justify-center pa-10">
                   <v-spacer></v-spacer>
                   <v-btn class="buttonCancel" 
+                          :disabled="reservation.status != 'Scheduled'"
                           :ripple="false"
                           @click="openCancelReservationModal">Cancel</v-btn>
                 </v-col>
             </v-row>
         </v-col>
-      </v-row>
+     
     </v-card>
     <CancelModal
     v-model:is-open="isCancelReservationModalOpen"
@@ -66,10 +59,16 @@ import CancelModal from '@/components/modals/DeleteModal.vue'
 import { toRefs } from 'vue'
 import type { Reservation } from '@/types/Reservation'
 import { differenceInHours, isAfter } from 'date-fns';
+import { getToken } from '@/services/storage/sessionStorage'
+import { cancelReservation } from '@/services/backend/reservations/hospedeCancelReservation';
 
 interface Props {
   reservation: Reservation,
 }
+
+const emit = defineEmits(['canceled'])
+
+const tokenUser = localStorage.getItem("token")
 
 const isCancelReservationModalOpen = ref(false)
 
@@ -93,8 +92,15 @@ const openCancelReservationModal = () => {
 }
 
 const CancelReservationHandler = () => {
-  //função de cancelar reserva
-  isCancelReservationModalOpen.value = false
+  errorMessageCancelReservation.value = ""
+
+  cancelReservation({token: tokenUser ?? "", reservaid: reservation.value.id}).then( (res) => {
+    if (res) {
+      emit('canceled')
+      isCancelReservationModalOpen.value = false
+    }
+    else errorMessageCancelReservation.value = "Error canceling Reservation, please try again later"
+  })
 }
 
 const props = defineProps<Props>()
@@ -123,7 +129,6 @@ const getButtonClass = (status) => {
   margin-top: 2rem;
 }
 .reservation{
-  width: 100%;
   background-color: #f1f2f4;
   padding: 2rem;
   border-radius: 0.5em;
@@ -132,6 +137,7 @@ const getButtonClass = (status) => {
   flex-direction: column;
   justify-content: center;
   gap: 2rem;
+  margin-bottom: 20px;
 }
 
 .confirmation-message {

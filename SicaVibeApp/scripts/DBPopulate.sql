@@ -96,7 +96,7 @@ VALUES  (1,1,101  ,'LIVRE'), (1,1,102  ,'LIVRE'), (1,1,103  ,'OCUPADO'),
 
 
 INSERT INTO Reserva (UtilizadorID, HotelID, DataEntrada, DataSaida, DataCheckIn, DataCheckout, Preco, Estado)
-VALUES (1, 1, '2023-06-23', '2023-06-30', '2023-06-17 12:00:00', null, 365.00, 'A_DECORRER'),
+VALUES (1, 1, '2023-07-23', '2023-07-30', null, null, 365.00, 'MARCADA'),
        (1, 1, '2023-06-12', '2023-06-16', '2023-06-12 14:00:00', '2023-06-16 11:00:00', 210.00, 'TERMINADA'),
        (1, 2, '2023-06-12', '2023-06-16', null, null, 200.00, 'CANCELADA'),
 

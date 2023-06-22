@@ -3,16 +3,26 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import CurrentPasswordModal from '@/components/modals/CurrentPasswordModal.vue'
 import DeleteModal from '@/components/modals/DeleteModal.vue'
-import { useUserStore, type User } from '@/stores/userStore';
 import { deleteAccount } from '@/services/backend/auth/deleteAccount';
-import type { Token } from '@/types/Token';
+import { getToken } from '@/services/storage/sessionStorage'
 import { login } from '@/services/backend/auth/login';
 import HostReservationCard from '@/components/HostReservationCard.vue'
+import type { Reservation } from '@/types/Reservation';
+import { getReservations } from '@/services/backend/reservations/hospedeGetReservations'
+import { getGuestInfo } from '@/services/backend/auth/getGuestInfo';
+import { type User } from '@/stores/userStore'
 
 
 const router = useRouter()
 
-const { user} = useUserStore()
+let user = ref<User>()
+
+const tokenUser = getToken()
+
+getUser()
+function getUser () {
+  getGuestInfo(tokenUser ?? "").then(res => user.value = res)
+}
 
 
 const isChangePassordModalOpen = ref(false)
@@ -36,7 +46,7 @@ const changePasswordOnClick = async () => {
   console.log(currentPasswordValue)
 
   try { 
-    await login({email: user.email, password: currentPasswordValue}) 
+    await login({email: user.value?.email ?? "", password: currentPasswordValue}) 
   } catch {
     errorMessageCurrentPassword.value = 'The current password is incorrect. Please try again.'
   }
@@ -55,53 +65,26 @@ const openDeleteAccountModal = () => {
 }
 
 const deleteAccountHandler = () => {
-  deleteAccount((user as User).token) 
+  deleteAccount((user.value as User).token) 
   isChangePassordModalOpen.value = false
   router.push('/home')
 }
 
 
-const reservations = [
-  {
-    "id" : "1",
-    "guestId" : "2",
-    "guestName" : "Filipa",
-    "inDate" : "10/10/2001",
-    "outDate" : "11/10/2001",
-    "price" : "100",
-    "status" : "Scheduled",
-    "rooms" : [],
-    "services" : []
-  },
-  {
-    "id" : "1",
-    "guestId" : "2",
-    "guestName" : "Filipa",
-    "inDate" : "10/10/2023",
-    "outDate" : "11/10/2001",
-    "price" : "100",
-    "status" : "On going",
-    "rooms" : [],
-    "services" : []
-  },
-  {
-    "id" : "1",
-    "guestId" : "2",
-    "guestName" : "Filipa",
-    "inDate" : "10/10/2001",
-    "outDate" : "11/10/2001",
-    "price" : "100",
-    "status" : "Done",
-    "rooms" : [],
-    "services" : []
-  }
-];
+const reservations = ref<Reservation[]>([]);
+getReservas()
+
+function getReservas () {
+  getReservations({token: tokenUser ?? ""}).then(res => reservations.value = res)
+}
+
+
 
 
 </script>
 
 <template>
-    <div class="outer-container">
+    <div>
         <div class="navbar">
             <div class="circle" />
             <v-app-bar-title class="header-text">SicaVibe</v-app-bar-title>
@@ -109,6 +92,13 @@ const reservations = [
             <v-img class="image-fill" contain src="../user_button.jpg"></v-img>
         </div>
         <div class="page-container">
+          <div class="reservations">
+                <label class="subtitle-text">Reservations</label>
+          
+                <div class="background-rect2">
+                  <HostReservationCard v-for="reservation in reservations" :key="reservation.id" :reservation="reservation" @canceled="getReservas"/>
+                </div>
+            </div>
             <div class="profile">
                 <label class="subtitle-text">Profile</label>
                 <div class="background-rect">
@@ -160,14 +150,6 @@ const reservations = [
                   </div>
                 </div>
             </div>
-            <div class="reservations">
-                <label class="subtitle-text">Reservations</label>
-                <div class="background-rect2">
-                  <div class="background-rect2">
-                    <HostReservationCard v-for="reservation in reservations" :key="reservation.id" :reservation="reservation" />
-                  </div>
-                </div>
-            </div>
         </div>
     </div>
     <CurrentPasswordModal
@@ -192,11 +174,27 @@ const reservations = [
 </template>
 
 <style scoped>
-.outer-container {
+
+.page-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
+  flex-direction: row;
+  padding: 20px;
+  gap: 2rem;
+  height: calc(100% - 100px);
+}
+
+@media (max-width: 800px) {
+  .page-container {
+    flex-direction: column;
+  }
+}
+
+.profile {
+  flex: 2;
+}
+
+.reservations {
+  flex: 3;
 }
 
 .navbar {
@@ -234,9 +232,6 @@ const reservations = [
 }
 
 .background-rect {
-  max-width: 1000px;
-  max-height: 800px;
-  width: 100%;
   background-color: #f1f2f4;
   padding: 2rem;
   border-radius: 0.5em;
@@ -287,30 +282,11 @@ const reservations = [
 }
 
 .background-rect2 {
-  max-width: 1000px;
-  max-height: 800px;
-  width: 100%;
   background-color: #f1f2f4;
   padding: 2rem;
   border-radius: 0.5em;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.page-container {
-  display: flex;
-  gap: 2rem;
-}
-
-.profile {
-  flex: 1;
-}
-
-.reservations {
-  flex: 2;
+  overflow-y: scroll;
+  max-height: 79vh;
 }
 
 .button-delete {

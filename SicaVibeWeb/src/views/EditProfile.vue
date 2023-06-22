@@ -2,54 +2,85 @@
 import TextField from '@/components/TextField.vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import {
-  validatePassword,
-  validatePhone
-} from '@/services/validator'
+import { validatePhone } from '@/services/validator'
+import { getGuestInfo } from '@/services/backend/auth/getGuestInfo';
+import { type User } from '@/stores/userStore'
+import { getToken } from '@/services/storage/sessionStorage'
+import { editProfile } from '@/services/backend/auth/hospedeEditProfile'
+import type { UserBackend } from '@/services/backend/auth/converters';
 
 const router = useRouter()
 const success = ref(false)
 const errorMessagePhone = ref('')
 const errorMessage = ref('')
+let user = ref<User>()
+const tokenUser = getToken()
+
+const name = ref<string>("")
+const phone = ref<string>("")
+const address = ref<string>("")
+
+function getUser () {
+  getGuestInfo(tokenUser ?? "").then(res => {
+    user.value = res
+    name.value = user.value.name
+    phone.value = user.value.phoneNumber
+    address.value = user.value.address
+  })
+}
+getUser()
+
+
 
 const cancelOnClick = () => {
   router.push({ name: 'hostprofile' })
 }
 
 const saveOnClick = async () => {
-  const nameField = document.querySelector('#name') as HTMLInputElement
-  const nameValue = nameField.value
-  const addressField = document.querySelector('#address') as HTMLInputElement
-  const addressValue = addressField.value
-  const phoneField = document.querySelector('#phone') as HTMLInputElement
-  const phoneValue = phoneField.value
 
   // Reset error messages
   errorMessagePhone.value = ''
 
   if (
-    validatePhone(phoneValue)
+    validatePhone(phone.value)
   ) {
-    success.value = true
 
-    setTimeout(() => {
-      router.push({ name: 'hostprofile' })
+    const newUser : UserBackend = {
+      id : user.value?.id ?? -1,
+      nome: name.value,
+      email: user.value?.email ?? "",
+      morada: address.value,
+      numTelemovel: phone.value,
+      cc: user.value?.cc ?? "",
+      nif: user.value?.nif ?? "",
+      dataNascimento: user.value?.birthDate ?? new Date(),
+      hotelName: "",
+    } 
+    
+    editProfile({token: tokenUser ?? "", user: newUser}).then((res) => {
+      if (res) {
+        success.value = true
 
-    }, 2000)
+        setTimeout(() => {
+          router.push({ name: 'hostprofile' })
+        }, 2000)
+
+      }
+    })
+
+    
+
   } else {
 
-    if (!validatePhone(phoneValue)) {
+    if (!validatePhone(phone.value)) {
       errorMessagePhone.value += 'The phone number must have 9 digits.'
     }
   }
 }
-const name = ref<string>('Filipa')
-const phone = ref<string>('123456789')
-const address = ref<string>('Rua da Filipa')
 </script>
 
 <template>
-  <div class="outer-container">
+  <div>
     <div class="navbar">
       <div class="circle" />
       <v-app-bar-title class="header-text">SicaVibe</v-app-bar-title>
@@ -70,6 +101,8 @@ const address = ref<string>('Rua da Filipa')
                 <div v-if="errorMessagePhone" class="error-message">{{ errorMessagePhone }}</div>
               </div>
             </div>
+
+            
             <div class="w-100">
               <label>Address</label>
               <TextField id="address" v-model:value='address'></TextField>
@@ -97,11 +130,6 @@ const address = ref<string>('Rua da Filipa')
 </template>
 
 <style scoped>
-.outer-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 
 .navbar {
   display: flex;
@@ -130,6 +158,7 @@ const address = ref<string>('Rua da Filipa')
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 100px;
 }
 
 .register-title {
