@@ -19,7 +19,6 @@ const isChangePassordModalOpen = ref(false)
 const isDeleteAccountModalOpen = ref(false)
 const errorMessageCurrentPassword = ref('')
 
-const currentPassword = "Ola_12345"
 
 const logoutOnClick = async () => {
   router.push('/')

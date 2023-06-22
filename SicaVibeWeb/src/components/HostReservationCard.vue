@@ -1,16 +1,16 @@
 <template>
-    <v-card class="reservation" color="white">
+    <v-card class="reservation" color="white" >
       <v-row>
         <v-col cols="2">
           <v-img class="hotelImage"
             aspect-ratio="4/3"
-            height="150"
+            height="10"
             cover
             :src="imageUrl"
           ></v-img>
         </v-col>
         <v-col cols="10">
-            <v-row>
+            <v-row class="top">
                 <v-col>{{  reservation.inDate  }}</v-col>
                 <v-col><v-img class="image-fill" contain src="../arrow.jpg"></v-img></v-col>
                 <v-col>{{  reservation.outDate }}</v-col>
@@ -27,18 +27,14 @@
                     </template></v-col>
             </v-row>
             <v-row class="d-flex align-center">
-                <v-col class="text-center total-text">
-                    Total: 
-                    <span class="price-text">{{ reservation.price }}€</span>
+                <v-col class="total-text">
+                  Total: <span class="price-text">{{ reservation.price }}€</span>
                 </v-col>
                 <v-col class="d-flex justify-center pa-10">
-                    <div class="button-container">
-                        <v-spacer></v-spacer>
-                        <v-btn class="buttonCancel" 
-                                :ripple="false"
-                                @click="openCancelReservationModal">Cancel</v-btn>
-                        <v-btn class="buttonExtend">Extend</v-btn>
-                    </div>
+                  <v-spacer></v-spacer>
+                  <v-btn class="buttonCancel" 
+                          :ripple="false"
+                          @click="openCancelReservationModal">Cancel</v-btn>
                 </v-col>
             </v-row>
         </v-col>
@@ -89,13 +85,17 @@ const openCancelReservationModal = () => {
   if (timeDifferenceInHours > 24 && isAfter(reservationDate,currentDate)) {    
     isCancelReservationModalOpen.value = true;
   } else {
-    errorMessageCancelReservation.value = 'It is not possible to cancel a reservation with less than 24 hours notice.'
+    errorMessageCancelReservation.value = 'It is not possible to cancel a reservation with less than 24 hours.'
     setTimeout(() => {
       errorMessageCancelReservation.value = '';
     }, 4000);
   }
 }
 
+const CancelReservationHandler = () => {
+  //função de cancelar reserva
+  isCancelReservationModalOpen.value = false
+}
 
 const props = defineProps<Props>()
 
@@ -119,6 +119,9 @@ const getButtonClass = (status) => {
 
 <style scoped>
 
+.top{
+  margin-top: 2rem;
+}
 .reservation{
   width: 100%;
   background-color: #f1f2f4;
@@ -173,38 +176,28 @@ const getButtonClass = (status) => {
   background-color: #CFD8DC;
 }
 
-.buttonExtend {
-  color: white;
-  background-color: #0d47a1;
-}
-
-.button-container {
-  width: 100%;
-  display: flex;
-  flex-direction: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-
 .buttonOngoing {
   color: white;
   background-color: rgb(105, 218, 105);
+  border-radius: 20px;
 }
 
 .buttonCancelled {
   color: white;
   background-color: red;
+  border-radius: 20px;
 }
 
 .buttonScheduled {
   color: white;
   background-color: #5cc2ee;
+  border-radius: 20px;
 }
 
 .buttonDone{
   color: black;
   background-color: white;
+  border-radius: 20px;
 }
 </style>
 

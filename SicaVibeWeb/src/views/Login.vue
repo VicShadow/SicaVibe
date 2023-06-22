@@ -65,7 +65,7 @@ const loginOnClick = async () => {
                 </v-responsive>
               </v-card-item>
 
-              <v-text class="router-link d-flex justify-center">Forgot your password?</v-text>
+              <router-link class="router-link d-flex justify-center" to="/changepassword">Forgot your password?</router-link>
 
               <v-card-text class="d-flex justify-center text-red">
                 {{ errorMessage }}
