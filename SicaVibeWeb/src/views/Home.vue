@@ -34,7 +34,7 @@
             <br>
           </p>
         </div>
-        <div class='item'>
+        <div class='item' id='item2'>
           <img src='/hotel1.jpg' alt='img' class='image1' />
           <img src='/Hotel.jpg' alt='img' class='image2' />
         </div>
@@ -118,12 +118,6 @@ span {
   justify-content: space-between;
 }
 
-@media (max-width: 800px) {
-  .flex {
-    flex-direction: column;
-  }
-}
-
 .card {
   flex: 1;
   max-width: 300px;
@@ -181,8 +175,8 @@ span {
   .image2{
     width: 350px;
     height: 325px;
-    left: 40%;
-    top: 5%;
+    left: 37.5%;
+    top: 10%;
   }
   
 }
@@ -190,17 +184,59 @@ span {
 @media (max-width: 1200px) {
 
   .image1{
-    width: 250px;
-    height: 238px;
+    width: 230px;
+    height: 218px;
     left: 9.5%;
   }
 
   .image2{
-    width: 315px;
-    height: 290px;
-    left: 37%;
+    width: 310px;
+    height: 295px;
+    left: 35%;
     top: 20%;
   }
 
+}
+
+@media (max-width: 980px) {
+
+  .image1{
+    display: none;
+  }
+
+  #item2{
+    position: unset;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image2{
+    position: unset;
+  }
+
+}
+
+@media(max-width:820px) {
+  
+  .text-h4{
+    display: none;
+  }
+
+  .text{
+    flex-direction: column;
+  }
+
+  #item2{
+    padding-top: 2rem;
+  }
+  
+}
+
+@media (max-width: 500px) {
+  .flex {
+    flex-direction: column;
+  }
 }
 </style>
