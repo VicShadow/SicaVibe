@@ -55,8 +55,6 @@ getReservations(headersSimple).then(res => reservas.value = res)
 
 
 function filterByHotel(id: number) {
-  console.log('hotel ID ---> ', id)
-
   if (!id) getReservations(headersSimple).then(res => reservas.value = res)
   else {
     headersFilter.hotelid = id

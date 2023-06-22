@@ -2,13 +2,13 @@
 import { toRefs } from 'vue'
 
 interface CheckProps {
-  size?: number
+  size?: string
 }
 
 const props: CheckProps = defineProps({
   size: {
-    type: Number,
-    default: 24
+    type: String,
+    default: "24px"
   }
 })
 

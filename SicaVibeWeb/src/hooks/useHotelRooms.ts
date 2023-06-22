@@ -9,16 +9,11 @@ export interface useRoomsProps {
 }
 
 export const useHotelRooms = ({ hotelId }: useRoomsProps) => {
-  console.log("hotelId", hotelId)
   const token = getToken() as Token
-
-  console.log("Token:", token)
 
   const queryKey = 'selectedRooms'
   const queryFn = async () => {
-    const hotelRooms = await getHotelRooms({token, hotelId: hotelId.value})
-    console.log("hotelRooms", hotelRooms)
-    return hotelRooms
+    return await getHotelRooms({ token, hotelId: hotelId.value })
   }
 
   const {

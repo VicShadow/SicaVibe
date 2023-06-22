@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
 
 export interface RoomCardSelectorProps {
   id: number
@@ -11,16 +11,29 @@ export interface RoomCardSelectorProps {
   numberOfRoomsSelected: number
 }
 
+export interface RoomCardSelectorEmits {
+  (e: 'increaseRoomSelection', roomTypeId: number): void
+
+  (e: 'decreaseRoomSelection', roomTypeId: number): void
+}
+
 const props = defineProps<RoomCardSelectorProps>()
 
 const { roomName, description, imgID, price, capacity } = toRefs(props)
+
+const emit = defineEmits<RoomCardSelectorEmits>()
+
+const src = computed(() => {
+  // TODO: get image from backend
+  return 'https://images.unsplash.com/photo-1606258566788-7feca2a53560?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80'
+})
 </script>
 
 <template>
   <div class='card'>
     <div class='card-left'>
-      <v-img :cover='true' class='img' src='https://images.unsplash.com/photo-1606258566788-7feca2a53560?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80'
-             height='200px' width='100%'></v-img>
+      <v-img :cover='true' class='img' :src='src'
+             height='100%' width='100%'></v-img>
       <div class='title-container'>
         <h1>{{ roomName }}</h1>
         <p class='description'>{{ description }}</p>
@@ -29,12 +42,39 @@ const { roomName, description, imgID, price, capacity } = toRefs(props)
     <div class='card-right'>
       <span class='text-h5'>Nº People: {{ capacity }}</span>
       <span class='text-h5'>Price/Night {{ price }}€</span>
-      <span class='text-h5'>{{ numberOfRoomsSelected }} rooms selected</span>
+      <div class='input-room-number'>
+        <button class='minus-button' @click='emit("decreaseRoomSelection", id)'>-</button>
+        <span class='selected-rooms'>{{ numberOfRoomsSelected }}</span>
+        <button class='plus-button' @click='emit("increaseRoomSelection", id)'>+</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.input-room-number {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.selected-rooms {
+  font-size: 1.28rem;
+  border: 1px solid #000000;
+  padding: 0.25rem 0.5rem;
+}
+
+.minus-button, .plus-button {
+  height: 100%;
+  aspect-ratio: 1;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: #f7f7f7;
+  padding: 0.25rem 0.5rem;
+}
+
 .title-container {
   width: 100%;
   height: 100%;

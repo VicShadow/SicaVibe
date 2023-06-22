@@ -24,11 +24,16 @@ const props = defineProps<InvoiceProps>()
 
 const { nights, rooms, services, selectedRooms, selectedServices } = toRefs(props)
 
-const total = computed(() => {
+const roomsTotal = computed(() => {
   let total = 0
   for (const room of rooms.value) {
     total += room.preco * (selectedRooms.value[room.id] || 0) * nights.value
   }
+  return total
+})
+
+const servicesTotal = computed(() => {
+  let total = 0
   for (const serviceId of selectedServices.value) {
     const service = services.value.find(service => service.id === serviceId)
     if (service) {
@@ -36,6 +41,10 @@ const total = computed(() => {
     }
   }
   return total
+})
+
+const total = computed(() => {
+  return roomsTotal.value + servicesTotal.value
 })
 </script>
 
@@ -45,21 +54,31 @@ const total = computed(() => {
     <div class='invoice__body'>
       <div class='invoice__body__rooms'>
         <h3 class='invoice__body__rooms__title'>Rooms</h3>
-        <div class='rooms'>
-          <div class='room' v-for='[roomId, numberOfRooms] in Object.entries(selectedRooms)' :key='roomId'>
-            <span>{{ rooms.find(room => room.id === Number(roomId))?.nome }}</span>
-            <span>{{ rooms.find(room => room.id === Number(roomId))?.preco }} €</span>
-            <span>{{ numberOfRooms }}</span>
+        <div class='room-line'>
+          <div class='rooms'>
+            <div class='room' v-for='[roomId, numberOfRooms] in Object.entries(selectedRooms)' :key='roomId'>
+              <span>{{ rooms.find(room => room.id === Number(roomId))?.nome }}</span>
+              <span>{{ rooms.find(room => room.id === Number(roomId))?.preco }} €</span>
+              <span>{{ numberOfRooms }}</span>
+            </div>
           </div>
+          <span class='rooms-total'>
+              {{ roomsTotal }} €
+            </span>
         </div>
       </div>
       <div class='invoice__body__services'>
         <h3 class='invoice__body__services__title'>Services</h3>
-        <div class='services'>
-          <div class='service' v-for='service in selectedServices' :key='services.find(s => s.id === service)?.id'>
-            <span>{{ services.find(s => s.id === service)?.nome }}</span>
-            <span>{{ services.find(s => s.id === service)?.preco }} €</span>
+        <div class='service-line'>
+          <div class='services'>
+            <div class='service' v-for='service in selectedServices' :key='services.find(s => s.id === service)?.id'>
+              <span>{{ services.find(s => s.id === service)?.nome }}</span>
+              <span>{{ services.find(s => s.id === service)?.preco }} €</span>
+            </div>
           </div>
+          <span class='services-total'>
+          {{ servicesTotal }} €
+        </span>
         </div>
       </div>
     </div>
@@ -71,7 +90,22 @@ const total = computed(() => {
 </template>
 
 <style scoped>
+.room-line, .service-line {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.rooms-total, .services-total {
+  min-width: 80px;
+  font-weight: bolder;
+  font-size: 1.5rem;
+}
+
+
 .total-value {
+  min-width: 80px;
   font-weight: bolder;
   font-size: 1.5rem;
 }
@@ -98,6 +132,7 @@ const total = computed(() => {
 
 
 .invoice {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -132,6 +167,7 @@ const total = computed(() => {
 }
 
 .rooms {
+  width: 100%;
   display: flex;
   flex-direction: row;
   gap: 1rem;

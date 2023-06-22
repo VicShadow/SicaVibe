@@ -15,6 +15,8 @@ import ServiceCard from '@/components/ServiceCard.vue'
 import RoomCardSelector from '@/components/RoomCardSelector.vue'
 import type { RoomTypeAvailable } from '@/types/Hotel'
 import Invoice from '@/components/Invoice.vue'
+import { formatDateBackendFromStr } from '@/services/formatter'
+import { makeReservation as makeReservationBackend } from '@/services/backend/reservations/makeReservation'
 
 const router = useRouter()
 const currentStep = ref(0)
@@ -35,11 +37,7 @@ const {
   errorMessage: startDateErrorMessage
 } = useField<string>(() => 'startDate',
   yup.string()
-  /*
-  .min(new Date(new Date().getDate() + 1), 'Start date must be in the future')
-  .max(new Date(new Date().getDate() + 30), 'Start date must be within 30 days')
-  .required('Start date is required')
-   */
+    .required('Start date is required')
 )
 
 
@@ -48,12 +46,25 @@ const {
   errorMessage: endDateErrorMessage
 } = useField<string>(() => 'endDate',
   yup.string()
-  /*
-  .min(startDate.value + 1, 'Start date must be after start date')
-  .max(new Date(new Date().getDate() + 30), 'Start date must be within 30 days')
-  .required('End date is required')
-   */
+    .required('End date is required')
 )
+
+const nights = computed(() => {
+  if (startDate.value && endDate.value) {
+    const start = new Date(startDate.value)
+    const end = new Date(endDate.value)
+    const diff = end.getTime() - start.getTime()
+    return Math.ceil(diff / (1000 * 60 * 60 * 24))
+  }
+  return 0
+})
+
+const errorNights = computed(() => {
+  if (startDate.value && endDate.value && nights.value < 1) {
+    return 'End date must be after start date'
+  }
+  return ''
+})
 
 const availableRooms = ref<RoomTypeAvailable[]>()
 
@@ -86,54 +97,48 @@ const fetchAvailableRooms = async (): Promise<void> => {
     const fetchedRoomTypes = await getRoomTypes({
       hotelId: hotelId.value
     })
-
-    console.log('available rooms', fetchedAvailableRooms)
-    console.log('room types', fetchedRoomTypes)
-
-
     availableRooms.value = joinRoomTypes(fetchedRoomTypes, fetchedAvailableRooms)
 
-    console.log('available rooms', availableRooms.value)
   } catch (e) {
     console.log(e)
   }
 }
 
 const fetchServices = async (): Promise<void> => {
-  const fetchedServices = await getExtraServices({
+  services.value = await getExtraServices({
     hotelId: hotelId.value
   })
-
-  console.log('services', fetchedServices)
-
-  services.value = fetchedServices
 }
 
-const makeReservation = async (): Promise<void> => {
-  // TODO: Make reservation
-}
+const makeReservation = async (): Promise<boolean> => {
+  try {
+    await makeReservationBackend({
+      token,
+      hotelId: hotelId.value,
+      inDate: formatDateBackendFromStr(startDate.value),
+      outDate: formatDateBackendFromStr(endDate.value),
+      rooms: selectedRooms.value,
+      services: selectedServices.value
+    })
 
-const nights = computed(() => {
-  if (startDate.value && endDate.value) {
-    const start = new Date(startDate.value)
-    const end = new Date(endDate.value)
-    const diff = Math.abs(end.getTime() - start.getTime())
-    return Math.ceil(diff / (1000 * 60 * 60 * 24))
+    return true
+  } catch (e) {
+    console.log(e)
   }
-  return 0
-})
-
+  return false
+}
 
 const advanceStep = () => {
   if (currentStep.value === 0) {
+    if (!startDate.value || !endDate.value || nights.value < 1) {
+      return
+    }
     fetchAvailableRooms()
   } else if (currentStep.value === 1) {
     if (Object.entries(selectedRooms.value).length === 0) {
       return
     }
     fetchServices()
-  } else if (currentStep.value === 3) {
-    makeReservation()
   }
   currentStep.value++
 }
@@ -147,6 +152,11 @@ const cancelOnClick = async () => {
 }
 
 const submitOnClick = async () => {
+  const success = await makeReservation()
+  if (!success) {
+    return
+  }
+
   currentStep.value = -1
   showSuccess.value = true
 
@@ -163,14 +173,20 @@ const increaseRoomSelection = (roomId: number) => {
   }
 }
 
+const decreaseRoomSelection = (roomId: number) => {
+  if (selectedRooms.value[roomId] === 1) {
+    selectedRooms.value = Object.fromEntries(Object.entries(selectedRooms.value).filter(([key, _]) => key !== roomId.toString()))
+  } else {
+    selectedRooms.value[roomId]--
+  }
+}
+
 const selectService = (serviceId: number) => {
   if (selectedServices.value.includes(serviceId)) {
     selectedServices.value = selectedServices.value.filter(id => id !== serviceId)
   } else {
     selectedServices.value.push(serviceId)
   }
-
-  console.log('selected services', selectedServices.value)
 }
 </script>
 
@@ -182,15 +198,18 @@ const selectService = (serviceId: number) => {
       <div class='date-form'>
         <div class='start-date'>
           <span class='text-md-h6 font-weight-bold'>Start Date</span>
-          <TextField class='date-input' type='date' v-model:value='startDate' :error='startDateErrorMessage' />
+          <TextField class='date-input' type='date' v-model:value='startDate' />
+          <span class='error-message'>{{ startDateErrorMessage }}</span>
         </div>
         <div class='end-date'>
           <span class='text-md-h6 font-weight-bold'>End Date</span>
-          <TextField class='date-input' type='date' v-model:value='endDate' :error='startDateErrorMessage' />
+          <TextField class='date-input' type='date' v-model:value='endDate' :error='endDateErrorMessage' />
+          <span class='error-message'>{{ endDateErrorMessage }}</span>
         </div>
         <div class='nights'>
           <span class='text-md-h6 font-weight-bold'>Nights</span>
           <span class='date-input'> {{ nights }} </span>
+          <span class='error-message'>{{ errorNights }}</span>
         </div>
       </div>
     </div>
@@ -202,7 +221,9 @@ const selectService = (serviceId: number) => {
           v-for='roomType in availableRooms' :key='roomType.id' :id='roomType.id' :room-name='roomType.nome'
           :capacity='roomType.capacidade'
           :price='roomType.preco' :available='roomType.roomsAvailable' :description='roomType.descricao'
-          :img-i-d='roomType.imgID' @click='increaseRoomSelection(roomType.id)' :number-of-rooms-selected='selectedRooms[roomType.id] || 0' />
+          :img-i-d='roomType.imgID' @increaseRoomSelection='(roomId) => increaseRoomSelection(roomId)'
+          @decreaseRoomSelection='(roomId) => decreaseRoomSelection(roomId)'
+          :number-of-rooms-selected='selectedRooms[roomType.id] || 0' />
       </div>
     </div>
 
@@ -218,7 +239,8 @@ const selectService = (serviceId: number) => {
     <div v-if='currentStep === 3' class='step'>
       <h1 class='title'>Confirm the invoice</h1>
       <div class='invoice'>
-        <Invoice :nights='nights' :selectedRooms='selectedRooms' :services='services' :selected-services='selectedServices'  :rooms='availableRooms || []' />
+        <Invoice :nights='nights' :selectedRooms='selectedRooms' :services='services'
+                 :selected-services='selectedServices' :rooms='availableRooms || []' />
       </div>
 
     </div>
@@ -241,9 +263,20 @@ const selectService = (serviceId: number) => {
 </template>
 
 <style scoped>
+.invoice {
+  width: 100%;
+}
+
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+}
+
 .rooms {
   width: 100%;
   height: 100%;
+  max-height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -307,7 +340,7 @@ const selectService = (serviceId: number) => {
   align-items: flex-start;
   justify-content: space-between;
   gap: 2rem;
-  max-height: 600px;
+  max-height: 800px;
   max-width: 1000px;
   background: #f3f3f3;
   margin: 0 auto;

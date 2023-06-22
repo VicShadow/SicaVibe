@@ -30,8 +30,6 @@ const saveOnClick = async () => {
     validatePassword(passwordValue) &&
     passwordValue === confirmPasswordValue
   ) {
-    console.log("entrei")
-
     success.value = true
 
     setTimeout(() => {

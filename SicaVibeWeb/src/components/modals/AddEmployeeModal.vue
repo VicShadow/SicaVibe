@@ -120,8 +120,6 @@ const registerOnClick = async () => {
     }, 1000);
 
   } else {
-    console.log("entrei no else")
-
     if (!validateNif(nifValue)) {
       errorMessageNif.value += 'The NIF must have 9 digits'
     }
@@ -233,7 +231,7 @@ const registerOnClick = async () => {
                 <label for="hotel">Hotel:</label>
                 <select name="hotel" id="hotelid" v-model="hotelid" required>
                     <option v-for="hotel in hoteis" :key="hotel.id" :value="hotel.id">{{ hotel.nome }}</option>
-                </select> 
+                </select>
                 <div v-if="errorMessageHotel" class="error-message">
                   {{ errorMessageHotel }}
                 </div>
@@ -243,7 +241,7 @@ const registerOnClick = async () => {
         </form>
 
         <div v-if="success" class="sucessMessage">Employed created with success!</div>
-    
+
         <v-card-actions class="pa-0 w-100 d-flex justify-end">
             <v-btn
             class="cancel-btn"

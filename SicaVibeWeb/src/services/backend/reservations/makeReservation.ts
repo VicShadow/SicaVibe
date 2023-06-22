@@ -33,7 +33,7 @@ export const makeReservation = async (
     dataentrada: inDate,
     datasaida: outDate,
     quartos: rooms,
-    servicos: services
+    servicosextra: services
   }
 
   const response = await backend.post(MAKE_RESERVATION_ENDPOINT, body, { headers })
