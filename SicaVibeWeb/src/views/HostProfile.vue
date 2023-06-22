@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import CurrentPasswordModal from '@/components/modals/CurrentPasswordModal.vue'
 import DeleteModal from '@/components/modals/DeleteModal.vue'
 import { deleteAccount } from '@/services/backend/auth/deleteAccount';
-import { getToken } from '@/services/storage/sessionStorage'
+import { getToken, removeToken } from '@/services/storage/sessionStorage'
 import { login } from '@/services/backend/auth/login';
 import HostReservationCard from '@/components/HostReservationCard.vue'
 import type { Reservation } from '@/types/Reservation';
@@ -31,6 +31,7 @@ const errorMessageCurrentPassword = ref('')
 
 
 const logoutOnClick = async () => {
+  removeToken()
   router.push('/')
 }
 

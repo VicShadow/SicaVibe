@@ -14,7 +14,7 @@ const EDIT_PROFILE_ENDPOINT = '/hospede/edit-account'
 export const editProfile = async ({
   token,
   user
-}: EditProfileProps) : Promise<boolean>=> {
+}: EditProfileProps) : Promise<UserBackend>=> {
   const endpoint = EDIT_PROFILE_ENDPOINT
 
   const backendUser = {
@@ -33,10 +33,9 @@ export const editProfile = async ({
     token
   }
 
-  const res = await backend.post(endpoint, backendUser, 
-  { headers })
+  const res = await backend.post(endpoint, backendUser, { headers })
 
-  if (res.status !== 200) return false
+  if (res.status !== 200) throw new Error("Edit Profile Not Possible!")
   
-  return true
+  return res.data as UserBackend
 }
