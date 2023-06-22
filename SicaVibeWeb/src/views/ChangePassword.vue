@@ -17,7 +17,7 @@ const cancelOnClick = () => {
 }
 
 const saveOnClick = async () => {
-    const passwordField = document.querySelector('#password') as HTMLInputElement
+  const passwordField = document.querySelector('#password') as HTMLInputElement
   const passwordValue = passwordField.value
   const confirmPasswordField = document.querySelector('#confirmPassword') as HTMLInputElement
   const confirmPasswordValue = confirmPasswordField.value

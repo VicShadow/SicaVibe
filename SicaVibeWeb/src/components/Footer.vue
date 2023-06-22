@@ -30,6 +30,7 @@ import items from '../Items'
 
 .cols {
   text-align: start;
+  margin-top: 3%;
 }
 
 .text {
@@ -40,6 +41,10 @@ import items from '../Items'
 
 .links {
   color: #5C677D;
+}
+
+@media (max-width: 900px){
+
 }
 
 </style>

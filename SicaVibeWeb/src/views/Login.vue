@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Role, useUserStore } from '@/stores/userStore'
 
-const INITIAL_GUEST_ENDPOINT = '/guest/make-reservation' // TODO: Change this to the correct guest endpoint
+const INITIAL_GUEST_ENDPOINT = '/hostprofile' // TODO: Change this to the correct guest endpoint
 const INITIAL_RECEPTIONIST_ENDPOINT = '/receptionist/reservations'
 const INITIAL_ADMIN_ENDPOINT = '/admin/reservations'
 
@@ -65,7 +65,7 @@ const loginOnClick = async () => {
                 </v-responsive>
               </v-card-item>
 
-              <v-text class="router-link d-flex justify-center">Forgot your password?</v-text>
+              <router-link class="router-link d-flex justify-center" to="/changepassword">Forgot your password?</router-link>
 
               <v-card-text class="d-flex justify-center text-red">
                 {{ errorMessage }}

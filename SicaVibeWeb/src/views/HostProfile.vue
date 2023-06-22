@@ -1,10 +1,37 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import CurrentPasswordModal from '@/components/modals/CurrentPasswordModal.vue'
+import DeleteModal from '@/components/modals/DeleteModal.vue'
+import { deleteAccount } from '@/services/backend/auth/deleteAccount';
+import { getToken, removeToken } from '@/services/storage/sessionStorage'
+import { login } from '@/services/backend/auth/login';
+import HostReservationCard from '@/components/HostReservationCard.vue'
+import type { Reservation } from '@/types/Reservation';
+import { getReservations } from '@/services/backend/reservations/hospedeGetReservations'
+import { getGuestInfo } from '@/services/backend/auth/getGuestInfo';
+import { type User } from '@/stores/userStore'
+
 
 const router = useRouter()
 
+let user = ref<User>()
+
+const tokenUser = getToken()
+
+getUser()
+function getUser () {
+  getGuestInfo(tokenUser ?? "").then(res => user.value = res)
+}
+
+
+const isChangePassordModalOpen = ref(false)
+const isDeleteAccountModalOpen = ref(false)
+const errorMessageCurrentPassword = ref('')
+
+
 const logoutOnClick = async () => {
+  removeToken()
   router.push('/')
 }
 
@@ -12,25 +39,53 @@ const editOnClick = async () => {
   router.push('/edit')
 }
 
+errorMessageCurrentPassword.value = ''
+
 const changePasswordOnClick = async () => {
+  const currentPasswordField = document.querySelector('#currentPassword') as HTMLInputElement
+  const currentPasswordValue = currentPasswordField.value
+  console.log(currentPasswordValue)
+
+  try { 
+    await login({email: user.value?.email ?? "", password: currentPasswordValue}) 
+  } catch {
+    errorMessageCurrentPassword.value = 'The current password is incorrect. Please try again.'
+  }
+
+  isChangePassordModalOpen.value = false
   router.push('/changepassword')
 }
 
-const user = {
-    "email" : "hospede9@gmail.com",
-    "password" : "Password.123",
-    "nome" : "Joana Alves",
-    "numTelemovel" : "123456780",
-    "dataNascimento" : "15/05/2001",
-    "morada" : "Rua da Joana, nº(-1)",
-    "cc" : "100100108",
-    "nif" : "100100108"
+
+const openChangePasswordModal = () => {
+  isChangePassordModalOpen.value = true
 }
+
+const openDeleteAccountModal = () => {
+  isDeleteAccountModalOpen.value = true
+}
+
+const deleteAccountHandler = () => {
+  deleteAccount((user.value as User).token) 
+  isChangePassordModalOpen.value = false
+  router.push('/home')
+}
+
+
+const reservations = ref<Reservation[]>([]);
+getReservas()
+
+function getReservas () {
+  getReservations({token: tokenUser ?? ""}).then(res => reservations.value = res)
+}
+
+
+
 
 </script>
 
 <template>
-    <div class="outer-container">
+    <div>
         <div class="navbar">
             <div class="circle" />
             <v-app-bar-title class="header-text">SicaVibe</v-app-bar-title>
@@ -38,6 +93,13 @@ const user = {
             <v-img class="image-fill" contain src="../user_button.jpg"></v-img>
         </div>
         <div class="page-container">
+          <div class="reservations">
+                <label class="subtitle-text">Reservations</label>
+          
+                <div class="background-rect2">
+                  <HostReservationCard v-for="reservation in reservations" :key="reservation.id" :reservation="reservation" @canceled="getReservas"/>
+                </div>
+            </div>
             <div class="profile">
                 <label class="subtitle-text">Profile</label>
                 <div class="background-rect">
@@ -54,7 +116,9 @@ const user = {
                             <v-btn class="fill-width lowercase-text" @click="editOnClick">Edit Profile</v-btn>
                           </v-row>
                           <v-row class="fill-height">
-                            <v-btn class="fill-width lowercase-text" @click="changePasswordOnClick">Change Password</v-btn>
+                            <v-btn class="fill-width lowercase-text" 
+                                  :ripple="false"
+                                  @click="openChangePasswordModal">Change Password</v-btn>
                           </v-row>
                         </v-list>
                       </v-menu>
@@ -63,43 +127,75 @@ const user = {
                   <v-row>
                     <v-img class="user-img" contain src="../user_button.jpg"></v-img>
                   </v-row>
-                  <h2 class="name">{{  user.nome }}</h2>
-                  <div class="profile-fields">
-                    <label class="field">Email</label>
-                    <label class="field-text">{{  user.email }}</label>
-                    <label class="field">Address</label>
-                    <label class="field-text">{{  user.morada }}</label>
-                    <label class="field">Birthday</label>
-                    <label class="field-text">{{  user.dataNascimento }}</label>
-                    <label class="field">Phone Number</label>
-                    <label class="field-text">{{  user.numTelemovel }}</label>
-                    <label class="field">NIF</label>
-                    <label class="field-text">{{  user.nif }}</label>
-                    <label class="field">CC</label>
-                    <label class="field-text">{{  user.cc }}</label>
+                  <div v-if="user">
+                    <h2 class="name">{{  user.name }}</h2>
+                    <div class="profile-fields">
+                      <label class="field">Email</label>
+                      <label class="field-text">{{  user.email }}</label>
+                      <label class="field">Address</label>
+                      <label class="field-text">{{  user.address }}</label>
+                      <label class="field">Birthday</label>
+                      <label class="field-text">{{  user.birthDate}}</label>
+                      <label class="field">Phone Number</label>
+                      <label class="field-text">{{  user.phoneNumber }}</label>
+                      <label class="field">NIF</label>
+                      <label class="field-text">{{  user.nif }}</label>
+                      <label class="field">CC</label>
+                      <label class="field-text">{{  user.cc }}</label>
+                    </div>
                   </div>
                   <div class="button-container">
-                    <v-btn class="button-delete">Delete Account</v-btn>
+                    <v-btn class="button-delete" 
+                          :ripple="false"
+                          @click="openDeleteAccountModal">Delete Account</v-btn>
                   </div>
                 </div>
-            </div>
-            <div class="reservations">
-                <label class="subtitle-text">Reservations</label>
-                <div class="background-rect2">
-                    
-                </div>
-
             </div>
         </div>
     </div>
+    <CurrentPasswordModal
+    v-model:is-open="isChangePassordModalOpen"
+    :is-open="isChangePassordModalOpen"
+    title="Current Password"
+    input="password"
+    type="password"
+    @cancel="isChangePassordModalOpen = false"
+    @confirm="changePasswordOnClick"
+    :error-message-current-password="errorMessageCurrentPassword"
+    />
+    <DeleteModal
+    v-model:is-open="isDeleteAccountModalOpen"
+    :is-open="isDeleteAccountModalOpen"
+    message="Are you sure you want to delete the account?"
+    title="Delete Account"
+    @cancel="isDeleteAccountModalOpen = false"
+    @confirm="deleteAccountHandler"
+  />
+
 </template>
 
 <style scoped>
-.outer-container {
+
+.page-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
+  flex-direction: row;
+  padding: 20px;
+  gap: 2rem;
+  height: calc(100% - 100px);
+}
+
+@media (max-width: 800px) {
+  .page-container {
+    flex-direction: column;
+  }
+}
+
+.profile {
+  flex: 2;
+}
+
+.reservations {
+  flex: 3;
 }
 
 .navbar {
@@ -137,9 +233,6 @@ const user = {
 }
 
 .background-rect {
-  max-width: 1000px;
-  max-height: 800px;
-  width: 100%;
   background-color: #f1f2f4;
   padding: 2rem;
   border-radius: 0.5em;
@@ -189,32 +282,12 @@ const user = {
   line-height: 3; 
 }
 
-
 .background-rect2 {
-  max-width: 1000px;
-  max-height: 800px;
-  width: 100%;
   background-color: #f1f2f4;
   padding: 2rem;
   border-radius: 0.5em;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.page-container {
-  display: flex;
-  gap: 2rem;
-}
-
-.profile {
-  flex: 1;
-}
-
-.reservations {
-  flex: 2;
+  overflow-y: scroll;
+  max-height: 79vh;
 }
 
 .button-delete {
@@ -229,15 +302,6 @@ const user = {
   justify-content: center;
   align-items: center;
   margin-top: auto; 
-}
-.edit-button {
-  background-color: transparent !important;
-  box-shadow: none !important;
-  display: flex;
-  justify-content: flex-start;
-  max-height: 100px;
-  max-width: 100px;
-  margin: auto;
 }
 
 .align-right {
@@ -255,5 +319,10 @@ const user = {
 .lowercase-text {
   text-transform: lowercase;
 }
+
+
 </style>
   
+
+
+           

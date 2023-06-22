@@ -3,7 +3,7 @@
     <NavBar transparent />
     <h1 class='text-h4' id='texth3'>Your perfect stay,</h1>
     <h1 class='text-h4' id='texth31'>every time</h1>
-    <img src='/torreBelem.jpg' alt='img' class='image-fit' />
+    <img src='/torreBelem1.jpg' alt='img' class='image-fit' />
   </section>
   <section class='group-padding'>
     <section class='card-group'>
@@ -34,7 +34,7 @@
             <br>
           </p>
         </div>
-        <div class='item'>
+        <div class='item' id='item2'>
           <img src='/hotel1.jpg' alt='img' class='image1' />
           <img src='/Hotel.jpg' alt='img' class='image2' />
         </div>
@@ -118,12 +118,6 @@ span {
   justify-content: space-between;
 }
 
-@media (max-width: 800px) {
-  .flex {
-    flex-direction: column;
-  }
-}
-
 .card {
   flex: 1;
   max-width: 300px;
@@ -152,26 +146,102 @@ span {
 }
 
 .image1 {
-  width: 282px;
-  height: 264px;
+  width: 278px;
+  height: 260px;
   border-radius: 100%;
-  left: 9.5%;
-  top: -0.5%;
-
   position: absolute;
+  left: 9.5%;
+  top: -20%;
 }
 
 .image2 {
-  display: none;
-  width: 390px;
-  height: 375px;
+  width: 380px;
+  height: 355px;
   border-radius: 100%;
   position: absolute;
   left: 37%;
-  top: 10%;
-  max-width: 300px;
-  max-height: 200px;
-  aspect-ratio: 1;
+  top: -10%;
 }
 
+@media (max-width: 1300px) {
+
+  .image1{
+    width: 268px;
+    height: 250px;
+    left: 9.5%;
+    top: -10%;
+  }
+
+  .image2{
+    width: 350px;
+    height: 325px;
+    left: 37.5%;
+    top: 10%;
+  }
+  
+}
+
+@media (max-width: 1200px) {
+
+  .image1{
+    width: 230px;
+    height: 218px;
+    left: 9.5%;
+  }
+
+  .image2{
+    width: 310px;
+    height: 295px;
+    left: 35%;
+    top: 20%;
+  }
+
+}
+
+@media (max-width: 980px) {
+
+  .image1{
+    display: none;
+  }
+
+  #item2{
+    position: unset;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image2{
+    position: unset;
+  }
+
+}
+
+@media(max-width:820px) {
+  
+  .text-h4{
+    display: none;
+  }
+
+  .card {
+    flex: 50%;
+  }
+
+  .text{
+    flex-direction: column;
+  }
+
+  #item2{
+    padding-top: 2rem;
+  }
+  
+}
+
+@media (max-width: 500px) {
+
+  .flex {
+    flex-direction: column;
+  }
+}
 </style>
