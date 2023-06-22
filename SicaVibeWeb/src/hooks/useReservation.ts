@@ -4,6 +4,7 @@ import type { Ref } from 'vue'
 import type { Token } from '@/types/Token'
 import { getReservation } from '@/services/backend/reservations/getReservation'
 import type { AxiosError } from 'axios'
+import { ref } from 'vue'
 
 export interface useReservationProps {
   token: Token
@@ -19,6 +20,7 @@ export interface useReservationReturn {
 }
 
 export const useReservation = (props: useReservationProps): useReservationReturn => {
+  /*
   const queryKey = 'reservation'
   const queryFn = async () => {
     try {
@@ -41,6 +43,27 @@ export const useReservation = (props: useReservationProps): useReservationReturn
     queryFn,
     cacheTime: 0
   })
+   */
+
+  // Do not use vue query at all but return the data using the backend service
+  const reservation = ref<Reservation>()
+  const isLoading = ref(false)
+  const isError = ref(false)
+  const isSuccess = ref(false)
+  const error = ref<string | null>(null)
+
+  getReservation({ token: props.token, reservationId: props.reservationId.value })
+    .then((data) => {
+      reservation.value = data
+      isSuccess.value = true
+    })
+    .catch((err) => {
+      error.value = (err as AxiosError).message
+      isError.value = true
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
 
   return {
     reservation,
