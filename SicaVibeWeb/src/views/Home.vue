@@ -224,6 +224,10 @@ span {
     display: none;
   }
 
+  .card {
+    flex: 50%;
+  }
+
   .text{
     flex-direction: column;
   }
