@@ -3,7 +3,7 @@
     <NavBar />
     <h1 class='text-h4' id='texth3'>Your perfect stay,</h1>
     <h1 class='text-h4' id='texth31'>every time</h1>
-    <img src='/torreBelem.jpg' alt='img' class='image-fit' />
+    <img src='/torreBelem1.jpg' alt='img' class='image-fit' />
   </section>
   <section class='group-padding'>
     <section class='card-group'>
@@ -235,6 +235,7 @@ span {
 }
 
 @media (max-width: 500px) {
+
   .flex {
     flex-direction: column;
   }
