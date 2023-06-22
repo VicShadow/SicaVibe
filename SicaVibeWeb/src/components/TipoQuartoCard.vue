@@ -1,67 +1,56 @@
 <template>
-<v-card
-    class="vcard flex"
-    color="black" 
-    variant="tonal"
-    rounded="lg">
+  <v-card
+    class='vcard flex'
+    color='black'
+    variant='tonal'
+    rounded='lg'>
 
-    <v-img class="hotelImage"
-    aspect-ratio="4/3"
-    width="300"
-    cover
-    :src="imageUrl">
+    <v-img class='hotelImage'
+           aspect-ratio='4/3'
+           width='300'
+           :cover='true'
+           :src='imageUrl'>
     </v-img>
 
-    <div class="card">
-    <v-card-title> {{ tipoQuarto.nome }}</v-card-title>
-    <v-card-text> 
-      <div>{{  tipoQuarto.descricao }}</div>
+    <div class='card'>
+      <v-card-title> {{ tipoQuarto.nome }}</v-card-title>
+      <v-card-text>
+        <div>{{ tipoQuarto.descricao }}</div>
 
-      <div class="marginTop">
-        <span class="boldText">Capacity: </span> 
-        {{ tipoQuarto.capacidade }} people
-      </div>
+        <div class='marginTop'>
+          <span class='boldText'>Capacity: </span>
+          {{ tipoQuarto.capacidade }} people
+        </div>
 
-      <div class="marginTop">
-        <span class="boldText">Price per Night: </span> 
-        {{ tipoQuarto.preco }}€
-      </div>
-    </v-card-text>
+        <div class='marginTop'>
+          <span class='boldText'>Price per Night: </span>
+          {{ tipoQuarto.preco }}€
+        </div>
+      </v-card-text>
     </div>
 
-</v-card>
+  </v-card>
 </template>
 
 
-
-
-<script lang="ts" setup>
-import type { TipoQuarto } from '@/types/Hotel';
+<script lang='ts' setup>
+import type { TipoQuarto } from '@/types/Hotel'
 
 
 interface Props {
-    tipoQuarto : TipoQuarto
+  tipoQuarto: TipoQuarto
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
-const imageUrl = import.meta.env.VITE_BACKEND_URL + "/imagem/" + props.tipoQuarto.imgID
+const imageUrl = import.meta.env.VITE_BACKEND_URL + '/imagem/' + props.tipoQuarto.imgID
 
 </script>
-
 
 
 <style scoped>
 .card {
   border-radius: 15px;
-}
-
-.container {
-  padding-top: 20px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin-top: 100px;
-  
 }
 
 .marginTop {
@@ -73,7 +62,7 @@ const imageUrl = import.meta.env.VITE_BACKEND_URL + "/imagem/" + props.tipoQuart
   font-weight: bold;
   font-size: 17px;
 }
- 
+
 .hotelImage {
   border-radius: 15px;
 }

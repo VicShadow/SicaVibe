@@ -2,12 +2,10 @@
 import NavBar from '@/components/navbar/NavBar.vue'
 </script>
 
-<template >
+<template>
   <NavBar />
   <div class='content'>
-    <div class='content-bg'>
     <router-view />
-    </div>
   </div>
 </template>
 
@@ -17,12 +15,6 @@ import NavBar from '@/components/navbar/NavBar.vue'
   width: 100%;
   height: 100%;
   padding: 6%;
-}
-
-.content-bg {
-  width: 100%;
-  height: 100%;
-  background: #f3f3f3;
 }
 
 

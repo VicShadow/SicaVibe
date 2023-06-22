@@ -9,18 +9,18 @@ interface StepsProps {
 
 const props = defineProps<StepsProps>()
 
-const { num, current } = toRefs(props)
+const { current } = toRefs(props)
 </script>
 
 <template>
   <div class='steps'>
-    <span class='step' :class='{ active: 1 === current }'>1</span>
-    <span class='separator'></span>
-    <span class='step' :class='{ active: 2 === current }'>2</span>
-    <span class='separator'></span>
-    <span class='step' :class='{ active: 3 === current }'>3</span>
-    <span class='separator'></span>
-    <span class='step' :class='{ active: 4 === current }'>4</span>
+    <span class='step' :class='{ active: 1 <= current }'>1</span>
+    <span class='separator' :class='{ active: 2 <= current }'></span>
+    <span class='step' :class='{ active: 2 <= current }'>2</span>
+    <span class='separator' :class='{ active: 3 <= current }'></span>
+    <span class='step' :class='{ active: 3 <= current }'>3</span>
+    <span class='separator' :class='{ active: 4 <= current }'></span>
+    <span class='step' :class='{ active: 4 <= current }'>4</span>
   </div>
 </template>
 
@@ -32,6 +32,7 @@ const { num, current } = toRefs(props)
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  max-height: 60px;
   gap: 2%;
 }
 
@@ -46,6 +47,7 @@ const { num, current } = toRefs(props)
   font-weight: bold;
   color: #989898;
   background-color: #d9d9d9;
+  font-size: large;
 }
 
 .separator {

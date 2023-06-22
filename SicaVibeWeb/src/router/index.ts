@@ -32,7 +32,7 @@ const routes = [
     component: AdminLayoutVue,
     children: [
       {
-        path: 'rooms',
+        path: 'selectedRooms',
         name: 'admin-rooms',
         component: AdminRooms
       },

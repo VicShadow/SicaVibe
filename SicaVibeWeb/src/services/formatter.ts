@@ -21,3 +21,9 @@ export const formatDateBackend = (date: Date): string => {
 
   return `${day}/${month}/${year}`
 }
+
+export const formatDateBackendFromStr = (date: string): string => {
+  const [day, month, year] = date.split('-')
+
+  return `${year}/${month}/${day}`
+}

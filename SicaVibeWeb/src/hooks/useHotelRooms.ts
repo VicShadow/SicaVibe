@@ -14,7 +14,7 @@ export const useHotelRooms = ({ hotelId }: useRoomsProps) => {
 
   console.log("Token:", token)
 
-  const queryKey = 'rooms'
+  const queryKey = 'selectedRooms'
   const queryFn = async () => {
     const hotelRooms = await getHotelRooms({token, hotelId: hotelId.value})
     console.log("hotelRooms", hotelRooms)

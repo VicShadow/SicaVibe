@@ -23,10 +23,10 @@ const position = computed(() => {
     </div>
     <div class='right'>
       <router-link to='/login'>
-        <v-btn class='bt1' density='comfortable' rounded='xl' variant='outlined'> Login</v-btn>
+        <v-btn class='bt1' density='comfortable' variant='outlined'> Login</v-btn>
       </router-link>
       <router-link to='/signup'>
-        <v-btn class='bt2' density='comfortable' rounded='xl'> Sign up</v-btn>
+        <v-btn class='bt2' density='comfortable'>Sign up</v-btn>
       </router-link>
     </div>
   </div>

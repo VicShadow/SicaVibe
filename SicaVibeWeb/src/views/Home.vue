@@ -1,6 +1,6 @@
 <template>
   <section class='section-1'>
-    <NavBar />
+    <NavBar transparent />
     <h1 class='text-h4' id='texth3'>Your perfect stay,</h1>
     <h1 class='text-h4' id='texth31'>every time</h1>
     <img src='/torreBelem.jpg' alt='img' class='image-fit' />
