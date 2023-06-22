@@ -19,7 +19,7 @@ $bootDiskSize = "64GB"
 $bootDiskType = "pd-ssd"
 $customMemory = "16GB"
 $customCpu = "8"
-$zone = "us-central1-b"
+$zone = "us-central1-a"
 $scopes = "https://www.googleapis.com/auth/cloud-platform"
 $network = "address=34.28.141.169,network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default"
 
@@ -85,43 +85,36 @@ sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
 sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBPopulate.sql
 "@
 
-$sshSetupMavenAndStart = @"
+$sshSetupMaven = @"
 mvn clean package -f ~/SicaVibe/SicaVibeApp/pom.xml
 mv ~/SicaVibe/SicaVibeApp/target/SicaVibeApp-0.0.1-SNAPSHOT.jar ./SicaVibeApp.jar
 mv ~/SicaVibe/SicaVibeApp/scripts/startApp.sh .
 sudo chmod +x startApp.sh
-cat ~/SicaVibe/SicaVibeApp/scripts/startArt.txt
-./startApp.sh
 "@
 
-$sshCommand = @"
-sudo apt-get update
-sudo apt-get install openjdk-17-jre maven mysql-server -y
-gcloud secrets versions access 1 --secret="id_github" > ~/.ssh/id_rsa
-sudo chmod 600 .ssh/id_rsa
-gcloud secrets versions access 1 --secret="id_github_pub" > ./.ssh/id_rsa.pub
-ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-git clone git@github.com:VicShadow/SicaVibe.git
-sudo sh ~/SicaVibe/SicaVibeApp/scripts/loadImages.sh
-sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBSicaVibeCreate.ddl
-sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBUserCreate.sql
-sudo mysql < ~/SicaVibe/SicaVibeApp/scripts/DBPopulate.sql
-mvn clean package -f ~/SicaVibe/SicaVibeApp/pom.xml
-mv ~/SicaVibe/SicaVibeApp/target/SicaVibeApp-0.0.1-SNAPSHOT.jar ./SicaVibeApp.jar
-mv ~/SicaVibe/SicaVibeApp/scripts/startApp.sh .
-sudo chmod +x startApp.sh
-cat ~/SicaVibe/SicaVibeApp/scripts/startArt.txt
-./startApp.sh
+$sshSetupNPM = @"
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install nodejs -y
+echo 'Sleeping for 6s'
+sleep 6
+sudo npm install --global yarn
+yarn --cwd ~/SicaVibe/SicaVibeWeb/
+echo 'VITE_BACKEND_IP=$vmIP
+VITE_BACKEND_PORT=8080
+VITE_BACKEND_URL=http://`$VITE_BACKEND_IP:`$VITE_BACKEND_PORT' > ~/SicaVibe/SicaVibeWeb/.env
 "@
+
+$sshStartSicaVibe = @"
+yarn --cwd ~/SicaVibe/SicaVibeWeb/ dev --host & ./startApp.sh
+"@
+
 
 
 Write-Host "Setting up VM..."
 ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshInstallBasics
 ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupGitHubUp
 ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupBD
-ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupMavenAndStart
-Write-Host "Done."
-
-# Start interative ssh terminal
-ssh -o "StrictHostKeyChecking=no" $vmIP
+ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupMaven
+ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshSetupNPM
+Write-Host "Done. Starting App..."
+ssh -o "StrictHostKeyChecking=no" $vmIP -C $sshStartSicaVibe
