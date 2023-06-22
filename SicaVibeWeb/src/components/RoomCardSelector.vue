@@ -25,8 +25,9 @@ const emit = defineEmits<RoomCardSelectorEmits>()
 
 const src = computed(() => {
   // TODO: get image from backend
-  return 'https://images.unsplash.com/photo-1606258566788-7feca2a53560?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80'
+  return import.meta.env.VITE_BACKEND_URL + "/imagem/" + imgID.value
 })
+
 </script>
 
 <template>
@@ -40,8 +41,8 @@ const src = computed(() => {
       </div>
     </div>
     <div class='card-right'>
-      <span class='text-h5'>Nº People: {{ capacity }}</span>
-      <span class='text-h5'>Price/Night {{ price }}€</span>
+      <span class='text-h6'>Nº People: {{ capacity }}</span>
+      <span class='text-h6'>Price/Night {{ price }}€</span>
       <div class='input-room-number'>
         <button class='minus-button' @click='emit("decreaseRoomSelection", id)'>-</button>
         <span class='selected-rooms'>{{ numberOfRoomsSelected }}</span>
