@@ -59,4 +59,8 @@ const showCancel = () => {
   </v-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+.error-message {
+  color: red;
+}
+</style>

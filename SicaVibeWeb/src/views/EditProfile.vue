@@ -101,7 +101,6 @@ const address = ref<string>('Rua da Filipa')
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100vh;
 }
 
 .navbar {
@@ -142,7 +141,7 @@ const address = ref<string>('Rua da Filipa')
 
 .background-rect {
   max-width: 1000px;
-  max-height: 800px;
+  max-height: 200px;
   width: 100%;
   background-color: #f1f2f4;
   padding: 2rem;
@@ -221,4 +220,5 @@ const address = ref<string>('Rua da Filipa')
   color: red;
   font-size: 0.9rem;
 }
+
 </style>

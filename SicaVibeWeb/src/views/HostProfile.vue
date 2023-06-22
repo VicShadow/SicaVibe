@@ -70,8 +70,20 @@ const reservations = [
     "inDate" : "10/10/2001",
     "outDate" : "11/10/2001",
     "price" : "100",
-    "status" : "",
-    "quartos" : []
+    "status" : "Scheduled",
+    "rooms" : [],
+    "services" : []
+  },
+  {
+    "id" : "1",
+    "guestId" : "2",
+    "guestName" : "Filipa",
+    "inDate" : "10/10/2023",
+    "outDate" : "11/10/2001",
+    "price" : "100",
+    "status" : "On going",
+    "rooms" : [],
+    "services" : []
   },
   {
     "id" : "1",
@@ -80,20 +92,12 @@ const reservations = [
     "inDate" : "10/10/2001",
     "outDate" : "11/10/2001",
     "price" : "100",
-    "status" : "",
-    "quartos" : []
-  },
-  {
-    "id" : "1",
-    "guestId" : "2",
-    "guestName" : "Filipa",
-    "inDate" : "10/10/2001",
-    "outDate" : "11/10/2001",
-    "price" : "100",
-    "status" : "",
-    "quartos" : []
+    "status" : "Done",
+    "rooms" : [],
+    "services" : []
   }
-]
+];
+
 
 </script>
 
@@ -323,15 +327,6 @@ const reservations = [
   align-items: center;
   margin-top: auto; 
 }
-.edit-button {
-  background-color: transparent !important;
-  box-shadow: none !important;
-  display: flex;
-  justify-content: flex-start;
-  max-height: 100px;
-  max-width: 100px;
-  margin: auto;
-}
 
 .align-right {
   margin-left: auto;
@@ -348,6 +343,8 @@ const reservations = [
 .lowercase-text {
   text-transform: lowercase;
 }
+
+
 </style>
   
 
