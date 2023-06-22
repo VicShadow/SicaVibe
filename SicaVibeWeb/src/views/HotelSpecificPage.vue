@@ -31,7 +31,7 @@
 
       <!-- RESERVATION BUTTON -->
       <div class="btn paddingHorizontal">
-        <v-btn rounded="lg" color="#CD519D">BOOK A RESERVATION</v-btn>
+        <v-btn @click='bookReservationOnClick' rounded="lg" color="#CD519D">BOOK A RESERVATION</v-btn>
       </div>
 
 
@@ -73,6 +73,10 @@ function fetchHotel () {
     hotel.value = res
     imageUrl = import.meta.env.VITE_BACKEND_URL + "/imagem/" + hotel.value?.imgID
   })
+}
+
+const bookReservationOnClick = () => {
+  router.push('/guest/make-reservation/' + hotelid)
 }
 </script>
 

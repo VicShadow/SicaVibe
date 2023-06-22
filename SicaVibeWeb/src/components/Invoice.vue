@@ -1,7 +1,5 @@
 <script setup lang='ts'>
-/*
-:nights='nights' :rooms='availableRooms' :selected-services='selectedServices'
- */
+
 import type { ExtraService } from '@/services/backend/reservations/getExtraServices'
 import type { RoomTypeAvailable } from '@/types/Hotel'
 import { computed, toRefs } from 'vue'
@@ -59,7 +57,8 @@ const total = computed(() => {
             <div class='room' v-for='[roomId, numberOfRooms] in Object.entries(selectedRooms)' :key='roomId'>
               <span>{{ rooms.find(room => room.id === Number(roomId))?.nome }}</span>
               <span>{{ rooms.find(room => room.id === Number(roomId))?.preco }} €</span>
-              <span>{{ numberOfRooms }}</span>
+              <span>x{{ numberOfRooms }}</span>
+              <span> {{ nights }} nights</span>
             </div>
           </div>
           <span class='rooms-total'>

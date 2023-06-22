@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import Steps from '@/components/Steps.vue'
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Check from '@/assets/icons/Check.vue'
 import { useField } from 'vee-validate'
 import * as yup from 'yup'
@@ -22,7 +22,9 @@ const router = useRouter()
 const currentStep = ref(0)
 const showSuccess = ref(false)
 
-const hotelId = ref(1) // TODO: HARDCODED HOTEL ID
+const route = useRoute()
+
+const hotelId  = route.params.hotelId as number
 
 const token = getToken() as Token
 
@@ -91,11 +93,11 @@ const fetchAvailableRooms = async (): Promise<void> => {
       token,
       inDate: '23/06/2023',//formatDateBackendFromStr(startDate.value),
       outDate: '28/06/2023',//formatDateBackendFromStr(endDate.value),
-      hotelId: hotelId.value
+      hotelId: hotelId
     })
 
     const fetchedRoomTypes = await getRoomTypes({
-      hotelId: hotelId.value
+      hotelId: hotelId
     })
     availableRooms.value = joinRoomTypes(fetchedRoomTypes, fetchedAvailableRooms)
 
@@ -106,7 +108,7 @@ const fetchAvailableRooms = async (): Promise<void> => {
 
 const fetchServices = async (): Promise<void> => {
   services.value = await getExtraServices({
-    hotelId: hotelId.value
+    hotelId: hotelId
   })
 }
 
@@ -114,7 +116,7 @@ const makeReservation = async (): Promise<boolean> => {
   try {
     await makeReservationBackend({
       token,
-      hotelId: hotelId.value,
+      hotelId: hotelId,
       inDate: formatDateBackendFromStr(startDate.value),
       outDate: formatDateBackendFromStr(endDate.value),
       rooms: selectedRooms.value,
@@ -161,7 +163,7 @@ const submitOnClick = async () => {
   showSuccess.value = true
 
   setTimeout(async () => {
-    await router.push('/')
+    await router.push('/hostprofile')
   }, 2000)
 }
 

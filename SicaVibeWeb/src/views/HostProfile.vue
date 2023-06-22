@@ -46,14 +46,14 @@ const changePasswordOnClick = async () => {
   const currentPasswordValue = currentPasswordField.value
   console.log(currentPasswordValue)
 
-  try { 
-    await login({email: user.value?.email ?? "", password: currentPasswordValue}) 
+  try {
+    await login({email: user.value?.email ?? "", password: currentPasswordValue})
   } catch {
     errorMessageCurrentPassword.value = 'The current password is incorrect. Please try again.'
   }
 
   isChangePassordModalOpen.value = false
-  router.push('/changepassword')
+  await router.push('/changepassword')
 }
 
 
@@ -65,10 +65,10 @@ const openDeleteAccountModal = () => {
   isDeleteAccountModalOpen.value = true
 }
 
-const deleteAccountHandler = () => {
-  deleteAccount((user.value as User).token) 
+const deleteAccountHandler = async () => {
+  await deleteAccount((user.value as User).token)
   isChangePassordModalOpen.value = false
-  router.push('/home')
+  await router.push('/home')
 }
 
 
@@ -88,14 +88,14 @@ function getReservas () {
     <div>
         <div class="navbar">
             <div class="circle" />
-            <v-app-bar-title class="header-text">SicaVibe</v-app-bar-title>
+            <v-app-bar-title class="header-text" @click.prevent='$router.push({name : "home"})'>SicaVibe</v-app-bar-title>
             <v-btn class="button" @click="logoutOnClick">Logout</v-btn>
             <v-img class="image-fill" contain src="../user_button.jpg"></v-img>
         </div>
         <div class="page-container">
           <div class="reservations">
                 <label class="subtitle-text">Reservations</label>
-          
+
                 <div class="background-rect2">
                   <HostReservationCard v-for="reservation in reservations" :key="reservation.id" :reservation="reservation" @canceled="getReservas"/>
                 </div>
@@ -116,7 +116,7 @@ function getReservas () {
                             <v-btn class="fill-width lowercase-text" @click="editOnClick">Edit Profile</v-btn>
                           </v-row>
                           <v-row class="fill-height">
-                            <v-btn class="fill-width lowercase-text" 
+                            <v-btn class="fill-width lowercase-text"
                                   :ripple="false"
                                   @click="openChangePasswordModal">Change Password</v-btn>
                           </v-row>
@@ -145,7 +145,7 @@ function getReservas () {
                     </div>
                   </div>
                   <div class="button-container">
-                    <v-btn class="button-delete" 
+                    <v-btn class="button-delete"
                           :ripple="false"
                           @click="openDeleteAccountModal">Delete Account</v-btn>
                   </div>
@@ -211,6 +211,7 @@ function getReservas () {
   font-weight: bold;
   font-size: 2.1rem;
   color: #0d47a1;
+  cursor: pointer;
 }
 
 .subtitle-text {
@@ -275,11 +276,11 @@ function getReservas () {
 .field {
   font-weight: bold;
   margin-top: 1.5rem;
-  line-height: 0.1; 
+  line-height: 0.1;
 }
 
 .field-text {
-  line-height: 3; 
+  line-height: 3;
 }
 
 .background-rect2 {
@@ -291,7 +292,7 @@ function getReservas () {
 }
 
 .button-delete {
-  margin-top: auto; 
+  margin-top: auto;
   color: white;
   background-color: #E53935;
   width: 300px;
@@ -301,7 +302,7 @@ function getReservas () {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: auto; 
+  margin-top: auto;
 }
 
 .align-right {
@@ -322,7 +323,6 @@ function getReservas () {
 
 
 </style>
-  
 
 
-           
+

@@ -59,7 +59,7 @@ const routes = [
     component: GuestLayoutVue,
     children: [
       {
-        path: 'make-reservation',
+        path: 'make-reservation/:hotelId',
         name: 'make-reservation',
         component: () => import('@/views/MakeReservation.vue')
       }
